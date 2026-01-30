@@ -1,0 +1,315 @@
+/* =========================
+   RESET
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* =========================
+   FULL SCREEN
+========================= */
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #eaf1ff, #ffffff);
+  transition: background 0.4s ease;
+  position: relative;
+}
+
+/* =========================
+   CARD (MÁS CHICA)
+========================= */
+.login-card {
+  width: 360px;
+  padding: 32px;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: fadeUp 0.6s ease;
+}
+
+/* =========================
+   LOGO
+========================= */
+.login-logo {
+  width: 170px;
+  margin-bottom: 4px;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* =========================
+   TEXTOS
+========================= */
+.login-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.login-input,
+.captcha-input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 11px;
+  border: 1px solid #cbd5e1;
+  font-size: 13px;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: all 0.3s ease;
+}
+
+.login-input::placeholder,
+.captcha-input::placeholder {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.login-input:focus,
+.captcha-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================
+   BOTONES
+========================= */
+.login-button {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.login-button.primary {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+}
+
+.login-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
+}
+
+.login-button.secondary {
+  background: transparent;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+
+.login-button.secondary:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* =========================
+   CAPTCHA
+========================= */
+.captcha-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.captcha-code {
+  min-width: 80px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-align: center;
+  user-select: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.captcha-code.flash {
+  animation: flashCaptcha 0.4s ease forwards;
+}
+
+@keyframes flashCaptcha {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(37, 99, 235, 0);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+.captcha-input {
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid #cbd5e1;
+  font-size: 12px;
+  text-align: center;
+}
+
+.captcha-refresh {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.captcha-refresh:hover {
+  background: #1e40af;
+  transform: rotate(90deg) scale(1.1);
+}
+
+.captcha-valid {
+  background: #16a34a !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.6);
+}
+
+/* =========================
+   BOTÓN DARK MODE
+========================= */
+.theme-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(25deg) scale(1.1);
+}
+
+/* =========================
+   DARK MODE
+========================= */
+.dark {
+  background: linear-gradient(135deg, #020617, #0f172a);
+}
+
+.dark .login-card {
+  background: #020617;
+}
+
+.dark .login-title {
+  color: #e5e7eb;
+}
+
+.dark .login-subtitle {
+  color: #94a3b8;
+}
+
+.dark .login-input,
+.dark .captcha-input {
+  background: #020617;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+.dark .login-input::placeholder,
+.dark .captcha-input::placeholder {
+  color: #94a3b8;
+}
+
+.dark .login-button.secondary {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.dark .captcha-code {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.dark .captcha-refresh {
+  background: #1d1f2a;
+  border: 1px solid #334155;
+}
+
+/* =========================
+   OLVIDASTE TU CONTRASEÑA
+========================= */
+.forgot-password {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #38bdf8;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: #0ea5e9;
+  text-decoration: underline;
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}

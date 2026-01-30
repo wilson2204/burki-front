@@ -1,0 +1,216 @@
+/* ========================= */
+/* CONTENEDOR PRINCIPAL */
+/* ========================= */
+.usuarios-container {
+  width: 100%;
+  padding: 25px;
+  background: #f4f6f9;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ========================= */
+/* TOOLBAR */
+/* ========================= */
+.usuarios-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.usuarios-toolbar .btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ========================= */
+/* TABLA */
+/* ========================= */
+.usuarios-table-container {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.usuarios-table thead {
+  background: #f0f2f5;
+}
+
+.usuarios-table th {
+  padding: 14px;
+  font-size: 13px;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+.usuarios-table td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.usuarios-table tbody tr:hover {
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+/* ========================= */
+/* FILA SELECCIONADA CLARA */
+/* ========================= */
+.usuarios-table tbody tr.selected {
+  background: #e0f2fe;
+  font-weight: 600;
+  border-left: 4px solid #3b82f6;
+  color: #111827;
+}
+
+/* ========================= */
+/* ACCIONES */
+/* ========================= */
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+/* ========================= */
+/* BOTÓN MODIFICAR (AZUL) */
+/* ========================= */
+.btn.edit {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 36px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.edit:hover {
+  background: #1d4ed8;
+}
+
+/* ========================= */
+/* BOTÓN ELIMINAR (ROJO) */
+/* ========================= */
+.btn.danger {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 36px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.danger:hover {
+  background: #dc2626;
+}
+
+/* ========================= */
+/* FORMULARIO */
+/* ========================= */
+.form-header {
+  background: #1f2937;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 16px 16px 0 0;
+}
+
+.form-body {
+  padding: 25px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.form-grid label {
+  font-size: 13px;
+  color: #555;
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #3b82f6;
+}
+
+/* ========================= */
+/* MODO OSCURO */
+/* ========================= */
+.dark-mode .usuarios-container {
+  background: #0f172a;
+}
+
+.dark-mode .usuarios-table-container {
+  background: #020617;
+}
+
+.dark-mode .usuarios-table thead {
+  background: #020617;
+}
+
+.dark-mode .usuarios-table th,
+.dark-mode .usuarios-table td {
+  color: #e5e7eb;
+  border-bottom: 1px solid #334155;
+}
+
+.dark-mode .usuarios-table tbody tr:hover {
+  background: #1e293b;
+}
+
+/* FILA SELECCIONADA OSCURA */
+.dark-mode .usuarios-table tbody tr.selected {
+  background: linear-gradient(90deg, #1e3a8a, #1e40af);
+  color: #ffffff;
+  border-left: 4px solid #60a5fa;
+}
+
+/* BOTÓN MODIFICAR OSCURO */
+.dark-mode .btn.edit {
+  background: #3b82f6;
+}
+
+.dark-mode .btn.edit:hover {
+  background: #2563eb;
+}
+
+/* BOTÓN ELIMINAR OSCURO */
+.dark-mode .btn.danger {
+  background: #ef4444;
+}
+
+.dark-mode .btn.danger:hover {
+  background: #dc2626;
+}
+

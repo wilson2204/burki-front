@@ -1,0 +1,41 @@
+.recuperar-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f172a;
+}
+
+.recuperar-card {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  color: white;
+  text-align: center;
+}
+
+.recuperar-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+.recuperar-card button {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.recuperar-card span {
+  display: block;
+  margin-top: 15px;
+  color: #93c5fd;
+  cursor: pointer;
+}
