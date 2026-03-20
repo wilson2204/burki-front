@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ReCAPTCHA from "react-google-recaptcha";
 import "./Login.css";
 import logo from "../../assets/bruki-logo.png";
 import { useAlert } from "../../context/Alertcontext";
@@ -9,21 +8,35 @@ export default function Login() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
 
-  const [darkMode, setDarkMode] = useState(false);
-  const [alias, setAlias] = useState("");
-  const [captchaValido, setCaptchaValido] = useState(false);
+  const [PIN, setPIN] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.body.classList.add("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!alias) {
-      showAlert("Completá el alias", "error");
-      return;
-    }
-
-    if (!captchaValido) {
-      showAlert("Confirmá que no sos un robot 🤖", "info");
+    if (!PIN || !password) {
+      showAlert("Completá PIN y contraseña", "error");
       return;
     }
 
@@ -37,27 +50,44 @@ export default function Login() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ alias }),
+          body: JSON.stringify({
+            PIN,
+            password,
+          }),
         }
       );
 
-      if (!res.ok) {
-        throw new Error("Alias incorrecto");
-      }
-
       const data = await res.json();
 
-      // 🔐 GUARDAMOS SESIÓN
-      localStorage.setItem("token", data.token || "token-backend");
-      localStorage.setItem("usuario", data.alias || alias);
-      localStorage.setItem("rol", data.rol || "Usuario");
-      localStorage.setItem("fotoPerfil", data.foto || "");
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("PIN o contraseña incorrectos");
+        if (res.status === 403) throw new Error("Acceso prohibido");
+        if (res.status === 422) throw new Error(data.code || "Error de validación");
+        throw new Error("Error del servidor");
+      }
 
-      showAlert(`Bienvenido ${data.alias || alias} 👋`, "success");
+      // 🔥 Usuario con una sola empresa
+      if (data.code === "COMPLETED") {
+        showAlert("Login exitoso 👋", "success");
+        navigate("/home");
+        return;
+      }
 
-      navigate("/empresa-select");
+      // 🔥 Usuario con varias empresas
+      if (data.code === "SELECT") {
+        sessionStorage.setItem("PIN", PIN);
+        sessionStorage.setItem("password", password);
+        sessionStorage.setItem("empresas", JSON.stringify(data.companies));
+
+        showAlert("Elegí tu empresa 👇", "success");
+
+        navigate("/empresa-select", {
+          state: { companies: data.companies },
+        });
+      }
 
     } catch (error) {
+      console.error(error);
       showAlert(error.message || "Error de conexión", "error");
     } finally {
       setLoading(false);
@@ -65,10 +95,10 @@ export default function Login() {
   };
 
   return (
-    <div className={`login-page ${darkMode ? "dark" : ""}`}>
+    <div className="login-page">
 
       <button
-        className="theme-toggle"
+        className="google-theme-toggle"
         onClick={() => setDarkMode(!darkMode)}
       >
         {darkMode ? "☀️" : "🌙"}
@@ -78,29 +108,30 @@ export default function Login() {
         <img src={logo} alt="Bruki" className="login-logo" />
 
         <h1 className="login-title">Backoffice Bruki</h1>
-        <p className="login-subtitle">Ingresá con tu alias</p>
+        <p className="login-subtitle">Ingresá con tu usuario</p>
 
         <input
           type="text"
-          placeholder="Alias"
+          placeholder="PIN"
           className="login-input"
-          value={alias}
-          onChange={(e) => setAlias(e.target.value)}
+          value={PIN}
+          onChange={(e) => setPIN(e.target.value)}
         />
 
-        <div style={{ margin: "15px 0" }}>
-          <ReCAPTCHA
-            sitekey="6Lfhx0ksAAAAADxQAFkLoP1FAAtOY1EtvVZCl5h-"
-            onChange={(value) => setCaptchaValido(!!value)}
-          />
-        </div>
+        <input
+          type="password"
+          placeholder="Contraseña"
+          className="login-input"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
         <button
           type="submit"
           className="login-button primary"
-          disabled={!captchaValido || loading}
+          disabled={loading}
         >
-          {loading ? "Ingresando..." : "Iniciar sesión"}
+          {loading ? "Cargando..." : "Iniciar sesión"}
         </button>
       </form>
     </div>

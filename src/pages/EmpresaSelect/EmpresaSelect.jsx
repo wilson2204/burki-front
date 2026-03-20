@@ -1,53 +1,107 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./EmpresaSelect.css";
+import { useAlert } from "../../context/Alertcontext";
 
-export default function SelectEmpresa() {
+export default function EmpresaSelect() {
   const navigate = useNavigate();
-  const [empresas, setEmpresas] = useState([]);
+  const location = useLocation();
+  const { showAlert } = useAlert();
+
+  const storedPIN = sessionStorage.getItem("PIN");
+  const storedPassword = sessionStorage.getItem("password");
+
+  const empresas =
+    location.state?.companies ||
+    JSON.parse(sessionStorage.getItem("empresas") || "[]");
+
   const [empresaSeleccionada, setEmpresaSeleccionada] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setEmpresas([
-      "Bruki SRL",
-      "Wilson Tech",
-      "Café Central",
-    ]);
+    if (!storedPIN || empresas.length === 0) {
+      showAlert("Primero iniciá sesión", "info");
+      navigate("/login");
+    }
   }, []);
 
-  const handleContinue = () => {
-    if (!empresaSeleccionada) return;
+  const handleIngresar = async () => {
+    if (!empresaSeleccionada)
+      return showAlert("Seleccioná una empresa", "info");
 
-    localStorage.setItem("empresa", empresaSeleccionada);
-    navigate("/dashboard");
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        "http://localhost:8080/back_office/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            PIN: storedPIN,
+            password: storedPassword,
+            companyName: empresaSeleccionada,
+          }),
+        }
+      );
+
+
+      const data = await res.json();
+      console.log("LOGIN RESPONSE:", data);
+
+      if (!res.ok) {
+        if (res.status === 401)
+          throw new Error("PIN o contraseña incorrectos");
+        if (res.status === 403)
+          throw new Error("Acceso prohibido");
+        throw new Error("Error del servidor");
+      }
+      if (data.code === "COMPLETED") {
+        showAlert("Login exitoso ✔️", "success");
+
+        localStorage.setItem("usuario", storedPIN);
+        localStorage.setItem("rol", "USER");
+        localStorage.setItem("empresa", empresaSeleccionada);
+
+        sessionStorage.clear();
+
+        navigate("/dashboard");
+      }
+
+    } catch (error) {
+      showAlert(error.message || "Error de conexión", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="empresa-page">
       <div className="empresa-card">
-        <h2>Seleccioná tu empresa</h2>
-        <p>Elegí con cuál querés trabajar</p>
+        <h2 className="empresa-title">Seleccioná tu empresa</h2>
 
         <div className="empresa-grid">
-          {empresas.map((e, i) => (
+          {empresas.map((e) => (
             <div
-              key={i}
+              key={e.value}
               className={`empresa-item ${
-                empresaSeleccionada === e ? "active" : ""
+                empresaSeleccionada === e.value ? "active" : ""
               }`}
-              onClick={() => setEmpresaSeleccionada(e)}
+              onClick={() => setEmpresaSeleccionada(e.value)}
             >
-              {e}
+              {e.value}
             </div>
           ))}
         </div>
 
         <button
           className="empresa-btn"
-          onClick={handleContinue}
-          disabled={!empresaSeleccionada}
+          onClick={handleIngresar}
+          disabled={loading || !empresaSeleccionada}
         >
-          Continuar
+          {loading ? "Ingresando..." : "Ingresar"}
         </button>
       </div>
     </div>

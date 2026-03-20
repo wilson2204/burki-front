@@ -1,0 +1,190 @@
+.departamentos-container{
+  padding:25px;
+  background:var(--bg-primary);
+  border-radius:10px;
+  color:var(--text-primary);
+}
+
+/* TITULO */
+
+.departamentos-container h2{
+  margin-bottom:20px;
+}
+
+/* BARRA */
+
+.barra-acciones{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  background:var(--bg-secondary);
+  border:1px solid var(--border-color);
+
+  padding:12px 15px;
+  border-radius:8px;
+  margin-bottom:20px;
+}
+
+/* BOTONES */
+
+.botones{
+  display:flex;
+  gap:10px;
+}
+
+.botones button{
+  background:var(--button-bg);
+  border:1px solid var(--border-color);
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  color:var(--text-primary);
+  transition:.2s;
+}
+
+.botones button:hover{
+  background:var(--button-hover);
+}
+
+/* BUSCAR */
+
+.buscar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.buscar input{
+  padding:7px 10px;
+  border-radius:6px;
+  border:1px solid var(--border-color);
+  background:var(--bg-primary);
+  color:var(--text-primary);
+}
+
+/* FORMULARIO */
+
+.formulario-depto{
+
+  margin-top:20px;
+  padding:25px;
+
+  display:grid;
+  grid-template-columns:200px 1fr 200px;
+  gap:18px 30px;
+
+  background:var(--bg-secondary);
+  border:1px solid var(--border-color);
+  border-radius:8px;
+}
+
+/* FILA */
+
+.fila{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+/* INPUT */
+
+.fila input,
+.fila select{
+
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid var(--border-color);
+
+  background:var(--bg-primary);
+  color:var(--text-primary);
+
+  font-size:14px;
+}
+
+/* PRECIO */
+
+.precio{
+  grid-column:3;
+  text-align:right;
+}
+
+.precio span{
+  color:var(--text-secondary);
+}
+
+.precio h2{
+  font-size:32px;
+}
+
+/* TABLA */
+
+.tabla{
+  width:100%;
+  border-collapse:collapse;
+
+  background:var(--bg-secondary);
+  border-radius:8px;
+  overflow:hidden;
+
+  margin-top:25px;
+}
+
+.tabla thead{
+  background:var(--table-header);
+}
+
+.tabla th{
+  text-align:left;
+  padding:12px;
+}
+
+.tabla td{
+  padding:10px 12px;
+  border-top:1px solid var(--border-color);
+}
+
+.tabla tr:hover{
+  background:var(--table-hover);
+}
+body{
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.card{
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+}
+
+input, select{
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
+}
+/* BOTON ACCESO RAPIDO GRANDE */
+
+.acceso-rapido{
+grid-column:1 / -1;
+display:flex;
+justify-content:center;
+margin-top:12px;
+}
+
+.acceso-rapido button{
+padding:16px 45px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+font-weight:600;
+transition:0.2s;
+}
+
+.acceso-rapido button:hover{
+transform:scale(1.05);
+opacity:0.9;
+}

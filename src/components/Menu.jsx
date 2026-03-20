@@ -2,37 +2,21 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/menu.css";
 
-export default function Menu({ setSection }) {
-  const [openSystem, setOpenSystem] = useState(false);
-  const [usuario, setUsuario] = useState("");
-  const [foto, setFoto] = useState(null);
+export default function Menu({ setSection, usuario, rol, permisos }) {
 
-  // Datos simulados (después se pueden traer del backend)
-  const nombre = "Agustín";
-  const apellido = "Wilson";
-  const rol = "Administrador";
+  const [openSystem, setOpenSystem] = useState(false);
+  const [foto, setFoto] = useState(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem("usuario");
     const fotoGuardada = localStorage.getItem("fotoPerfil");
-
-    if (user) {
-      setUsuario(user.split("@")[0]);
-    }
-
-    if (fotoGuardada) {
-      setFoto(fotoGuardada);
-    }
+    if (fotoGuardada) setFoto(fotoGuardada);
   }, []);
 
   const iniciales = usuario
-    ? usuario
-        .split(" ")
-        .map((p) => p[0])
-        .join("")
-        .toUpperCase()
+    ? usuario.split(" ").map((p) => p[0]).join("").toUpperCase()
     : "?";
 
   const subirFoto = (e) => {
@@ -47,12 +31,39 @@ export default function Menu({ setSection }) {
     reader.readAsDataURL(file);
   };
 
+  const handleLogout = async () => {
+    const confirmLogout = window.confirm("¿Seguro que querés cerrar sesión?");
+    if (!confirmLogout) return;
+
+    try {
+      setIsLoggingOut(true);
+
+      await fetch("http://localhost:8080/back_office/auth/logout", {
+        method: "POST",
+      });
+    } catch (error) {
+      console.log("Error al cerrar sesión", error);
+    } finally {
+      localStorage.clear();
+      sessionStorage.clear();
+      setIsLoggingOut(false);
+      navigate("/login");
+    }
+  };
+
+  // 🔥 MANEJO SEGURO DE PERMISOS
+  const sinPermisos = !permisos || Object.keys(permisos).length === 0;
+
+  const can = (perm) => {
+    if (sinPermisos) return true;
+    return permisos[perm];
+  };
+
   return (
     <aside className="sidebar">
 
-      {/* PERFIL DE USUARIO */}
+      {/* PERFIL */}
       <div className="user-top">
-
         <label className="avatar-wrapper">
           {foto ? (
             <img src={foto} alt="Perfil" className="user-avatar-img" />
@@ -71,10 +82,9 @@ export default function Menu({ setSection }) {
         </label>
 
         <div className="user-info">
-          <span className="user-name">{nombre} {apellido}</span>
-          <span className="user-role">{rol}</span>
+          <span className="user-name">{usuario || "Usuario"}</span>
+          <span className="user-role">{rol || "Sin rol"}</span>
         </div>
-
       </div>
 
       {/* SISTEMA */}
@@ -87,54 +97,173 @@ export default function Menu({ setSection }) {
 
       {openSystem && (
         <div className="tree">
-          {[
-            { label: "Usuarios", value: "usuarios" },
-            { label: "Artículos", value: "articulos" },
-            { label: "Sub-Artículos", value: "subarticulos" },
-            { label: "Combos", value: "combos" },
-            { label: "Clasificación", value: "clasificacion" },
-            { label: "Cambios de precios", value: "cambiosprecios" },
-            { label: "Listas de precios", value: "listasprecios" },
-            { label: "Promociones", value: "promociones" },
-            { label: "Talles", value: "talles" },
-            { label: "Colores", value: "colores" },
-            { label: "Departamentos", value: "departamentos" },
-            { label: "Clientes", value: "clientes" },
-            { label: "Marcas", value: "marcas" },
-            { label: "Proveedores", value: "proveedores" },
-          ].map((item) => (
+
+          {/* USUARIOS */}
+          {can("USERS_ACCESS") && (
             <div
-              key={item.value}
               className="tree-item"
-              onClick={() => setSection(item.value)}
+              onClick={() => setSection("usuarios")}
             >
-              {item.label}
+              Usuarios
             </div>
-          ))}
+          )}
+
+          <div className="menu-divider"></div>
+
+          {/* ITEMS */}
+          {can("ITEMS_ACCESS") && (
+            <>
+              <div
+                className="tree-item"
+                onClick={() => setSection("articulos")}
+              >
+                Artículos
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("subarticulos")}
+              >
+                Sub-Artículos
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("combos")}
+              >
+                Combos
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("clasificacion_articulos")}
+              >
+                Clasificación de artículos
+              </div>
+
+              <div className="menu-divider"></div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("cambios_precios")}
+              >
+                Cambios de precios
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("listas_precios")}
+              >
+                Listas de precios
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("promociones")}
+              >
+                Promociones
+              </div>
+
+              <div className="menu-divider"></div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("talles")}
+              >
+                Talles
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("colores")}
+              >
+                Colores
+              </div>
+
+              <div className="menu-divider"></div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("departamentos")}
+              >
+                Departamentos
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("subdepartamentos")}
+              >
+                Sub-Departamentos
+              </div>
+
+              <div className="menu-divider"></div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("clientes")}
+              >
+                Clientes
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("categorias_clientes")}
+              >
+                Categorías de clientes
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("marcas")}
+              >
+                Marcas
+              </div>
+
+              <div
+                className="tree-item"
+                onClick={() => setSection("proveedores")}
+              >
+                Proveedores
+              </div>
+            </>
+          )}
+
         </div>
       )}
 
-      <div className="folder" onClick={() => setSection("stock")}>Stock</div>
-      <div className="folder" onClick={() => setSection("fiscal")}>Fiscal</div>
-      <div className="folder" onClick={() => setSection("informes")}>Informes</div>
-      <div className="folder" onClick={() => setSection("restaurante")}>Restaurante</div>
-      <div className="folder" onClick={() => setSection("estadisticas")}>Estadísticas</div>
-
-      <div
-        className="logout"
-        onClick={() => {
-          localStorage.removeItem("usuario");
-          localStorage.removeItem("fotoPerfil");
-          navigate("/");
-        }}
-      >
-        Salir
+      {/* SECCIONES GENERALES */}
+      <div className="folder" onClick={() => setSection("stock")}>
+        Stock
       </div>
 
-      {/* BRAND ABAJO */}
-      <div className="brand-bottom">
-        <h2>BRUKI</h2>
-        <span>Backoffice</span>
+      <div className="folder" onClick={() => setSection("fiscal")}>
+        Fiscal
+      </div>
+
+      {can("REPORTS_ACCESS") && (
+        <div className="folder" onClick={() => setSection("informes")}>
+          Informes
+        </div>
+      )}
+
+      <div className="folder" onClick={() => setSection("restaurante")}>
+        Restaurante
+      </div>
+
+      <div className="folder" onClick={() => setSection("estadisticas")}>
+        Estadísticas
+      </div>
+
+      {/* LOGOUT */}
+      <div
+        className="logout"
+        onClick={handleLogout}
+        style={{
+          opacity: isLoggingOut ? 0.6 : 1,
+          pointerEvents: isLoggingOut ? "none" : "auto"
+        }}
+      >
+        {isLoggingOut ? "Cerrando sesión..." : "Salir"}
       </div>
 
     </aside>

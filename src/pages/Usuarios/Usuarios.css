@@ -1,12 +1,31 @@
 /* ========================= */
+/* VARIABLES DE COLORES */
+/* ========================= */
+:root {
+  --bg-light: #f4f6f9;
+  --bg-dark: #0f172a;
+  --card-light: #ffffff;
+  --card-dark: #020617;
+  --text-light: #111827;
+  --text-dark: #e5e7eb;
+  --primary: #1e40af;
+  --primary-light: #3b82f6;
+  --danger: #b91c1c;
+  --hover-light: #f9fafb;
+  --hover-dark: #1e293b;
+}
+
+/* ========================= */
 /* CONTENEDOR PRINCIPAL */
 /* ========================= */
 .usuarios-container {
   width: 100%;
   padding: 25px;
-  background: #f4f6f9;
+  background: var(--bg-light);
   min-height: 100vh;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: var(--text-light);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ========================= */
@@ -14,30 +33,35 @@
 /* ========================= */
 .usuarios-toolbar {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
 .usuarios-toolbar .btn {
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
 }
 
 /* ========================= */
 /* TABLA */
 /* ========================= */
 .usuarios-table-container {
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  background: var(--card-light);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 .usuarios-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
 .usuarios-table thead {
@@ -49,28 +73,26 @@
   font-size: 13px;
   color: #374151;
   text-transform: uppercase;
+  text-align: left;
 }
 
 .usuarios-table td {
   padding: 12px;
-  font-size: 14px;
   border-bottom: 1px solid #e5e7eb;
-  color: #111827;
+  color: var(--text-light);
 }
 
 .usuarios-table tbody tr:hover {
-  background: #f9fafb;
-  cursor: pointer;
+  background: var(--hover-light);
 }
 
 /* ========================= */
-/* FILA SELECCIONADA CLARA */
+/* FILA SELECCIONADA */
 /* ========================= */
 .usuarios-table tbody tr.selected {
   background: #e0f2fe;
   font-weight: 600;
-  border-left: 4px solid #3b82f6;
-  color: #111827;
+  border-left: 4px solid var(--primary-light);
 }
 
 /* ========================= */
@@ -82,47 +104,40 @@
 }
 
 /* ========================= */
-/* BOTÓN MODIFICAR (AZUL) */
+/* BOTONES */
 /* ========================= */
 .btn.edit {
-  background: #2563eb;
+  background: var(--primary-light);
   color: white;
-  border: none;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-size: 13px;
-  cursor: pointer;
-  min-width: 36px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 36px;
+  height: 32px;
 }
 
 .btn.edit:hover {
-  background: #1d4ed8;
+  background: var(--primary);
 }
 
-/* ========================= */
-/* BOTÓN ELIMINAR (ROJO) */
-/* ========================= */
 .btn.danger {
-  background: #ef4444;
+  background: var(--danger);
   color: white;
-  border: none;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-size: 13px;
-  cursor: pointer;
-  min-width: 36px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 36px;
+  height: 32px;
 }
 
 .btn.danger:hover {
-  background: #dc2626;
+  background: #991b1b;
 }
 
 /* ========================= */
@@ -132,7 +147,8 @@
   background: #1f2937;
   color: white;
   padding: 16px 20px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 12px 12px 0 0;
+  font-weight: 600;
 }
 
 .form-body {
@@ -147,70 +163,70 @@
 
 .form-grid label {
   font-size: 13px;
-  color: #555;
+  color: #555555;
+  font-weight: 500;
 }
 
 .form-grid input,
 .form-grid select {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-grid input:focus,
 .form-grid select:focus {
-  border-color: #3b82f6;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
 }
 
 /* ========================= */
 /* MODO OSCURO */
 /* ========================= */
 .dark-mode .usuarios-container {
-  background: #0f172a;
+  background: var(--bg-dark);
+  color: var(--text-dark);
 }
 
 .dark-mode .usuarios-table-container {
-  background: #020617;
+  background: var(--card-dark);
 }
 
 .dark-mode .usuarios-table thead {
-  background: #020617;
+  background: var(--card-dark);
 }
 
 .dark-mode .usuarios-table th,
 .dark-mode .usuarios-table td {
-  color: #e5e7eb;
+  color: var(--text-dark);
   border-bottom: 1px solid #334155;
 }
 
 .dark-mode .usuarios-table tbody tr:hover {
-  background: #1e293b;
+  background: var(--hover-dark);
 }
 
-/* FILA SELECCIONADA OSCURA */
 .dark-mode .usuarios-table tbody tr.selected {
   background: linear-gradient(90deg, #1e3a8a, #1e40af);
   color: #ffffff;
-  border-left: 4px solid #60a5fa;
+  border-left: 4px solid var(--primary-light);
 }
 
-/* BOTÓN MODIFICAR OSCURO */
 .dark-mode .btn.edit {
-  background: #3b82f6;
+  background: var(--primary-light);
 }
 
 .dark-mode .btn.edit:hover {
-  background: #2563eb;
+  background: var(--primary);
 }
 
-/* BOTÓN ELIMINAR OSCURO */
 .dark-mode .btn.danger {
-  background: #ef4444;
+  background: var(--danger);
 }
 
 .dark-mode .btn.danger:hover {
-  background: #dc2626;
+  background: #991b1b;
 }
-

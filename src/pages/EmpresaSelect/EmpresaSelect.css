@@ -1,20 +1,34 @@
+/* ========================= */
+/* RESET GENERAL */
+/* ========================= */
+
+* {
+  box-sizing: border-box;
+  transition: background 0.25s ease, color 0.25s ease, border 0.25s ease;
+}
+
+/* ========================= */
+/* LIGHT MODE (DEFAULT) */
+/* ========================= */
+
 .empresa-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a, #020617);
+  background: #f3f4f6;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: #111827;
   font-family: system-ui, sans-serif;
+  position: relative;
 }
 
 .empresa-card {
-  background: #0b1220;
+  background: #ffffff;
   padding: 35px 30px;
   border-radius: 18px;
   width: 360px;
   text-align: center;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
 .empresa-card h2 {
@@ -23,10 +37,14 @@
 }
 
 .empresa-card p {
-  opacity: 0.7;
+  opacity: 0.6;
   margin-bottom: 25px;
   font-size: 14px;
 }
+
+/* ========================= */
+/* GRID EMPRESAS */
+/* ========================= */
 
 .empresa-grid {
   display: flex;
@@ -36,7 +54,7 @@
 }
 
 .empresa-item {
-  background: #111827;
+  background: #e5e7eb;
   padding: 14px;
   border-radius: 12px;
   cursor: pointer;
@@ -47,34 +65,167 @@
 }
 
 .empresa-item:hover {
-  background: #1f2937;
+  background: #d1d5db;
   transform: translateY(-2px);
 }
 
 .empresa-item.active {
+  border-color: #4f46e5;
+  background: #eef2ff;
+}
+
+/* ========================= */
+/* PASSWORD INPUT */
+/* ========================= */
+
+.empresa-password-wrapper {
+  margin-top: 20px;
+  position: relative;
+}
+
+.empresa-password {
+  width: 100%;
+  padding: 14px 45px 14px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  background: #fafafa;
+}
+
+.empresa-password:focus {
+  border-color: #4f46e5;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.password-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #888;
+  pointer-events: none;
+}
+
+/* ========================= */
+/* ERROR */
+/* ========================= */
+
+.empresa-error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ========================= */
+/* BOTÓN INGRESAR */
+/* ========================= */
+
+.empresa-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.empresa-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.empresa-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+/* ========================= */
+/* BOTÓN DARK MODE */
+/* ========================= */
+
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  background: #f3f4f6;
+}
+
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+body.dark .empresa-page {
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: white;
+}
+
+body.dark .empresa-card {
+  background: #0b1220;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+body.dark .empresa-card p {
+  opacity: 0.7;
+}
+
+body.dark .empresa-item {
+  background: #111827;
+  color: white;
+}
+
+body.dark .empresa-item:hover {
+  background: #1f2937;
+}
+
+body.dark .empresa-item.active {
   border-color: #38bdf8;
   background: #0f172a;
   box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
 }
 
-.empresa-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: #38bdf8;
-  color: #020617;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+body.dark .empresa-password {
+  background: #1f2937;
+  color: white;
+  border: 1px solid #334155;
 }
 
-.empresa-btn:hover {
-  background: #0ea5e9;
+body.dark .empresa-password:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
 }
 
-.empresa-btn:disabled {
+body.dark .empresa-btn {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+}
+
+body.dark .theme-toggle {
+  background: #1e293b;
+  color: white;
+  border: 1px solid #334155;
+}
+
+body.dark .theme-toggle:hover {
   background: #334155;
-  color: #94a3b8;
-  cursor: not-allowed;
 }

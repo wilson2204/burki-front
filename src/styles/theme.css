@@ -1,0 +1,54 @@
+/* =========================
+   THEME SYSTEM (GLOBAL)
+========================= */
+
+:root {
+
+  /* ===== LIGHT MODE ===== */
+
+  --bg-primary: #f4f6f9;
+  --bg-secondary: #ffffff;
+
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  --border-color: #e5e7eb;
+
+  --table-header: #f3f4f6;
+  --table-hover: #f9fafb;
+
+  --button-bg: #ffffff;
+  --button-hover: #f3f4f6;
+
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+
+  --shadow-card: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark-mode {
+
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+
+  --border-color: #334155;
+
+  --table-header: #1e293b;
+  --table-hover: #334155;
+
+  --button-bg: #1e293b;
+  --button-hover: #334155;
+
+  --input-bg: #1e293b;
+  --input-border: #334155;
+
+  --shadow-card: 0 20px 45px rgba(0,0,0,0.6);
+}

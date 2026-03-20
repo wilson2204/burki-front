@@ -1,0 +1,86 @@
+.subarticulos-container{
+padding:30px;
+}
+
+.subarticulos-top{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+}
+
+.form-left{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+}
+
+.form-group input,
+.form-group select{
+padding:8px;
+width:300px;
+}
+
+.form-buttons{
+display:grid;
+grid-template-columns:150px 150px;
+gap:10px;
+height:fit-content;
+}
+
+.btn{
+padding:10px;
+cursor:pointer;
+border:none;
+background:#e5e5e5;
+border-radius:5px;
+}
+
+.guardar{
+background:#4CAF50;
+color:white;
+}
+
+.agregar{
+background:#2196F3;
+color:white;
+}
+
+.eliminar{
+background:#f44336;
+color:white;
+}
+
+.tabla-subarticulos{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+.tabla-subarticulos th,
+.tabla-subarticulos td{
+border:1px solid #ccc;
+padding:8px;
+}
+
+.tabla-subarticulos input{
+width:100%;
+border:none;
+padding:6px;
+}
+
+.salir-container{
+margin-top:20px;
+}
+
+.btn-salir{
+background:#444;
+color:white;
+padding:10px 20px;
+border:none;
+cursor:pointer;
+}

@@ -1,13 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import AppRouter from "./routes/AppRouter";
-import "./pages/Login/Login.css";
+
+import "./styles/global.css";   // ✅ reset global
+import "./styles/theme.css";    // ✅ tema centralizado
+
 import { AlertProvider } from "./context/Alertcontext";
+import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AlertProvider>
-      <AppRouter />
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </AlertProvider>
   </React.StrictMode>
 );
