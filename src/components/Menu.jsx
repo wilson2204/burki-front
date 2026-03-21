@@ -253,7 +253,9 @@ export default function Menu({ setSection, usuario, rol, permisos }) {
       <div className="folder" onClick={() => setSection("estadisticas")}>
         Estadísticas
       </div>
-
+ <div className="folder" onClick={() => setSection("Mi Información")}>
+        Mi Información
+      </div>
       {/* LOGOUT */}
       <div
         className="logout"

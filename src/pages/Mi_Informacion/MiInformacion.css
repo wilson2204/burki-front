@@ -1,0 +1,107 @@
+.mi-informacion-card {
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 520px;
+  margin: 20px auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+}
+
+/* LIGHT MODE */
+.mi-informacion-card.light {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.mi-informacion-card.light p strong {
+  color: #0f172a;
+}
+
+.mi-informacion-card.light .user-avatar-placeholder {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* DARK MODE */
+.mi-informacion-card.dark {
+  background: #111827;
+  color: #f1f5f9;
+}
+
+.mi-informacion-card.dark p strong {
+  color: #f8fafc;
+}
+
+.mi-informacion-card.dark .user-avatar-placeholder {
+  background: #1f2937;
+  color: #f1f5f9;
+}
+
+.mi-informacion-card h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.mi-informacion-card p {
+  margin: 10px 0;
+  font-size: 1.05rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mi-informacion-card img {
+  display: block;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 25px auto;
+  transition: all 0.3s ease;
+}
+
+.user-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0 auto 25px auto;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Botón Cambiar Contraseña */
+.change-password-btn {
+  padding: 10px 25px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+/* LIGHT MODE botón */
+.change-password-btn.light {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.change-password-btn.light:hover {
+  background: #1e293b;
+}
+
+/* DARK MODE botón */
+.change-password-btn.dark {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.change-password-btn.dark:hover {
+  background: #e2e8f0;
+}
