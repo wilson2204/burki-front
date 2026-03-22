@@ -10,16 +10,20 @@ import { AuthProvider } from "./context/AuthContext";
 
 import { registerSW } from 'virtual:pwa-register'
 
-registerSW({
+import { registerSW } from 'virtual:pwa-register'
+
+const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    window.location.reload()
+    const actualizar = confirm("Hay una nueva versión disponible 🚀\n¿Querés actualizar?");
+    if (actualizar) {
+      updateSW(true); // 💥 fuerza update
+    }
   },
   onOfflineReady() {
     console.log('App lista offline')
   }
 })
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AlertProvider>
