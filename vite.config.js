@@ -7,9 +7,17 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
+
       devOptions: {
-        enabled: true // 🔥 permite probar en desarrollo
+        enabled: true
       },
+
+      workbox: {
+        clientsClaim: true,
+        skipWaiting: true
+      },
+
       manifest: {
         name: 'Bruki Backoffice',
         short_name: 'Bruki',
@@ -29,6 +37,12 @@ export default defineConfig({
             src: '/icon-512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: '/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       }
