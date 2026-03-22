@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./subdepartamentos.css";
+import "./Subdepartamentos.css";
 
 export default function SubDepartamentos() {
 

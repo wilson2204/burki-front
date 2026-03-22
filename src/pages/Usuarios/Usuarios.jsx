@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAlert } from "../../context/Alertcontext";
-import "./usuarios.css";
+import "./Usuarios.css";
 
 export default function Usuarios({ setSection }) {
   const [view, setView] = useState("table");

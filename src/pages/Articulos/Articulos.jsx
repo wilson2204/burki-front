@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./articulos.css";
+import "./Articulos.css";
 
 export default function Articulos({ setSection }) {
 
