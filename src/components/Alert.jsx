@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Alert.css";
+import "./alert.css";
 
 export default function Alert({ message, type = "info", onClose }) {
   const [closing, setClosing] = useState(false);

@@ -4,7 +4,7 @@ import Menu from "../../components/Menu";
 import Usuarios from "../Usuarios/Usuarios";
 import Articulos from "../Articulos/Articulos";
 import Departamentos from "../Departamentos/Departamentos";
-import SubDepartamentos from "../Subdepartamentos/SubDepartamentos";
+import SubDepartamentos from "../Subdepartamentos/Subdepartamentos";
 import SubArticulos from "../Sub-Articulos/Subarticulos";
 import MiInformacion from "../Mi_Informacion/MiInformacion";
 

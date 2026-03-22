@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./departamentos.css";
+import "./Departamentos.css";
 
 export default function Departamentos({ setSection }) {
 
