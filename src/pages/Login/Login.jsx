@@ -43,19 +43,20 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        "http://localhost:8080/back_office/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            PIN,
-            password,
-          }),
-        }
-      );
+const res = await fetch(
+  "http://localhost:8080/back_office/auth/login",
+  {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      PIN,
+      password,
+    }),
+  }
+);
 
       const data = await res.json();
 
@@ -66,12 +67,15 @@ export default function Login() {
         throw new Error("Error del servidor");
       }
 
-      // 🔥 Usuario con una sola empresa
-      if (data.code === "COMPLETED") {
-        showAlert("Login exitoso 👋", "success");
-        navigate("/home");
-        return;
-      }
+      // Usuario con una sola empresa
+  if (data.code === "COMPLETED") {
+  showAlert("Login exitoso 👋", "success");
+
+  await new Promise(resolve => setTimeout(resolve, 50)); // 🔥 importante
+
+  navigate("/dashboard");
+  return;
+}
 
       // 🔥 Usuario con varias empresas
       if (data.code === "SELECT") {

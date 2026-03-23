@@ -36,6 +36,7 @@ export default function EmpresaSelect() {
         "http://localhost:8080/back_office/auth/login",
         {
           method: "POST",
+          credentials: "include", // 🔥 CLAVE
           headers: {
             "Content-Type": "application/json",
           },
@@ -47,7 +48,6 @@ export default function EmpresaSelect() {
         }
       );
 
-
       const data = await res.json();
       console.log("LOGIN RESPONSE:", data);
 
@@ -58,14 +58,16 @@ export default function EmpresaSelect() {
           throw new Error("Acceso prohibido");
         throw new Error("Error del servidor");
       }
+
       if (data.code === "COMPLETED") {
         showAlert("Login exitoso ✔️", "success");
 
-        localStorage.setItem("usuario", storedPIN);
-        localStorage.setItem("rol", "USER");
+
         localStorage.setItem("empresa", empresaSeleccionada);
 
         sessionStorage.clear();
+
+        await new Promise(resolve => setTimeout(resolve, 50)); // 🔥 ayuda cookie
 
         navigate("/dashboard");
       }
