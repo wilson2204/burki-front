@@ -10,7 +10,6 @@ import { AuthProvider } from "./context/AuthContext";
 
 import { registerSW } from 'virtual:pwa-register'
 
-import { registerSW } from 'virtual:pwa-register'
 
 const updateSW = registerSW({
   immediate: true,
