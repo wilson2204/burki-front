@@ -132,11 +132,13 @@ export default function Articulos({ setSection }) {
     setView("form");
   };
 
+  // 🔥 SOLO ESTO CAMBIÓ
   const guardar = async () => {
     const payload = {
-      barCode: form.codigo || null,
-      extraBarCode: form.adicional || null,
-      name: form.nombre || "",
+      barCode: form.codigo ? form.codigo : null,
+      extraBarCode: form.adicional ? form.adicional : null,
+      name: form.nombre || "SIN NOMBRE",
+
       cost: parseFloat(form.costo) || 0,
       margin: parseFloat(form.margen) || 0,
       price: parseFloat(form.precio) || 0,
@@ -152,9 +154,8 @@ export default function Articulos({ setSection }) {
       itemTypeId: form.itemTypeId ? parseInt(form.itemTypeId) : null,
       measurementUnitId: form.measurementUnitId ? parseInt(form.measurementUnitId) : null,
 
-      // 🔥 FIX GRUPO OBLIGATORIO
-      equivalentMeasurementName: "",
-      measurementUnitName: ""
+      equivalentMeasurementName: "Unidad",
+      measurementUnitName: "Unidad"
     };
 
     const method = selected ? "PUT" : "POST";
@@ -162,11 +163,18 @@ export default function Articulos({ setSection }) {
       ? `http://localhost:8080/back_office/item/${selected}`
       : "http://localhost:8080/back_office/item";
 
-    await fetch(url, {
+    const res = await fetch(url, {
       ...fetchConfig,
       method,
       body: JSON.stringify(payload)
     });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("ERROR BACK:", text);
+      alert("Error al guardar (ver consola)");
+      return;
+    }
 
     getArticulos();
     setView("table");
@@ -200,6 +208,23 @@ export default function Articulos({ setSection }) {
               <tr
                 key={a.id}
                 onClick={() => setSelected(a.id)}
+                onDoubleClick={() => {
+                  const item = articulos.find(x => x.id === a.id);
+
+                  setForm({
+                    ...form,
+                    id: item.id,
+                    nombre: item.name || "",
+                    precio: item.price || "0",
+                    costo: item.cost || "",
+                    margen: item.margin || "",
+                    codigo: item.barCode || "",
+                    adicional: item.extraBarCode || ""
+                  });
+
+                  setSelected(item.id);
+                  setView("form");
+                }}
                 className={selected === a.id ? "selected" : ""}
               >
                 <td>{a.name}</td>
