@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Articulos.css";
 
 export default function Articulos({ setSection }) {
@@ -6,302 +6,301 @@ export default function Articulos({ setSection }) {
   const [view, setView] = useState("table");
   const [tab, setTab] = useState("basicos");
 
-  const [articulos, setArticulos] = useState([
-    {
-      id: 1,
-      codigo: "7791234567890",
-      nombre: "Producto de ejemplo",
-      costo: 1000,
-      margen: 30,
-      precio: 1300,
-      iva: 21,
-      adicional: "A-001",
-      fecha: "12/01/2026"
-    }
-  ]);
-
+  const [articulos, setArticulos] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  const [form, setForm] = useState({
+  const [clasificaciones, setClasificaciones] = useState([]);
+  const [departamentos, setDepartamentos] = useState([]);
+  const [subDeptos, setSubDeptos] = useState([]);
+  const [proveedores, setProveedores] = useState([]);
+  const [marcas, setMarcas] = useState([]);
+  const [ivas, setIvas] = useState([]);
+  const [taxes, setTaxes] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [itemTypes, setItemTypes] = useState([]);
+  const [measurementUnits, setMeasurementUnits] = useState([]);
+
+  const [flashPrice, setFlashPrice] = useState(false);
+
+  const emptyForm = {
     id: "",
     codigo: "",
     nombre: "",
+    adicional: "",
     costo: "",
+    costoConIva: "",
     margen: "",
-    precio: "",
-    iva: "21",
-    adicional: ""
-  });
+    precio: "0.00",
+    precioFinal: "0.00",
+    precioAnterior: "",
+    fechaCambio: "",
+    iva: "",
+    taxId: "",
+    currencyId: "",
+    clasificacionId: "",
+    departamentoId: "",
+    subDepartamentoId: "",
+    proveedorId: "",
+    marcaId: "",
+    itemTypeId: "",
+    measurementUnitId: ""
+  };
 
-  const unidades = [
-    "Sin Descripción",
-    "Kilogramos",
-    "Metros",
-    "Metro cuadrado",
-    "Metro cubico",
-    "Litros",
-    "Unidad",
-    "Gramos",
-    "Milimetros",
-    "Centimetros",
-    "Mililitros"
-  ];
+  const [form, setForm] = useState(emptyForm);
 
-  /* NUEVO */
-  const nuevoArticulo = () => {
-    setForm({
-      id: "",
-      codigo: "",
-      nombre: "",
-      costo: "",
-      margen: "",
-      precio: "",
-      iva: "21",
-      adicional: ""
-    });
+  const fetchConfig = {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" }
+  };
 
+  const getCombos = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8080/back_office/item/data-for-creation",
+        fetchConfig
+      );
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      setClasificaciones(data.itemClassifications || []);
+      setItemTypes(data.itemTypes || []);
+      setMeasurementUnits(data.measurementUnits || []);
+
+      setProveedores(data.supplier || []);
+      setDepartamentos(data.itemCollections || []);
+      setSubDeptos(data.itemSubCollections || []);
+      setMarcas(data.brands || []);
+      setIvas(data.IVAs || []);
+      setTaxes(data.taxes || []);
+      setCurrencies(data.currencies || []);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getArticulos = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8080/back_office/item",
+        fetchConfig
+      );
+      if (!res.ok) return;
+
+      setArticulos(await res.json());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getCombos();
+    getArticulos();
+  }, []);
+
+  const recalcular = () => {
+    const costo = parseFloat(form.costo) || 0;
+    const margen = parseFloat(form.margen) || 0;
+
+    const ivaObj = ivas.find(i => i.id == form.iva);
+    const ivaRate = ivaObj ? (ivaObj.value || 0) : 0;
+
+    const costoConIva = costo + (costo * ivaRate / 100);
+    const precio = costo + (costo * margen / 100);
+    const precioFinal = precio + (precio * ivaRate / 100);
+
+    setForm(prev => ({
+      ...prev,
+      costoConIva: costoConIva.toFixed(2),
+      precio: precio.toFixed(2),
+      precioFinal: precioFinal.toFixed(2),
+      fechaCambio: new Date().toLocaleString()
+    }));
+
+    setFlashPrice(true);
+    setTimeout(() => setFlashPrice(false), 500);
+  };
+
+  useEffect(() => {
+    recalcular();
+  }, [form.costo, form.margen, form.iva, ivas]);
+
+  const nuevo = () => {
+    setForm(emptyForm);
+    setSelected(null);
     setView("form");
   };
 
-  /* GUARDAR */
-  const guardarArticulo = () => {
+  const guardar = async () => {
+    const payload = {
+      barCode: form.codigo || null,
+      extraBarCode: form.adicional || null,
+      name: form.nombre || "",
+      cost: parseFloat(form.costo) || 0,
+      margin: parseFloat(form.margen) || 0,
+      price: parseFloat(form.precio) || 0,
 
-    if (selected !== null) {
-      const updated = articulos.map(a =>
-        a.id === selected ? { ...form, id: selected } : a
-      );
-      setArticulos(updated);
-    } else {
-      const nuevo = {
-        ...form,
-        id: articulos.length + 1,
-        fecha: new Date().toLocaleDateString()
-      };
-      setArticulos([...articulos, nuevo]);
-    }
+      currencyId: form.currencyId ? parseInt(form.currencyId) : null,
+      supplierId: form.proveedorId ? parseInt(form.proveedorId) : null,
+      itemCollectionId: form.departamentoId ? parseInt(form.departamentoId) : null,
+      itemSubCollectionId: form.subDepartamentoId ? parseInt(form.subDepartamentoId) : null,
+      ivaId: form.iva ? parseInt(form.iva) : null,
+      taxId: form.taxId ? parseInt(form.taxId) : null,
+      classificationId: form.clasificacionId ? parseInt(form.clasificacionId) : null,
+      brandId: form.marcaId ? parseInt(form.marcaId) : null,
+      itemTypeId: form.itemTypeId ? parseInt(form.itemTypeId) : null,
+      measurementUnitId: form.measurementUnitId ? parseInt(form.measurementUnitId) : null,
 
-    setSelected(null);
+      // 🔥 FIX GRUPO OBLIGATORIO
+      equivalentMeasurementName: "",
+      measurementUnitName: ""
+    };
+
+    const method = selected ? "PUT" : "POST";
+    const url = selected
+      ? `http://localhost:8080/back_office/item/${selected}`
+      : "http://localhost:8080/back_office/item";
+
+    await fetch(url, {
+      ...fetchConfig,
+      method,
+      body: JSON.stringify(payload)
+    });
+
+    getArticulos();
     setView("table");
   };
 
-  /* ELIMINAR */
-  const eliminarArticulo = () => {
+  const eliminar = async () => {
+    if (!selected) return;
 
-    if (selected === null) return alert("Seleccione un artículo");
+    await fetch(
+      `http://localhost:8080/back_office/item/${selected}`,
+      { ...fetchConfig, method: "DELETE" }
+    );
 
-    const nuevos = articulos.filter(a => a.id !== selected);
-    setArticulos(nuevos);
-    setSelected(null);
-  };
-
-  /* MODIFICAR */
-  const modificarArticulo = () => {
-
-    if (selected === null) return alert("Seleccione un artículo");
-
-    const art = articulos.find(a => a.id === selected);
-
-    setForm(art);
-    setView("form");
-  };
-
-  /* DUPLICAR */
-  const duplicarArticulo = () => {
-
-    if (selected === null) return alert("Seleccione un artículo");
-
-    const art = articulos.find(a => a.id === selected);
-
-    const copia = {
-      ...art,
-      id: articulos.length + 1
-    };
-
-    setArticulos([...articulos, copia]);
-  };
-
-  /* SALIR */
-  const salir = () => {
-    if (setSection) {
-      setSection("home");
-    }
+    getArticulos();
   };
 
   return (
     <div className="articulos-container">
 
-      {/* BARRA SUPERIOR */}
-      <div className="articulos-toolbar">
-
-        <div className="articulos-buttons">
-          <button className="btn nuevo" onClick={nuevoArticulo}>➕ Nuevo</button>
-
-          <button className="btn eliminar" onClick={eliminarArticulo}>
-            ➖ Eliminar
-          </button>
-
-          <button className="btn modificar" onClick={modificarArticulo}>
-            ✏ Modificar
-          </button>
-
-          <button className="btn guardar" onClick={guardarArticulo}>
-            ✔ Guardar
-          </button>
-
-          <button className="btn duplicar" onClick={duplicarArticulo}>
-            📄 Duplicar
-          </button>
-
-          <button className="btn cancelar" onClick={() => setView("table")}>
-            ✖ Cancelar
-          </button>
-
-          <button className="btn salir" onClick={salir}>
-            ➡ Salir
-          </button>
-        </div>
-
-        <div className="articulos-search">
-          <label>
-            Listar solo <br />
-            Novedades <input type="checkbox" />
-          </label>
-
-          <div>
-            <span>Buscar</span>
-            <input type="text" placeholder="Buscar artículo..." />
-          </div>
-        </div>
-
+      <div className="toolbar">
+        <div className="tool" onClick={nuevo}>➕ Nuevo</div>
+        <div className="tool" onClick={eliminar}>🗑️ Eliminar</div>
+        <div className="tool" onClick={guardar}>💾 Guardar</div>
+        <div className="tool" onClick={() => setSection("home")}>🚪 Salir</div>
       </div>
 
-      {/* TABLA */}
       {view === "table" && (
-        <div className="articulos-table-container">
-          <table className="articulos-table">
-            <thead>
-              <tr>
-                <th>Nro.</th>
-                <th>Cod. de Barras</th>
-                <th>Artículo</th>
-                <th>Costo</th>
-                <th>Margen</th>
-                <th>Precio</th>
-                <th>IVA</th>
-                <th>Cod. Adicional</th>
-                <th>Ult. Cambio</th>
+        <table className="tabla">
+          <tbody>
+            {articulos.map(a => (
+              <tr
+                key={a.id}
+                onClick={() => setSelected(a.id)}
+                className={selected === a.id ? "selected" : ""}
+              >
+                <td>{a.name}</td>
+                <td>${a.price}</td>
               </tr>
-            </thead>
-
-            <tbody>
-              {articulos.map(a => (
-                <tr
-                  key={a.id}
-                  onClick={() => setSelected(a.id)}
-                  style={{
-                    background: selected === a.id ? "#e0f2fe" : ""
-                  }}
-                >
-                  <td>{a.id}</td>
-                  <td>{a.codigo}</td>
-                  <td>{a.nombre}</td>
-                  <td>${a.costo}</td>
-                  <td>{a.margen}%</td>
-                  <td>${a.precio}</td>
-                  <td>{a.iva}%</td>
-                  <td>{a.adicional}</td>
-                  <td>{a.fecha}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       )}
 
-      {/* FORMULARIO */}
       {view === "form" && (
-        <div className="articulos-form">
-
-          {/* PESTAÑAS */}
-          <div className="articulos-tabs">
-            {["basicos","otros","stock","talle","listas","imagen","combo"].map(t => (
-              <button
-                key={t}
-                className={tab === t ? "tab active" : "tab"}
-                onClick={() => setTab(t)}
-              >
-                {t === "basicos" && "Básicos"}
-                {t === "otros" && "Otros"}
-                {t === "stock" && "Stock"}
-                {t === "talle" && "Talle & color"}
-                {t === "listas" && "Listas y Promos"}
-                {t === "imagen" && "Imagen"}
-                {t === "combo" && "Combo"}
-              </button>
-            ))}
+        <div className="form-wrapper">
+          <div className="tabs-buttons">
+            <button className="tab-btn active">BASICOS</button>
           </div>
 
-          {tab === "basicos" && (
-            <div className="basicos-grid">
+          <div className="basicos-container">
+            <div className="form-grid">
 
-              <div className="col-izq">
+              <label>Artículo</label>
+              <textarea value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})}/>
 
-                <label>Artículo</label>
-                <textarea
-                  value={form.nombre}
-                  onChange={e =>
-                    setForm({ ...form, nombre: e.target.value })
-                  }
-                />
+              <label>Precio final</label>
+              <input value={form.precioFinal} disabled />
 
-                <label>Código de barras</label>
-                <input
-                  value={form.codigo}
-                  onChange={e =>
-                    setForm({ ...form, codigo: e.target.value })
-                  }
-                />
+              <label>Nro. Artículo</label>
+              <input value={form.id || "0"} disabled />
 
-                <label>Código adicional</label>
-                <input
-                  value={form.adicional}
-                  onChange={e =>
-                    setForm({ ...form, adicional: e.target.value })
-                  }
-                />
+              <label>Código de barras</label>
+              <input value={form.codigo} onChange={e => setForm({...form, codigo: e.target.value})}/>
 
-              </div>
+              <label>Código adicional</label>
+              <input value={form.adicional} onChange={e => setForm({...form, adicional: e.target.value})}/>
 
-              <div className="col-der">
+              <label>Departamento</label>
+              <select value={form.departamentoId} onChange={e => setForm({...form, departamentoId: e.target.value})}>
+                {departamentos.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+              </select>
 
-                <label>Costo</label>
-                <input
-                  value={form.costo}
-                  onChange={e =>
-                    setForm({ ...form, costo: e.target.value })
-                  }
-                />
+              <label>Sub-depto</label>
+              <select value={form.subDepartamentoId} onChange={e => setForm({...form, subDepartamentoId: e.target.value})}>
+                {subDeptos.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
 
-                <label>Margen</label>
-                <input
-                  value={form.margen}
-                  onChange={e =>
-                    setForm({ ...form, margen: e.target.value })
-                  }
-                />
+              <label>Proveedor</label>
+              <select value={form.proveedorId} onChange={e => setForm({...form, proveedorId: e.target.value})}>
+                {proveedores.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
 
-                <label>Precio</label>
-                <input
-                  value={form.precio}
-                  onChange={e =>
-                    setForm({ ...form, precio: e.target.value })
-                  }
-                />
+              <label>Marca</label>
+              <select value={form.marcaId} onChange={e => setForm({...form, marcaId: e.target.value})}>
+                {marcas.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+              </select>
 
+              <label>Tipo de art.</label>
+              <select value={form.itemTypeId} onChange={e => setForm({...form, itemTypeId: e.target.value})}>
+                {itemTypes.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+              </select>
+
+              <label>Clasificación</label>
+              <select value={form.clasificacionId} onChange={e => setForm({...form, clasificacionId: e.target.value})}>
+                {clasificaciones.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+
+              <label>Costo sin IVA</label>
+              <input value={form.costo} onChange={e => setForm({...form, costo: e.target.value})}/>
+
+              <label>Costo con IVA</label>
+              <input value={form.costoConIva} disabled />
+
+              <label>Margen %</label>
+              <input value={form.margen} onChange={e => setForm({...form, margen: e.target.value})}/>
+
+              <label>Tasa de IVA</label>
+              <select value={form.iva} onChange={e => setForm({...form, iva: e.target.value})}>
+                {ivas.map(i => <option key={i.id} value={i.id}>{i.description}</option>)}
+              </select>
+
+              <label>Impuesto interno</label>
+              <select value={form.taxId} onChange={e => setForm({...form, taxId: e.target.value})}>
+                {taxes.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+              </select>
+
+              <label>Tipo de moneda</label>
+              <select value={form.currencyId} onChange={e => setForm({...form, currencyId: e.target.value})}>
+                {currencies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+
+              <div className="form-actions">
+                <button className="btn-recalcular" onClick={recalcular}>
+                  Recalcular valores
+                </button>
+
+                <div className={`precio-box floating ${flashPrice ? "flash" : ""}`}>
+                  <span>Precio final</span>
+                  <h1>{form.precioFinal}</h1>
+                </div>
               </div>
 
             </div>
-          )}
+          </div>
 
         </div>
       )}

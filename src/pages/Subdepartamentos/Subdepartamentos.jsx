@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import "./Subdepartamentos.css";
 
+const API_SUB = "http://localhost:8080/back_office/item-sub-collection";
+const API_DEP = "http://localhost:8080/back_office/item-collection";
+
 export default function SubDepartamentos() {
 
   const [modo, setModo] = useState("tabla");
@@ -13,111 +16,176 @@ export default function SubDepartamentos() {
 
   const [seleccionado, setSeleccionado] = useState(null);
 
+  // =========================
+  // LOAD SUBDEPARTAMENTOS
+  // =========================
+  const cargarSubdepartamentos = async () => {
+    try {
+      const res = await fetch(API_SUB, {
+        method: "GET",
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Error subdepartamentos");
+
+      const data = await res.json();
+      setSubdepartamentos(data);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // =========================
+  // LOAD DEPARTAMENTOS
+  // =========================
+  const cargarDepartamentos = async () => {
+    try {
+      const res = await fetch(API_DEP, {
+        method: "GET",
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Error departamentos");
+
+      const data = await res.json();
+
+      const normalizados = data.map(d => ({
+        id: d.id ?? d.nro,
+        name: d.name ?? d.nombre
+      }));
+
+      setDepartamentos(normalizados);
+
+    } catch (err) {
+      console.error(err);
+      setDepartamentos([]);
+    }
+  };
+
   useEffect(() => {
-
-    const deps = localStorage.getItem("departamentos");
-    if (deps) setDepartamentos(JSON.parse(deps));
-
-    const subs = localStorage.getItem("subdepartamentos");
-    if (subs) setSubdepartamentos(JSON.parse(subs));
-
+    cargarSubdepartamentos();
+    cargarDepartamentos();
   }, []);
 
-  useEffect(() => {
-
-    localStorage.setItem(
-      "subdepartamentos",
-      JSON.stringify(subdepartamentos)
-    );
-
-  }, [subdepartamentos]);
-
+  // =========================
+  // NUEVO
+  // =========================
   const nuevo = () => {
-
     setModo("nuevo");
     setNombre("");
     setDepartamento("");
-
-  };
-
-  const cancelar = () => {
-
-    setModo("tabla");
     setSeleccionado(null);
-
   };
 
-  const guardar = () => {
-
-    if (!nombre || !departamento) {
-      alert("Complete los datos");
-      return;
-    }
-
-    if (modo === "editar") {
-
-      const copia = [...subdepartamentos];
-
-      copia[seleccionado] = {
-        ...copia[seleccionado],
-        nombre,
-        departamento
-      };
-
-      setSubdepartamentos(copia);
-
-    } else {
-
-      const nuevoSub = {
-        codigo: subdepartamentos.length + 1,
-        departamento,
-        nombre
-      };
-
-      setSubdepartamentos([...subdepartamentos, nuevoSub]);
-
-    }
-
+  // =========================
+  // CANCELAR
+  // =========================
+  const cancelar = () => {
     setModo("tabla");
+    setNombre("");
+    setDepartamento("");
+    setSeleccionado(null);
   };
 
+  // =========================
+  // GUARDAR (POST / PUT)
+  // =========================
+  const guardar = async () => {
+
+    if (!nombre || !departamento) return alert("Complete los datos");
+
+    try {
+
+      if (modo === "editar") {
+
+        const id = subdepartamentos[seleccionado].id;
+
+        const res = await fetch(`${API_SUB}/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            name: nombre,
+            itemCollectionId: Number(departamento)
+          })
+        });
+
+        if (!res.ok) throw new Error();
+
+      } else {
+
+        const res = await fetch(API_SUB, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            name: nombre,
+            itemCollectionId: Number(departamento)
+          })
+        });
+
+        if (!res.ok) throw new Error();
+      }
+
+      await cargarSubdepartamentos();
+      setModo("tabla");
+
+    } catch (err) {
+      console.error(err);
+      alert("Error guardando");
+    }
+  };
+
+  // =========================
+  // MODIFICAR
+  // =========================
   const modificar = () => {
 
-    if (seleccionado === null) {
-      alert("Seleccione un registro");
-      return;
-    }
+    if (seleccionado === null) return alert("Seleccione un registro");
 
     const item = subdepartamentos[seleccionado];
 
-    setNombre(item.nombre);
-    setDepartamento(item.departamento);
-
+    setNombre(item.name);
+    setDepartamento(item.itemCollectionId);
     setModo("editar");
-
   };
 
-  const eliminar = () => {
+  // =========================
+  // ELIMINAR
+  // =========================
+  const eliminar = async () => {
 
-    if (seleccionado === null) {
-      alert("Seleccione un registro");
-      return;
+    if (seleccionado === null) return alert("Seleccione un registro");
+    if (!window.confirm("¿Eliminar?")) return;
+
+    try {
+
+      const id = subdepartamentos[seleccionado].id;
+
+      const res = await fetch(`${API_SUB}/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error();
+
+      await cargarSubdepartamentos();
+      setSeleccionado(null);
+
+    } catch (err) {
+      console.error(err);
+      alert("Error eliminando");
     }
+  };
 
-    if (!window.confirm("Eliminar registro?")) return;
-
-    const copia = [...subdepartamentos];
-
-    copia.splice(seleccionado, 1);
-
-    const reordenado = copia.map((d, i) => ({
-      ...d,
-      codigo: i + 1
-    }));
-
-    setSubdepartamentos(reordenado);
+  const salir = () => {
+    setModo("tabla");
     setSeleccionado(null);
-
   };
 
   return (
@@ -125,35 +193,49 @@ export default function SubDepartamentos() {
 
       <h2>Sub-Departamentos</h2>
 
-      {/* BARRA BOTONES */}
-
+      {/* ================= TOOLBAR PRO ================= */}
       <div className="toolbar">
 
-        <button onClick={nuevo}>➕ Nuevo</button>
+        <button className="tool nuevo" data-icon="➕" onClick={nuevo}>
+          <span>Nuevo</span>
+        </button>
 
-        <button onClick={eliminar}>➖ Eliminar</button>
+        <button
+          className={`tool eliminar ${seleccionado === null ? "disabled" : ""}`}
+          data-icon="🗑️"
+          onClick={eliminar}
+        >
+          <span>Eliminar</span>
+        </button>
 
-        <button onClick={modificar}>✏️ Modificar</button>
+        <button
+          className={`tool modificar ${seleccionado === null ? "disabled" : ""}`}
+          data-icon="✏️"
+          onClick={modificar}
+        >
+          <span>Modificar</span>
+        </button>
 
-        <button onClick={guardar}>✔ Guardar</button>
+        <button className="tool guardar" data-icon="💾" onClick={guardar}>
+          <span>Guardar</span>
+        </button>
 
-        <button onClick={cancelar}>❌ Cancelar</button>
-
-        <button onClick={() => setModo("tabla")}>➡ Salir</button>
+        <button className="tool cancelar" data-icon="❌" onClick={cancelar}>
+          <span>Cancelar</span>
+        </button>
 
       </div>
 
-      {/* TABLA */}
-
+      {/* ================= TABLA ================= */}
       {modo === "tabla" && (
 
         <table className="sub-table">
 
           <thead>
             <tr>
-              <th>Codigo</th>
+              <th>ID</th>
               <th>Departamento</th>
-              <th>Sub-Departamento</th>
+              <th>SubDepartamento</th>
             </tr>
           </thead>
 
@@ -162,16 +244,14 @@ export default function SubDepartamentos() {
             {subdepartamentos.map((d, index) => (
 
               <tr
-                key={index}
+                key={d.id}
                 onClick={() => setSeleccionado(index)}
-                className={
-                  seleccionado === index ? "fila-activa" : ""
-                }
+                className={seleccionado === index ? "fila-activa" : ""}
               >
 
-                <td>{d.codigo}</td>
-                <td>{d.departamento}</td>
-                <td>{d.nombre}</td>
+                <td>{d.id}</td>
+                <td>{d.itemCollectionId}</td>
+                <td>{d.name}</td>
 
               </tr>
 
@@ -183,49 +263,33 @@ export default function SubDepartamentos() {
 
       )}
 
-      {/* FORMULARIO */}
-
+      {/* ================= FORM ================= */}
       {modo !== "tabla" && (
 
         <div className="form-sub">
 
-          <div className="campo">
+          <label>Departamento</label>
 
-            <label>Departamento</label>
+          <select
+            value={departamento}
+            onChange={(e) => setDepartamento(e.target.value)}
+          >
+            <option value="">Seleccione</option>
 
-            <select
-              value={departamento}
-              onChange={(e) =>
-                setDepartamento(e.target.value)
-              }
-            >
+            {departamentos.map(d => (
+              <option key={d.id} value={d.id}>
+                {d.name}
+              </option>
+            ))}
 
-              <option value="">Seleccione</option>
+          </select>
 
-              {departamentos.map((d) => (
+          <label>SubDepartamento</label>
 
-                <option key={d.nro} value={d.nombre}>
-                  {d.nombre}
-                </option>
-
-              ))}
-
-            </select>
-
-          </div>
-
-          <div className="campo">
-
-            <label>SubDepartamento</label>
-
-            <input
-              value={nombre}
-              onChange={(e) =>
-                setNombre(e.target.value)
-              }
-            />
-
-          </div>
+          <input
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
 
         </div>
 

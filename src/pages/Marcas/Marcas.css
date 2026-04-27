@@ -1,0 +1,40 @@
+.marcas-container {
+  padding: 20px;
+}
+
+.toolbar {
+  margin-bottom: 15px;
+}
+
+.btn {
+  margin-right: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th, .tabla td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.tabla tr:hover {
+  background-color: #f5f5f5;
+}
+
+.selected {
+  background-color: #d0ebff !important;
+}
+
+.form-nueva {
+  margin-bottom: 10px;
+}

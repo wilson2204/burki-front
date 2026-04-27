@@ -1,12 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../../components/Menu";
+
 import Usuarios from "../Usuarios/Usuarios";
 import Articulos from "../Articulos/Articulos";
 import Departamentos from "../Departamentos/Departamentos";
 import SubDepartamentos from "../Subdepartamentos/Subdepartamentos";
 import SubArticulos from "../Sub-Articulos/Subarticulos";
 import MiInformacion from "../Mi_Informacion/MiInformacion";
+import Marcas from "../Marcas/Marcas";
+import OtrosTributos from "../Otrostributos/OtrosTributos";
+import Proveedores from "../Proveedores/proveedores";
+import Monedas from "../Monedas/Monedas";
+import Clasificaciones from "../Clasificaciones/Clasificaciones";
 
 export default function Dashboard() {
   const [section, setSection] = useState("home");
@@ -14,7 +20,17 @@ export default function Dashboard() {
   const [rol, setRol] = useState(null);
   const [permisos, setPermisos] = useState(null);
   const [theme, setTheme] = useState("light");
+
   const navigate = useNavigate();
+
+  // 🔥 APLICAR TEMA AL BODY (FIX)
+  useEffect(() => {
+    if (theme === "dark") {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [theme]);
 
   // 🔥 Cargar sesión + usuario + permisos
   useEffect(() => {
@@ -25,7 +41,6 @@ export default function Dashboard() {
           credentials: "include",
         });
 
-        // ❌ Si no hay sesión → login
         if (!res.ok) {
           navigate("/login");
           return;
@@ -36,7 +51,6 @@ export default function Dashboard() {
         setUsuario(data.nameAndSurname || "Usuario");
         setRol(data.userRole || "USER");
 
-        // 🔥 cargar permisos después de validar sesión
         const resPerm = await fetch(
           "http://localhost:8080/back_office/auth/check-permissions",
           {
@@ -88,8 +102,8 @@ export default function Dashboard() {
 
       <div className="dashboard-main">
         <div className="dashboard-content">
-          
-          {/* 🔥 Switch modo */}
+
+          {/* 🔥 SWITCH TEMA */}
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
             <button
               onClick={() =>
@@ -123,13 +137,32 @@ export default function Dashboard() {
           {section === "articulos" && <Articulos />}
           {section === "subarticulos" && (
             <SubArticulos setSection={setSection} />
+            
           )}
+          {section === "clasificaciones" && (
+        <Clasificaciones setSection={setSection} />
+      )}
           {section === "departamentos" && (
             <Departamentos setSection={setSection} />
           )}
           {section === "subdepartamentos" && (
             <SubDepartamentos setSection={setSection} />
           )}
+          {section === "proveedores" && <Proveedores />}
+          {section === "marcas" && <Marcas />}
+          {section === "otros_tributos" && <OtrosTributos />}
+
+          {section === "impuestos" && <h2>Impuestos</h2>}
+          {section === "balanzas" && <h2>Balanzas</h2>}
+          {section === "formas_pago" && <h2>Formas de pago</h2>}
+          {section === "formas_pago_cuotas" && <h2>Formas de pago - cuotas</h2>}
+        {section === "monedas" && <Monedas />}
+          {section === "funciones_usuario" && <h2>Funciones de usuarios</h2>}
+          {section === "movimientos_stock" && <h2>Tipos de movimientos de stock</h2>}
+          {section === "config_pos" && <h2>Configuración POS</h2>}
+          {section === "config_general" && <h2>Configuración General</h2>}
+          {section === "asistente" && <h2>Asistente de configuración</h2>}
+
           {section === "Mi Información" && (
             <MiInformacion
               usuario={{
@@ -139,6 +172,7 @@ export default function Dashboard() {
               mode={theme}
             />
           )}
+
         </div>
       </div>
     </div>

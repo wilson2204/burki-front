@@ -26,8 +26,9 @@ export default function EmpresaSelect() {
   }, []);
 
   const handleIngresar = async () => {
-    if (!empresaSeleccionada)
+    if (!empresaSeleccionada) {
       return showAlert("Seleccioná una empresa", "info");
+    }
 
     try {
       setLoading(true);
@@ -36,7 +37,7 @@ export default function EmpresaSelect() {
         "http://localhost:8080/back_office/auth/login",
         {
           method: "POST",
-          credentials: "include", // 🔥 CLAVE
+          credentials: "include", // 🔥 USÁS COOKIE
           headers: {
             "Content-Type": "application/json",
           },
@@ -62,14 +63,14 @@ export default function EmpresaSelect() {
       if (data.code === "COMPLETED") {
         showAlert("Login exitoso ✔️", "success");
 
-
+        // 🔥 CLAVE: guardar sesión en frontend
+        localStorage.setItem("auth", "true");
         localStorage.setItem("empresa", empresaSeleccionada);
+        localStorage.setItem("usuario", storedPIN);
 
         sessionStorage.clear();
 
-        await new Promise(resolve => setTimeout(resolve, 50)); // 🔥 ayuda cookie
-
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       }
 
     } catch (error) {

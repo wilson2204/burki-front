@@ -1,4 +1,4 @@
-.sub-container {
+.otros-container {
   background: var(--bg-primary);
   color: var(--text-primary);
   padding: 10px;
@@ -72,24 +72,13 @@
 }
 
 /* TABLA */
-.sub-table {
+.tabla {
   margin-top: 10px;
   width: 100%;
-  border-collapse: collapse;
-}
-
-.sub-table th,
-.sub-table td {
-  padding: 8px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.fila-activa {
-  background: rgba(37, 99, 235, 0.15);
 }
 
 /* FORM */
-.form-sub {
+.formulario {
   margin-top: 20px;
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -97,11 +86,8 @@
   max-width: 600px;
 }
 
-.form-sub input,
-.form-sub select {
+.formulario input,
+.formulario select {
   height: 35px;
   padding: 6px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  outline: none;
 }

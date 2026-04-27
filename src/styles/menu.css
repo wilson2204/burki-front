@@ -315,3 +315,45 @@
   background: #d9d9d9;
   margin: 6px 0;
 }
+.parametros {
+  position: relative;
+}
+
+/* 🔥 SUBMENU OCULTO */
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #1e293b;
+  min-width: 250px;
+  border-radius: 10px;
+  padding: 10px 0;
+  display: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+/* 🔥 MOSTRAR AL HOVER */
+.parametros:hover .submenu {
+  display: block;
+}
+
+/* ITEMS */
+.submenu div {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #e2e8f0;
+  transition: 0.2s;
+}
+
+.submenu div:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+/* DIVIDER */
+.menu-divider {
+  height: 1px;
+  background: #334155;
+  margin: 5px 0;
+}

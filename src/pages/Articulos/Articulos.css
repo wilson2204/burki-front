@@ -1,270 +1,251 @@
-/* ===================== */
-/* CONTENEDOR PRINCIPAL */
-/* ===================== */
+/* ================= CONTENEDOR ================= */
+
 .articulos-container {
-  width: 100%;
-  padding: 20px;
-  background: #f4f6f9;
-  font-family: "Segoe UI", sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 14px;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* ===================== */
-/* TOOLBAR */
-/* ===================== */
-.articulos-toolbar {
+/* ================= TOOLBAR ================= */
+
+.toolbar {
   display: flex;
-  justify-content: space-between;
-  background: #ffffff;
+  gap: 14px;
   padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
 }
 
-.articulos-buttons {
+.tool {
   display: flex;
-  gap: 8px;
-}
-
-.articulos-buttons .btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.articulos-search {
-  display: flex;
-  gap: 15px;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+
+  width: 105px;
+  height: 82px;
+
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
 }
 
-.articulos-search input {
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.tool:hover {
+  transform: translateY(-3px);
+  background: #eef2ff;
 }
 
-/* ===================== */
-/* TABLA */
-/* ===================== */
-.articulos-table-container {
-  background: #ffffff;
-  border-radius: 10px;
-  overflow-x: auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  display: block !important;
-}
+/* ================= TABLA ================= */
 
-.articulos-table {
+.tabla {
+  margin-top: 12px;
   width: 100%;
   border-collapse: collapse;
-  color: #111827;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.articulos-table th {
-  background: #f0f2f5;
-  padding: 12px;
-  font-size: 13px;
-  text-transform: uppercase;
-  color: #374151;
-  border-bottom: 1px solid #ccc;
-}
-
-.articulos-table td {
-  padding: 10px;
+.tabla tr {
   border-bottom: 1px solid #e5e7eb;
-  font-size: 13px;
-}
-
-/* ===================== */
-/* FORMULARIO */
-/* ===================== */
-.articulos-form {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  padding: 15px;
-}
-
-/* ===================== */
-/* PESTAÑAS */
-/* ===================== */
-.articulos-tabs {
-  display: flex;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 15px;
-}
-
-.tab {
-  padding: 8px 14px;
-  border: none;
-  background: #f0f2f5;
   cursor: pointer;
-  font-size: 14px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  margin-right: 4px;
+  transition: 0.15s;
 }
 
-.tab.active {
-  background: #ffffff;
-  border: 1px solid #ccc;
-  border-bottom: none;
-  font-weight: 600;
-}
-
-/* ===================== */
-/* GRID BASICOS */
-/* ===================== */
-.basicos-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-
-.col-izq,
-.col-der {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* ===================== */
-/* CAMPOS */
-/* ===================== */
-label {
-  font-size: 13px;
-  color: #374151;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #999;
-  font-size: 13px;
-}
-
-textarea {
-  resize: none;
-}
-
-/* ===================== */
-/* FILAS DOBLES */
-/* ===================== */
-.fila {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-/* ===================== */
-/* PRECIO FINAL */
-/* ===================== */
-.precio-final {
-  display: flex;
-  flex-direction: column;
-}
-
-.precio-grande {
-  font-size: 36px;
-  font-weight: bold;
-  color: #1d4ed8;
-  text-align: right;
+.tabla tr:hover {
   background: #f9fafb;
 }
 
-/* ===================== */
-/* BOTÓN RECALCULAR */
-/* ===================== */
-.recalcular {
-  margin-top: 10px;
-  padding: 8px;
-  background: #e5e7eb;
-  border: 1px solid #999;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 13px;
+.tabla tr.selected {
+  background: #dbeafe;
 }
 
-.recalcular:hover {
-  background: #d1d5db;
+.tabla td {
+  padding: 14px;
+  font-size: 14px;
 }
 
-/* ===================== */
-/* BOTONES (COLORES MÁS SERIOS) */
-/* ===================== */
+/* ================= FORM ================= */
 
-.btn.nuevo { background: #1e40af; color: white; }
-.btn.eliminar { background: #b91c1c; color: white; }
-.btn.modificar { background: #2563eb; color: white; }
-.btn.guardar { background: #065f46; color: white; }
-.btn.duplicar { background: #374151; color: white; }
-.btn.cancelar { background: #6b7280; color: white; }
-.btn.salir { background: #334155; color: white; }
-
-/* ===================== */
-/* OTROS */
-/* ===================== */
-.otros-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-}
-
-.otros-col-izq,
-.otros-col-der {
+.form-wrapper {
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.otros-grid h3 {
-  color: #1d4ed8;
-  font-size: 15px;
-  border-bottom: 1px solid #1d4ed8;
-  padding-bottom: 3px;
-  margin-top: 10px;
-}
+/* ================= TABS ================= */
 
-.checkbox {
+.tabs-buttons {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  background: transparent;
+}
+
+.tab-btn {
+  padding: 9px 16px;
+  border: 1px solid #d1d5db;
+  background: #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: #dbeafe;
+}
+
+.tab-btn.active {
+  background: white;
+  font-weight: bold;
+  border-bottom: 2px solid #2563eb;
+  color: #2563eb;
+}
+
+/* ================= LAYOUT ================= */
+
+.basicos-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* ================= GRID FORM ================= */
+
+.form-grid {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px 16px;
+}
+
+.form-grid label {
+  display: flex;
   align-items: center;
   font-size: 13px;
+  color: #374151;
 }
 
-/* ===================== */
-/* MODO OSCURO */
-/* ===================== */
-.dark-mode .articulos-container {
-  background: #020617;
+.form-grid input,
+.form-grid textarea,
+.form-grid select {
+  height: 38px;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
 }
 
-.dark-mode .articulos-toolbar,
-.dark-mode .articulos-form,
-.dark-mode .articulos-table-container {
-  background: #020617;
+.form-grid textarea {
+  height: 70px;
+  resize: none;
 }
 
-.dark-mode label,
-.dark-mode th,
-.dark-mode td {
-  color: #e5e7eb !important;
+/* ================= BOTON + PRECIO ================= */
+
+.form-actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.dark-mode .articulos-table th {
-  background: #1e293b !important;
+/* BOTON */
+
+.btn-recalcular {
+  height: 42px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
 }
 
-.dark-mode input,
-.dark-mode select,
-.dark-mode textarea {
-  background: #020617;
-  color: #e5e7eb;
-  border: 1px solid #334155;
+.btn-recalcular:hover {
+  background: #1d4ed8;
+}
+
+/* PRECIO */
+
+.precio-box.floating {
+  width: 160px;
+  height: 70px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+
+  text-align: center;
+}
+
+.precio-box.floating span {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.precio-box.floating h1 {
+  font-size: 22px;
+  margin: 0;
+  color: #2563eb;
+}
+
+/* FLASH EFECTO PRECIO */
+
+.flash {
+  animation: flashAnim 0.5s ease;
+}
+
+@keyframes flashAnim {
+  0% { transform: scale(1); background: #eff6ff; }
+  50% { transform: scale(1.05); background: #dbeafe; }
+  100% { transform: scale(1); background: #eff6ff; }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .precio-box.floating {
+    width: 100%;
+  }
 }
