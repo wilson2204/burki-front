@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EmpresaSelect.css";
 import { useAlert } from "../../context/Alertcontext";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function EmpresaSelect() {
   const navigate = useNavigate();
@@ -18,16 +19,18 @@ export default function EmpresaSelect() {
   const [empresaSeleccionada, setEmpresaSeleccionada] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const { t } = useLanguage();
+
   useEffect(() => {
     if (!storedPIN || empresas.length === 0) {
-      showAlert("Primero iniciá sesión", "info");
+      showAlert(t("empresaSelect.loginFirst"), "info");
       navigate("/login");
     }
   }, []);
 
   const handleIngresar = async () => {
     if (!empresaSeleccionada) {
-      return showAlert("Seleccioná una empresa", "info");
+      return showAlert(t("empresaSelect.selectCompany"), "info");
     }
 
     try {
@@ -54,14 +57,14 @@ export default function EmpresaSelect() {
 
       if (!res.ok) {
         if (res.status === 401)
-          throw new Error("PIN o contraseña incorrectos");
+          throw new Error(t("empresaSelect.wrongCredentials"));
         if (res.status === 403)
-          throw new Error("Acceso prohibido");
-        throw new Error("Error del servidor");
+          throw new Error(t("empresaSelect.forbidden"));
+        throw new Error(t("empresaSelect.serverError"));
       }
 
       if (data.code === "COMPLETED") {
-        showAlert("Login exitoso ✔️", "success");
+        showAlert(t("empresaSelect.loginSuccess"), "success");
 
         // 🔥 CLAVE: guardar sesión en frontend
         localStorage.setItem("auth", "true");
@@ -74,7 +77,10 @@ export default function EmpresaSelect() {
       }
 
     } catch (error) {
-      showAlert(error.message || "Error de conexión", "error");
+      showAlert(
+  error.message || t("empresaSelect.connectionError"),
+  "error"
+);
     } finally {
       setLoading(false);
     }
@@ -83,7 +89,9 @@ export default function EmpresaSelect() {
   return (
     <div className="empresa-page">
       <div className="empresa-card">
-        <h2 className="empresa-title">Seleccioná tu empresa</h2>
+        <h2 className="empresa-title">
+  {t("empresaSelect.title")}
+</h2>
 
         <div className="empresa-grid">
           {empresas.map((e) => (
@@ -104,7 +112,9 @@ export default function EmpresaSelect() {
           onClick={handleIngresar}
           disabled={loading || !empresaSeleccionada}
         >
-          {loading ? "Ingresando..." : "Ingresar"}
+          {loading
+  ? t("empresaSelect.entering")
+  : t("empresaSelect.enter")}
         </button>
       </div>
     </div>

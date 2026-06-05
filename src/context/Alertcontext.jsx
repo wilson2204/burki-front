@@ -1,37 +1,97 @@
-import { createContext, useContext, useState, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect
+} from "react";
+
 import Alert from "../components/Alert";
 
 const AlertContext = createContext();
 
-export function AlertProvider({ children }) {
-  const [alerts, setAlerts] = useState([]);
-  const lastMessage = useRef(null); // 👈 evita duplicados
+export function AlertProvider({
+  children
+}) {
+
+  const [alerts, setAlerts] =
+    useState([]);
+
+  const [notifications, setNotifications] =
+    useState(() => {
+      const saved =
+        localStorage.getItem(
+          "notifications"
+        );
+
+      return saved
+        ? JSON.parse(saved)
+        : [];
+    });
+
+  const lastMessage = useRef(null);
+
   const alertId = useRef(0);
 
+  useEffect(() => {
+    localStorage.setItem(
+      "notifications",
+      JSON.stringify(notifications)
+    );
+  }, [notifications]);
+
   const removeAlert = (id) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
+    setAlerts((prev) =>
+      prev.filter((a) => a.id !== id)
+    );
   };
 
-  const showAlert = (message, type = "info") => {
+  const showAlert = (
+    message,
+    type = "info"
+  ) => {
 
-    // 🚫 evita duplicado inmediato (StrictMode fix)
-    if (lastMessage.current === message) return;
+    if (lastMessage.current === message)
+      return;
+
     lastMessage.current = message;
 
     const id = alertId.current++;
 
-    const newAlert = { id, message, type };
+    const newAlert = {
+      id,
+      message,
+      type,
+      time: new Date().toLocaleTimeString(),
+      read: false
+    };
 
-    setAlerts((prev) => [...prev, newAlert]);
+    // ALERTA VISUAL
+    setAlerts((prev) => [
+      ...prev,
+      newAlert
+    ]);
+
+    // 🔔 GUARDAR NOTIFICACIÓN
+    setNotifications((prev) => [
+      newAlert,
+      ...prev
+    ]);
 
     setTimeout(() => {
       removeAlert(id);
       lastMessage.current = null;
-    }, 3000);
+    }, 1500);
   };
 
   return (
-    <AlertContext.Provider value={{ showAlert }}>
+    <AlertContext.Provider
+      value={{
+        showAlert,
+        notifications,
+        setNotifications
+      }}
+    >
       {children}
 
       <div className="alert-stack">
@@ -40,7 +100,9 @@ export function AlertProvider({ children }) {
             key={alert.id}
             message={alert.message}
             type={alert.type}
-            onClose={() => removeAlert(alert.id)}
+            onClose={() =>
+              removeAlert(alert.id)
+            }
           />
         ))}
       </div>
@@ -48,4 +110,5 @@ export function AlertProvider({ children }) {
   );
 }
 
-export const useAlert = () => useContext(AlertContext);
+export const useAlert = () =>
+  useContext(AlertContext);

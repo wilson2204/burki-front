@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import "./Departamentos.css";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function Departamentos() {
+export default function Departamentos({ setSection }) {
 
+  const { t } = useLanguage();
   const API_URL = "http://localhost:8080/back_office/item-collection";
   const API_IVA = "http://localhost:8080/back_office/iva";
   const API_TAX = "http://localhost:8080/back_office/tax/item-collection";
@@ -79,7 +81,7 @@ export default function Departamentos() {
 
   const handleModificar = () => {
     const item = data.find(d => d.id === seleccionado);
-    if (!item) return alert("Seleccioná un registro");
+    if (!item) return alert(t("departamentos.selectRecord"));
 
     setModoCrear(false);
     setModoEditar(true);
@@ -114,9 +116,9 @@ export default function Departamentos() {
   };
 
   const handleEliminar = async () => {
-    if (!seleccionado) return alert("Seleccioná un registro");
+    if (!seleccionado) return alert(t("departamentos.selectRecord"));
 
-    if (!window.confirm("¿Eliminar este registro?")) return;
+    if (!window.confirm(t("departamentos.confirmDelete"))) return;
 
     try {
       const res = await fetch(`${API_URL}/${seleccionado}`, {
@@ -131,7 +133,7 @@ export default function Departamentos() {
       }
 
       if (res.status === 409) {
-        alert("No se puede eliminar: está siendo usado por otros registros");
+        alert(t("departamentos.inUse"))
         return;
       }
 
@@ -144,7 +146,7 @@ export default function Departamentos() {
 
   const handleGuardar = async () => {
 
-    if (!showForm) return alert("Primero presioná Nuevo o Modificar");
+    if (!showForm) return alert(t("departamentos.pressNewOrEdit"))
 
     try {
 
@@ -177,7 +179,7 @@ export default function Departamentos() {
       if (!res.ok) {
         const err = await res.text();
         console.error("SAVE error:", err);
-        alert("Error al guardar");
+        alert(t("departamentos.saveError"))
         return;
       }
 
@@ -214,46 +216,58 @@ export default function Departamentos() {
   const canModify = !!seleccionado;
   const canDelete = !!seleccionado;
   const canSave = showForm;
+  const handleSalir = () => {
+  setSection("home"); // ⚠️ cambiá esto si tu app usa otro nombre
+};
 
   /* ================= RENDER ================= */
 
   return (
     <div className="departamentos-container">
+<div className="toolbar">
 
-      <h2>Departamentos</h2>
+  <div className="tool nuevo" onClick={handleNuevo}>
+    <span className="emoji">➕</span>
+    <span>{t("common.new")}</span>
+  </div>
 
-      <div className="toolbar">
+  <div
+    className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
+    onClick={() => seleccionado && handleEliminar()}
+  >
+    <span className="emoji">🗑️</span>
+    <span>{t("common.delete")}</span>
+  </div>
 
-        <div className="tool nuevo" onClick={handleNuevo}>
-          <span>Nuevo</span>
-        </div>
+  <div
+    className={`tool modificar ${!canModify ? "disabled" : ""}`}
+    onClick={() => canModify && handleModificar()}
+  >
+    <span className="emoji">✏️</span>
+    <span>{t("common.edit")}</span>
+  </div>
 
-        <div
-          className={`tool modificar ${!canModify ? "disabled" : ""}`}
-          onClick={() => canModify && handleModificar()}
-        >
-          <span>Modificar</span>
-        </div>
+  <div
+    className={`tool guardar ${!canSave ? "disabled" : ""}`}
+    onClick={() => canSave && handleGuardar()}
+  >
+    <span className="emoji">💾</span>
+    <span>{t("common.save")}</span>
+  </div>
 
-        <div
-          className={`tool eliminar ${!canDelete ? "disabled" : ""}`}
-          onClick={() => canDelete && handleEliminar()}
-        >
-          <span>Eliminar</span>
-        </div>
+  <div
+    className={`tool cancelar ${!showForm ? "disabled" : ""}`}
+    onClick={() => showForm && handleCancelar()}
+  >
+    <span className="emoji">❌</span>
+    <span>{t("common.cancel")}</span>
+  </div>
+  <div className="tool salir" onClick={handleSalir}>
+  <span className="emoji">🚪</span>
+  <span>{t("common.exit")}</span>
+</div>
 
-        <div
-          className={`tool guardar ${!canSave ? "disabled" : ""}`}
-          onClick={() => canSave && handleGuardar()}
-        >
-          <span>Guardar</span>
-        </div>
-
-        <div className="tool cancelar" onClick={handleCancelar}>
-          <span>Cancelar</span>
-        </div>
-
-      </div>
+</div>
 
       {/* FORM FIJO Y CONTROLADO */}
       {showForm && (
@@ -262,7 +276,7 @@ export default function Departamentos() {
           <div className="form-left">
 
             <div className="row">
-              <label>Nombre</label>
+              <label>{t("common.name")}</label>
               <input
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
@@ -270,7 +284,7 @@ export default function Departamentos() {
             </div>
 
             <div className="row">
-              <label>Detalle</label>
+              <label>{t("departamentos.detail")}</label>
               <input
                 value={form.description}
                 onChange={e => setForm({ ...form, description: e.target.value })}
@@ -278,7 +292,7 @@ export default function Departamentos() {
             </div>
 
             <div className="row">
-              <label>I.V.A</label>
+              <label>{t("departamentos.iva")}</label>
               <select
                 value={form.ivaRateId}
                 onChange={e =>
@@ -288,7 +302,7 @@ export default function Departamentos() {
                   })
                 }
               >
-                <option value="">Seleccionar</option>
+                <option value="">{t("common.select")}</option>
                 {ivas.map(i => (
                   <option key={i.id} value={i.id}>
                     {i.description}
@@ -298,7 +312,7 @@ export default function Departamentos() {
             </div>
 
             <div className="row">
-              <label>Imp. Interno</label>
+              <label>{t("departamentos.internalTax")}</label>
               <select
                 value={form.taxId}
                 onChange={e =>
@@ -308,7 +322,7 @@ export default function Departamentos() {
                   })
                 }
               >
-                <option value="">Ninguno</option>
+                <option value="">{t("common.none")}</option>
                 {taxes.map(t => (
                   <option key={t.id} value={t.id}>
                     {t.name}
@@ -318,7 +332,7 @@ export default function Departamentos() {
             </div>
 
             <div className="row">
-              <label>Ubicación</label>
+              <label>{t("departamentos.position")}</label>
               <select
                 value={form.positionButton}
                 onChange={e =>
@@ -339,7 +353,7 @@ export default function Departamentos() {
                   setForm({ ...form, weighable: e.target.checked })
                 }
               />
-              <label>Es pesable</label>
+              <label>{t("departamentos.weighable")}</label>
             </div>
 
           </div>
@@ -347,7 +361,7 @@ export default function Departamentos() {
           <div className="form-right">
 
             <button className="acceso-btn" onClick={handleAccesoRapido}>
-              Acceso rápido
+              {t("departamentos.quickAccess")}
             </button>
 
             <input
@@ -377,24 +391,65 @@ export default function Departamentos() {
         </div>
       )}
 
-      {/* TABLA */}
-      <table className="tabla">
-        <tbody>
-          {data.map(d => (
-            <tr
-              key={d.id}
-              onClick={() => setSeleccionado(d.id)}
-              className={seleccionado === d.id ? "selected" : ""}
-            >
-              <td>{d.id}</td>
-              <td>{d.name}</td>
-              <td>{d.ivaDescription || d.ivaRateId}</td>
-              <td>{d.positionButton}</td>
-              <td>{d.weighable ? "Sí" : "No"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+ {/* TABLA */}
+<table className="tabla">
+  <thead>
+    <tr>
+      <th style={{ width: "70px" }}>Nro</th>
+      <th>Departmento</th>
+      <th style={{ width: "100px" }}>Precio</th>
+      <th style={{ width: "100px" }}>IVA</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {data.map((d) => (
+      <tr
+        key={d.id}
+        onClick={() => setSeleccionado(d.id)}
+        className={seleccionado === d.id ? "selected" : ""}
+      >
+        {/* Nro */}
+        <td>{d.id}</td>
+
+        {/* Department */}
+        <td>{d.name}</td>
+
+        {/* Precio */}
+        <td>
+          {Number(d.price || 0).toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </td>
+
+        {/* IVA */}
+        <td>
+          {(() => {
+            const ivaSeleccionado = ivas.find(
+              (i) => i.id === d.ivaRateId
+            );
+
+            const porcentaje =
+              ivaSeleccionado?.rate ??
+              ivaSeleccionado?.percentage ??
+              ivaSeleccionado?.value ??
+              ivaSeleccionado?.amount;
+
+            if (porcentaje !== undefined && porcentaje !== null) {
+              return Number(porcentaje).toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              });
+            }
+
+            return ivaSeleccionado?.description || "0,00";
+          })()}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
     </div>
   );

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import "./Monedas.css";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function Monedas() {
+export default function Monedas({ setSection }) {
 
   const API_URL = "http://localhost:8080/back_office/currency";
-
+const { t } = useLanguage();
   const [data, setData] = useState([]);
   const [modoCrear, setModoCrear] = useState(false);
   const [modoEditar, setModoEditar] = useState(false);
@@ -26,7 +27,7 @@ export default function Monedas() {
       });
 
       if (res.status === 401) {
-        alert("Sesión expirada");
+        alert(t("monedas.sessionExpired"));
         return;
       }
 
@@ -59,7 +60,7 @@ export default function Monedas() {
   // EDITAR
   // =====================
   const handleModificar = () => {
-    if (!seleccionado) return alert("Seleccioná una moneda");
+    if (!seleccionado) return alert(t("monedas.selectCurrency"));
 
     setForm(seleccionado);
     setModoEditar(true);
@@ -91,12 +92,12 @@ export default function Monedas() {
       }
 
       if (res.status === 401) {
-        alert("No autorizado");
+        alert(t("monedas.unauthorized"));
         return;
       }
 
       if (res.status === 422) {
-        alert("Datos inválidos");
+        alert(t("monedas.invalidData"));
         return;
       }
 
@@ -131,12 +132,12 @@ export default function Monedas() {
       }
 
       if (res.status === 404) {
-        alert("No existe la moneda");
+        alert(t("monedas.currencyNotFound"));
         return;
       }
 
       if (res.status === 422) {
-        alert("Error de formato");
+        alert(t("monedas.formatError"));
         return;
       }
 
@@ -149,9 +150,8 @@ export default function Monedas() {
   // 🔥 DELETE
   // =====================
   const eliminar = async () => {
-    if (!seleccionado) return alert("Seleccioná una moneda");
-
-    const ok = confirm("¿Eliminar moneda?");
+    if (!seleccionado) return alert(t("monedas.selectCurrency"));
+    const ok = confirm(t("monedas.confirmDelete"));
     if (!ok) return;
 
     try {
@@ -167,12 +167,12 @@ export default function Monedas() {
       }
 
       if (res.status === 404) {
-        alert("No existe");
+        alert(t("monedas.notFound"));
         return;
       }
 
       if (res.status === 409) {
-        alert("No se puede eliminar: está en uso");
+        alert(t("monedas.inUse"));
         return;
       }
 
@@ -205,7 +205,7 @@ export default function Monedas() {
 
         <div className="tool nuevo" data-icon="+"
           onClick={handleNuevo}>
-          <span>Nuevo</span>
+          <span>{t("common.new")}</span>
         </div>
 
         <div
@@ -213,7 +213,7 @@ export default function Monedas() {
           data-icon="−"
           onClick={eliminar}
         >
-          <span>Eliminar</span>
+          <span>{t("common.delete")}</span>
         </div>
 
         <div
@@ -221,7 +221,7 @@ export default function Monedas() {
           data-icon="✎"
           onClick={handleModificar}
         >
-          <span>Modificar</span>
+          <span>{t("common.edit")}</span>
         </div>
 
         <div
@@ -229,7 +229,7 @@ export default function Monedas() {
           data-icon="✔"
           onClick={handleGuardar}
         >
-          <span>Guardar</span>
+          <span>{t("common.save")}</span>
         </div>
 
         <div
@@ -237,8 +237,16 @@ export default function Monedas() {
           data-icon="✖"
           onClick={handleCancelar}
         >
-          <span>Cancelar</span>
+          <span>{t("common.cancel")}</span>
         </div>
+
+        <div
+  className="tool salir"
+  data-icon="←"
+  onClick={() => setSection("home")}
+>
+  <span>{t("common.exit")}</span>
+</div>
 
       </div>
 
@@ -246,19 +254,19 @@ export default function Monedas() {
       {(modoCrear || modoEditar) && (
         <div className="formulario">
 
-          <label>Nombre</label>
+          <label>{t("common.name")}</label>
           <input
             value={form.name}
             onChange={e => setForm({ ...form, name: e.target.value })}
           />
 
-          <label>Símbolo</label>
+          <label>{t("monedas.symbol")}</label>
           <input
             value={form.symbol}
             onChange={e => setForm({ ...form, symbol: e.target.value })}
           />
 
-          <label>Valor</label>
+          <label>{t("monedas.value")}</label>
           <input
             type="number"
             value={form.value}
@@ -271,10 +279,10 @@ export default function Monedas() {
       {/* 🔥 TABLA */}
       <div className="tabla">
         <div className="tabla-header">
-          <span>ID</span>
-          <span>Nombre</span>
-          <span>Símbolo</span>
-          <span>Valor</span>
+          <span>{t("common.id")}</span>
+          <span>{t("common.name")}</span>
+          <span>{t("monedas.symbol")}</span>
+          <span>{t("monedas.value")}</span>
         </div>
 
         <div className="tabla-body">

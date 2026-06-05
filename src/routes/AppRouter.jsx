@@ -7,7 +7,6 @@ import Usuarios from "../pages/Usuarios/Usuarios";
 import EmpresaSelect from "../pages/EmpresaSelect/EmpresaSelect";
 import Recuperar from "../pages/Recuperar/Recuperar";
 import Departamentos from "../pages/Departamentos/Departamentos";
-
 import PrivateRoute from "./PrivateRoute.jsx";
 
 export default function AppRouter() {

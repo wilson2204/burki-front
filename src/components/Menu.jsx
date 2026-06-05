@@ -1,22 +1,58 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/menu.css";
+import { Building2, Users } from "lucide-react";
+import {
+  Home,
+  ChevronRight,
+  Package,
+  Coins,
+  User,
+  FileText,
+  Wrench,
+  BarChart3,
+  LogOut,
+  Moon,
+  Menu as MenuIcon
+} from "lucide-react";
+import logo from "../assets/logo_bruki_login-removebg-preview.png";
+import { useLanguage } from "../context/LanguageContext";
 
-export default function Menu({ setSection, usuario, rol, permisos }) {
-
+export default function Menu({
+  section,
+  setSection,
+  usuario,
+  rol,
+  permisos,
+  collapsed,
+  setCollapsed,
+  showQuickAccess,
+  setShowQuickAccess
+}){
   const [openSystem, setOpenSystem] = useState(false);
   const [openParametros, setOpenParametros] = useState(false);
   const [openImpuestos, setOpenImpuestos] = useState(false);
-
+  const [openEmpresa, setOpenEmpresa] = useState(false);
   const [foto, setFoto] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
+  const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("theme") === "dark";});
   const navigate = useNavigate();
+const { t } = useLanguage();
 
   useEffect(() => {
     const fotoGuardada = localStorage.getItem("fotoPerfil");
     if (fotoGuardada) setFoto(fotoGuardada);
   }, []);
+  useEffect(() => {
+  if (darkMode) {
+    document.body.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.body.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+  }
+}, [darkMode]);
 
   const iniciales = usuario
     ? usuario.split(" ").map((p) => p[0]).join("").toUpperCase()
@@ -64,201 +100,323 @@ export default function Menu({ setSection, usuario, rol, permisos }) {
   };
 
   return (
-    <aside className="sidebar">
+    <>
+<button
+  className={`sidebar-collapse-btn ${
+    collapsed ? "floating" : ""
+  }`}
+  onClick={() => setCollapsed(!collapsed)}
+>
+  <MenuIcon size={18} />
+</button>
+      <aside className={collapsed ? "sidebar hidden" : "sidebar"}>
+{/* HEADER */}
+<div className="sidebar-header">
+ <div className="sidebar-logo">
+  <img
+    src={logo}
+    alt="BRUKI"
+    className="sidebar-logo-image"
+  />
 
-      {/* PERFIL */}
-      <div className="user-top">
-        <label className="avatar-wrapper">
-          {foto ? (
-            <img src={foto} alt="Perfil" className="user-avatar-img" />
-          ) : (
-            <div className="user-avatar">{iniciales}</div>
-          )}
-          <div className="avatar-overlay">+ Añadir foto</div>
-          <input type="file" hidden onChange={subirFoto} />
-        </label>
-
-        <div className="user-info">
-          <span className="user-name">{usuario || "Usuario"}</span>
-          <span className="user-role">{rol || "Sin rol"}</span>
-        </div>
-      </div>
-
-      {/* SISTEMA */}
-      <div className="folder" onClick={() => setOpenSystem(!openSystem)}>
-        {openSystem ? "▼" : "▶"} Sistema
-      </div>
-
-      {openSystem && (
-        <div className="tree">
-
-          <div className="tree-item" onClick={() => setSection("usuarios")}>
-            Usuarios
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("articulos")}>
-            Artículos
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("subarticulos")}>
-            Sub-Artículos
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("combos")}>
-            Combos
-          </div>
-
-          <div onClick={() => setSection("clasificaciones")}>
-  Clasificaciones
+  {!collapsed && (
+    <span className="sidebar-title">BRUKI</span>
+  )}
 </div>
 
-          <div className="menu-divider"></div>
+  <button
+    className="sidebar-collapse-btn"
+    onClick={() => setCollapsed(!collapsed)}
+  >
+    <MenuIcon size={18} />
+  </button>
+</div>
 
-          <div className="tree-item" onClick={() => setSection("cambios_precios")}>
-            Cambios de precios
-          </div>
+{/* MENÚ PRINCIPAL */}
 
-          <div className="tree-item" onClick={() => setSection("listas_precios")}>
-            Listas de precios
-          </div>
+{/* INICIO */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""} ${
+    section === "home" ? "active" : ""
+  }`}
+  onClick={() => setSection("home")}
+>
+  <span className="folder-icon">
+    <Home size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.home")}</span>}
+</div>
 
-          <div className="tree-item" onClick={() => setSection("promociones")}>
-            Promociones
-          </div>
+{/* SISTEMA */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setOpenSystem(!openSystem)}
+>
+  <span className="folder-icon">
+    <Package size={18} />
+  </span>
 
-          <div className="menu-divider"></div>
+  {!collapsed && (
+    <>
+      <span className="folder-label">{t("menu.system")}</span>
+      <ChevronRight
+        size={16}
+        className={`folder-arrow ${openSystem ? "open" : ""}`}
+      />
+    </>
+  )}
+</div>
 
-          <div className="tree-item" onClick={() => setSection("talles")}>
-            Talles
-          </div>
+{openSystem && !collapsed && (
+  <div className="tree">
+    <div className="tree-item disabled">{t("menu.users")}</div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("articulos")}>{t("menu.articles")}</div>
+    <div className="tree-item disabled">{t("menu.subArticles")}</div>
+    <div className="tree-item disabled">{t("menu.combos")}</div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("clasificaciones")}
+    >
+    {t("menu.classifications")}
+    </div>
 
-          <div className="tree-item" onClick={() => setSection("colores")}>
-            Colores
-          </div>
+    <div className="menu-divider"></div>
 
-          <div className="menu-divider"></div>
+    <div className="tree-item disabled">{t("menu.priceChanges")}</div>
+    <div className="tree-item disabled">{t("menu.priceLists")}</div>
+    <div className="tree-item disabled">{t("menu.promotions")}</div>
 
-          <div className="tree-item" onClick={() => setSection("departamentos")}>
-            Departamentos
-          </div>
+    <div className="menu-divider"></div>
 
-          <div className="tree-item" onClick={() => setSection("subdepartamentos")}>
-            Sub-Departamentos
-          </div>
+    <div className="tree-item disabled">{t("menu.sizes")}</div>
+    <div className="tree-item disabled">{t("menu.colors")}</div>
 
-          <div className="menu-divider"></div>
+    <div className="menu-divider"></div>
 
-          <div className="tree-item" onClick={() => setSection("clientes")}>
-            Clientes
-          </div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("departamentos")}
+    >
+      {t("menu.departments")}
+    </div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("subdepartamentos")}
+    >
+      {t("menu.subDepartments")}
+    </div>
 
-          <div className="tree-item" onClick={() => setSection("categorias_clientes")}>
-            Categorías de clientes
-          </div>
+    <div className="menu-divider"></div>
 
-          <div className="tree-item" onClick={() => setSection("marcas")}>
-            Marcas
-          </div>
+    <div className="tree-item disabled">{t("menu.customers")}</div>
+    <div className="tree-item disabled">{t("menu.customerCategories")}</div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("marcas")}
+    >
+      {t("menu.brands")}
+    </div>
+    <div
+      className="tree-item"
+      onClick={() => setSection("proveedores")}
+    >
+      {t("menu.suppliers")}
+    </div>
+  </div>
+)}
 
-          {/* 🔥 FIX PROVEEDORES */}
-          <div className="tree-item" onClick={() => setSection("proveedores")}>
-            Proveedores
-          </div>
+{/* PARÁMETROS */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setOpenParametros(!openParametros)}
+>
+  <span className="folder-icon">
+    <Coins size={18} />
+  </span>
 
+  {!collapsed && (
+    <>
+      <span className="folder-label">{t("menu.parameters")}</span>
+      <ChevronRight
+        size={16}
+        className={`folder-arrow ${openParametros ? "open" : ""}`}
+      />
+    </>
+  )}
+</div>
+
+{openParametros && !collapsed && (
+  <div className="tree">
+    {/* EMPRESA */}
+    <div
+      className="tree-item"
+      onClick={() => setOpenEmpresa(!openEmpresa)}
+    >
+      {openEmpresa ? "▼" : "▶"} {t("menu.company")}
+    </div>
+
+    {openEmpresa && (
+      <div className="tree" style={{ marginLeft: "15px" }}>
+        <div className="tree-item disabled">{t("menu.company")}</div>
+        <div
+          className="tree-item"
+          onClick={() => setSection("sucursales")}
+        >
+          {t("menu.branches")}
         </div>
-      )}
-
-      {/* PARAMETROS */}
-      <div className="folder" onClick={() => setOpenParametros(!openParametros)}>
-        {openParametros ? "▼" : "▶"} Parámetros
+        <div className="tree-item disabled">{t("menu.terminals")}</div>
       </div>
+    )}
 
-      {openParametros && (
-        <div className="tree">
+    {/* IMPUESTOS */}
+    <div
+      className="tree-item"
+      onClick={() => setOpenImpuestos(!openImpuestos)}
+    >
+      {openImpuestos ? "▼" : "▶"} {t("menu.taxes")}
+    </div>
 
-          <div className="tree-item" onClick={() => setSection("empresa")}>
-            Empresa
-          </div>
-
-          <div
-            className="tree-item"
-            onClick={() => setOpenImpuestos(!openImpuestos)}
-          >
-            {openImpuestos ? "▼" : "▶"} Impuestos
-          </div>
-
-          {openImpuestos && (
-            <div className="tree" style={{ marginLeft: "15px" }}>
-              <div className="tree-item" onClick={() => setSection("iva")}>
-                IVA
-              </div>
-
-              <div className="tree-item" onClick={() => setSection("otros_tributos")}>
-                Otros tributos
-              </div>
-            </div>
-          )}
-
-          <div className="tree-item" onClick={() => setSection("balanzas")}>
-            Balanzas
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("formas_pago")}>
-            Formas de pago
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("formas_pago_cuotas")}>
-            Formas de pago - cuotas
-          </div>
-
-          {/* 🔥 FIX MONEDAS */}
-          <div className="tree-item" onClick={() => setSection("monedas")}>
-            Moneda extranjera
-          </div>
-
-          <div className="menu-divider"></div>
-
-          <div className="tree-item" onClick={() => setSection("funciones_usuario")}>
-            Funciones de usuarios
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("movimientos_stock")}>
-            Tipos de movimientos de stock
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("config_pos")}>
-            Configuración POS
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("config_general")}>
-            Configuración General
-          </div>
-
-          <div className="tree-item" onClick={() => setSection("asistente")}>
-            Asistente de configuración
-          </div>
-
+    {openImpuestos && (
+      <div className="tree" style={{ marginLeft: "15px" }}>
+        <div className="tree-item disabled">{t("menu.vat")}</div>
+        <div
+          className="tree-item"
+          onClick={() => setSection("otros_tributos")}
+        >
+          {t("menu.otherTaxes")}
         </div>
-      )}
+      </div>
+    )}
 
-      {/* RESTO */}
-      <div className="folder" onClick={() => setSection("stock")}>
-        Stock
+    <div className="tree-item disabled">{t("menu.scales")}</div>
+    <div className="tree-item disabled">{t("menu.paymentMethods")}</div>
+    <div className="tree-item disabled">{t("menu.installments")}</div>
+
+    <div
+      className="tree-item"
+      onClick={() => setSection("monedas")}
+    >
+      {t("menu.foreignCurrency")}
+    </div>
+
+    <div className="menu-divider"></div>
+
+    <div className="tree-item disabled">{t("menu.userRoles")}</div>
+    <div className="tree-item disabled">
+      {t("menu.stockMovements")}
+    </div>
+    <div className="tree-item disabled">{t("menu.posConfiguration")}</div>
+    <div className="tree-item disabled">{t("menu.generalConfiguration")}</div>
+    <div className="tree-item disabled">
+      {t("menu.configurationWizard")}
+    </div>
+  </div>
+)}
+
+{/* RESTO DEL MENÚ */}
+<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+  <span className="folder-icon">
+    <Package size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.stock")}</span>}
+</div>
+
+<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+  <span className="folder-icon">
+    <Coins size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.fiscal")}</span>}
+</div>
+
+<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+  <span className="folder-icon">
+    <User size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.myInformation")}</span>}
+</div>
+
+<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+  <span className="folder-icon">
+    <FileText size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.reports")}</span>}
+</div>
+
+<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+  <span className="folder-icon">
+    <Wrench size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.tools")}</span>}
+</div>
+
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setSection("Estadisticas")}
+>
+  <span className="folder-icon">
+    <BarChart3 size={18} />
+  </span>
+  {!collapsed && <span className="folder-label">{t("menu.statistics")}</span>}
+</div>
+
+{/* BOTÓN SALIR */}
+<div className="logout" onClick={handleLogout}>
+  <LogOut size={18} />
+  {!collapsed && (
+    <span>
+      {isLoggingOut
+  ? t("menu.loggingOut")
+  : t("common.exit")}
+    </span>
+  )}
+</div>
+{showQuickAccess && (
+  <div className="quick-access-wrapper">
+    <div className="quick-access-bar">
+
+      <div className="quick-item" onClick={() => setSection("articulos")}>
+        <Package size={42} />
+        <span>{t("menu.articles")}</span>
       </div>
 
-      <div className="folder" onClick={() => setSection("fiscal")}>
-        Fiscal
+      <div className="quick-item" onClick={() => setSection("departamentos")}>
+        <Building2 size={42} />
+        <span>{t("menu.departmentsShort")}</span>
       </div>
 
-      <div className="folder" onClick={() => setSection("Mi Información")}>
-        Mi Información
+      <div className="quick-item" onClick={() => setSection("usuarios")}>
+        <Users size={42} />
+        <span>{t("menu.customers")}</span>
       </div>
 
-      {/* LOGOUT */}
-      <div className="logout" onClick={handleLogout}>
-        {isLoggingOut ? "Cerrando sesión..." : "Salir"}
+      <div className="quick-item salir" onClick={() => navigate("/login")}>
+        <LogOut size={42} />
+        <span>{t("common.exit")}</span>
       </div>
 
-    </aside>
+    </div>
+  </div>
+)}
+
+{/* TARJETA MODO OSCURO */}
+{!collapsed && (
+  <div
+    className="dark-mode-card"
+    onClick={() => setDarkMode(!darkMode)}
+    style={{ cursor: "pointer" }}
+  >
+    <div className="dark-mode-left">
+      <Moon size={18} />
+      <span>{t("menu.darkMode")}</span>
+    </div>
+
+    <span>{darkMode ? "🌙 ON" : "☀️ OFF"}</span>
+  </div>
+)}
+
+      </aside>
+    </>
   );
 }

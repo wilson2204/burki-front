@@ -149,7 +149,7 @@ body.dark .alert.warning {
   width: 100%;
   background: currentColor;
   opacity: 0.35;
-  animation: progressBar 3s linear forwards;
+  animation: progress 1.5s linear forwards;
 }
 
 @keyframes progressBar {
@@ -172,4 +172,146 @@ body.dark .alert.warning {
 }
 .alert {
   pointer-events: auto;
+}
+
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  min-width: 320px;
+  max-width: 420px;
+
+  padding: 14px 16px;
+
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  color: white;
+
+  z-index: 9999;
+
+  animation: slideIn 0.3s ease;
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.18);
+}
+
+.alert.success {
+  background: linear-gradient(
+    135deg,
+    #22c55e,
+    #16a34a
+  );
+}
+
+.alert.error {
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+}
+
+.alert.warning {
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #d97706
+  );
+}
+
+.alert.info {
+  background: linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb
+  );
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-icon {
+  font-size: 22px;
+}
+
+.alert-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-message {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.alert-time {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.alert-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.alert-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  height: 3px;
+  width: 100%;
+
+  background: rgba(255,255,255,0.6);
+
+  animation: progress 1.5s linear forwards;
+}
+
+.alert.closing {
+  animation: slideOut 0.3s ease forwards;
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  to {
+    opacity: 0;
+    transform: translateX(120%);
+  }
 }

@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import "./Subdepartamentos.css";
+import { useLanguage } from "../../context/LanguageContext";
 
 const API_SUB = "http://localhost:8080/back_office/item-sub-collection";
 const API_DEP = "http://localhost:8080/back_office/item-collection";
 
-export default function SubDepartamentos() {
+export default function SubDepartamentos({ setSection }) {
+
+const { t } = useLanguage();
 
   const [modo, setModo] = useState("tabla");
 
@@ -93,7 +96,7 @@ export default function SubDepartamentos() {
   // =========================
   const guardar = async () => {
 
-    if (!nombre || !departamento) return alert("Complete los datos");
+    if (!nombre || !departamento) return alert(t("subdepartamentos.completeData"));
 
     try {
 
@@ -137,7 +140,7 @@ export default function SubDepartamentos() {
 
     } catch (err) {
       console.error(err);
-      alert("Error guardando");
+      alert(t("subdepartamentos.saveError"));
     }
   };
 
@@ -146,7 +149,7 @@ export default function SubDepartamentos() {
   // =========================
   const modificar = () => {
 
-    if (seleccionado === null) return alert("Seleccione un registro");
+    if (seleccionado === null) return alert(t("subdepartamentos.selectRecord"));
 
     const item = subdepartamentos[seleccionado];
 
@@ -160,8 +163,8 @@ export default function SubDepartamentos() {
   // =========================
   const eliminar = async () => {
 
-    if (seleccionado === null) return alert("Seleccione un registro");
-    if (!window.confirm("¿Eliminar?")) return;
+    if (seleccionado === null) return alert(t("subdepartamentos.selectRecord"));
+    if (!window.confirm(t("subdepartamentos.confirmDelete"))) return;
 
     try {
 
@@ -179,25 +182,24 @@ export default function SubDepartamentos() {
 
     } catch (err) {
       console.error(err);
-      alert("Error eliminando");
+      alert(t("subdepartamentos.deleteError"));
     }
   };
 
   const salir = () => {
-    setModo("tabla");
-    setSeleccionado(null);
-  };
+  setSection("home"); // ⚠️ cambiar si tu app usa otro nombre
+};
 
   return (
     <div className="sub-container">
 
-      <h2>Sub-Departamentos</h2>
+      <h2>{t("subdepartamentos.title")}</h2>
 
       {/* ================= TOOLBAR PRO ================= */}
       <div className="toolbar">
 
         <button className="tool nuevo" data-icon="➕" onClick={nuevo}>
-          <span>Nuevo</span>
+          <span>{t("common.new")}</span>
         </button>
 
         <button
@@ -205,7 +207,7 @@ export default function SubDepartamentos() {
           data-icon="🗑️"
           onClick={eliminar}
         >
-          <span>Eliminar</span>
+          <span>{t("common.delete")}</span>
         </button>
 
         <button
@@ -213,17 +215,19 @@ export default function SubDepartamentos() {
           data-icon="✏️"
           onClick={modificar}
         >
-          <span>Modificar</span>
+          <span>{t("common.edit")}</span>
         </button>
 
         <button className="tool guardar" data-icon="💾" onClick={guardar}>
-          <span>Guardar</span>
+          <span>{t("common.save")}</span>
         </button>
 
         <button className="tool cancelar" data-icon="❌" onClick={cancelar}>
-          <span>Cancelar</span>
+          <span>{t("common.cancel")}</span>
         </button>
-
+        <button className="tool salir" data-icon="🚪" onClick={salir}>
+        <span>{t("common.exit")}</span>
+        </button>
       </div>
 
       {/* ================= TABLA ================= */}
@@ -233,9 +237,9 @@ export default function SubDepartamentos() {
 
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Departamento</th>
-              <th>SubDepartamento</th>
+              <th>{t("common.id")}</th>
+              <th>{t("departamentos.title")}</th>
+              <th>{t("subdepartamentos.single")}</th>
             </tr>
           </thead>
 
@@ -268,13 +272,13 @@ export default function SubDepartamentos() {
 
         <div className="form-sub">
 
-          <label>Departamento</label>
+          <label>{t("departamentos.title")}</label>
 
           <select
             value={departamento}
             onChange={(e) => setDepartamento(e.target.value)}
           >
-            <option value="">Seleccione</option>
+            <option value="">{t("common.select")}</option>
 
             {departamentos.map(d => (
               <option key={d.id} value={d.id}>
@@ -284,7 +288,7 @@ export default function SubDepartamentos() {
 
           </select>
 
-          <label>SubDepartamento</label>
+          <label>{t("subdepartamentos.single")}</label>
 
           <input
             value={nombre}

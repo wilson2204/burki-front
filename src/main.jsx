@@ -10,6 +10,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 import { registerSW } from 'virtual:pwa-register'
 
+import { LanguageProvider } from "./context/LanguageContext";
 
 const updateSW = registerSW({
   immediate: true,
@@ -25,10 +26,12 @@ const updateSW = registerSW({
 })
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <LanguageProvider>
+  <AuthProvider>
     <AlertProvider>
-      <AuthProvider>
-        <AppRouter />
-      </AuthProvider>
+      <AppRouter />
     </AlertProvider>
+  </AuthProvider>
+</LanguageProvider>
   </React.StrictMode>
 );

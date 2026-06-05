@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import "./marcas.css";
+import "./Marcas.css";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function Marcas() {
+export default function Marcas({ setSection }) {
 
+  const { t } = useLanguage();
   const [marcas, setMarcas] = useState([]);
   const [nuevaMarca, setNuevaMarca] = useState("");
   const [marcaEditada, setMarcaEditada] = useState("");
@@ -24,12 +26,11 @@ export default function Marcas() {
       });
 
       if (res.status === 401) {
-        alert("Sesión expirada");
-        return;
+        alert(t("marcas.sessionExpired"));
       }
 
       if (res.status === 403) {
-        alert("No tenés permisos para ver marcas");
+        alert(t("marcas.loadError"));
         return;
       }
 
@@ -94,17 +95,17 @@ export default function Marcas() {
       }
 
       if (res.status === 401) {
-        alert("Sesión expirada");
+        alert(t("marcas.sessionExpired"));
         return;
       }
 
       if (res.status === 403) {
-        alert("No tenés permisos para crear marcas");
+        alert(t("marcas.noCreatePermission"));
         return;
       }
 
       if (res.status === 422) {
-        alert("Nombre inválido");
+        alert(t("marcas.invalidName"));
         return;
       }
 
@@ -112,7 +113,7 @@ export default function Marcas() {
 
     } catch (error) {
       console.error("Error creando marca:", error);
-      alert("Error de conexión");
+      alert(t("marcas.connectionError"));
     }
   };
 
@@ -144,22 +145,22 @@ export default function Marcas() {
       }
 
       if (res.status === 401) {
-        alert("Sesión expirada");
+        alert(t("marcas.sessionExpired"));
         return;
       }
 
       if (res.status === 403) {
-        alert("No tenés permisos para modificar marcas");
+        alert(t("marcas.noEditPermission"));
         return;
       }
 
       if (res.status === 404) {
-        alert("La marca no existe");
+        alert(t("marcas.brandNotFound"));
         return;
       }
 
       if (res.status === 422) {
-        alert("Nombre inválido");
+        alert(t("marcas.invalidName"));
         return;
       }
 
@@ -167,7 +168,7 @@ export default function Marcas() {
 
     } catch (error) {
       console.error("Error modificando marca:", error);
-      alert("Error de conexión");
+      alert(t("marcas.connectionError"));
     }
   };
 
@@ -176,11 +177,11 @@ export default function Marcas() {
   // =========================
   const eliminarMarca = async () => {
     if (!seleccionada) {
-      alert("Seleccioná una marca");
+      alert(t("marcas.selectBrand"));
       return;
     }
 
-    const confirmar = confirm("¿Eliminar marca?");
+    const confirmar = confirm(t("marcas.confirmDelete"));
     if (!confirmar) return;
 
     try {
@@ -196,17 +197,17 @@ export default function Marcas() {
       }
 
       if (res.status === 401) {
-        alert("Sesión expirada");
+        alert(t("marcas.sessionExpired"));
         return;
       }
 
       if (res.status === 403) {
-        alert("No tenés permisos para eliminar marcas");
+        alert(t("marcas.noViewPermission"));
         return;
       }
 
       if (res.status === 404) {
-        alert("La marca no existe");
+        alert(t("marcas.brandNotFound"));
         return;
       }
 
@@ -217,6 +218,13 @@ export default function Marcas() {
       alert("Error de conexión");
     }
   };
+  // =========================
+  // Salir
+  // =========================
+
+  const salir = () => {
+  setSection("home"); // ⚠️ cambiá si tu app usa "home" u otro nombre
+};
 
   return (
     <div className="marcas-container">
@@ -230,18 +238,18 @@ export default function Marcas() {
             setModoEditar(false);
           }}
         >
-          ➕ Nuevo
+          ➕ {t("common.new")}
         </button>
 
         <button className="btn" onClick={eliminarMarca}>
-          🗑 Eliminar
+          🗑 {t("common.delete")}
         </button>
 
         <button
           className="btn"
           onClick={() => {
             if (!seleccionada) {
-              alert("Seleccioná una marca");
+              alert(t("marcas.selectBrand"));
               return;
             }
 
@@ -252,7 +260,7 @@ export default function Marcas() {
             setModoCrear(false);
           }}
         >
-          ✏️ Modificar
+          ✏️ {t("common.edit")}
         </button>
 
         <button
@@ -260,7 +268,7 @@ export default function Marcas() {
           disabled={!modoCrear && !modoEditar}
           onClick={modoCrear ? crearMarca : modificarMarca}
         >
-          💾 Guardar
+          💾 {t("common.save")}
         </button>
 
         <button
@@ -273,12 +281,15 @@ export default function Marcas() {
             setMarcaEditada("");
           }}
         >
-          ❌ Cancelar
+          ❌ {t("common.cancel")}
         </button>
 
         <button className="btn" onClick={cargarMarcas}>
-          🔄 Recargar
+          🔄 {t("marcas.reload")}
         </button>
+        <button className="btn" onClick={salir}>
+  🚪 {t("common.exit")}
+</button>
       </div>
 
       {/* 🔥 INPUT */}
@@ -286,7 +297,7 @@ export default function Marcas() {
         <div className="form-nueva">
           <input
             type="text"
-            placeholder="Nombre de la marca"
+            placeholder={t("marcas.brandName")}
             value={modoCrear ? nuevaMarca : marcaEditada}
             onChange={(e) =>
               modoCrear
@@ -301,8 +312,8 @@ export default function Marcas() {
       <table className="tabla">
         <thead>
           <tr>
-            <th>Código</th>
-            <th>Nombre</th>
+            <th>{t("common.id")}</th>
+            <th>{t("common.name")}</th>
           </tr>
         </thead>
 

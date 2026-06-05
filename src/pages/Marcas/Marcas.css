@@ -1,40 +1,346 @@
+/* ========================================= */
+/*             MARCAS - ESTILO ERP           */
+/* ========================================= */
+
 .marcas-container {
-  padding: 20px;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 14px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  min-height: 100vh;
 }
 
-.toolbar {
-  margin-bottom: 15px;
+/* ========================================= */
+/*                TOOLBAR                    */
+/* ========================================= */
+
+.marcas-container .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #d1d5db;
+
+  align-items: flex-start;
+
+  border-radius: 10px 10px 0 0;
 }
 
-.btn {
-  margin-right: 10px;
-  padding: 8px 12px;
+/* ========================================= */
+/*                BOTONES                    */
+/* ========================================= */
+
+.marcas-container .btn {
+  width: 95px;
+  height: 78px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-top: 8px;
+  gap: 8px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #ffffff,
+      #f3f4f6
+    );
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 12px;
+
   cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  transition: all .2s ease;
 }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.marcas-container .btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.9);
 }
 
-.tabla {
-  width: 100%;
-  border-collapse: collapse;
+.marcas-container .btn:active {
+  transform: scale(.97);
 }
 
-.tabla th, .tabla td {
-  border: 1px solid #ccc;
+/* ========================================= */
+/*              ICONOS BOTON                 */
+/* ========================================= */
+
+.marcas-container .btn svg {
+  width: 20px;
+  height: 20px;
+
   padding: 10px;
+
+  border-radius: 50%;
+
+  color: white;
+
+  flex-shrink: 0;
 }
 
-.tabla tr:hover {
-  background-color: #f5f5f5;
+/* COLORES */
+
+.marcas-container .btn.new svg {
+  background: #2563eb;
 }
 
-.selected {
-  background-color: #d0ebff !important;
+.marcas-container .btn.delete svg {
+  background: #2563eb;
 }
 
-.form-nueva {
-  margin-bottom: 10px;
+.marcas-container .btn.edit svg,
+.marcas-container .btn.modify svg {
+  background: #f97316;
+}
+
+.marcas-container .btn.save svg {
+  background: #059669;
+}
+
+.marcas-container .btn.cancel svg {
+  background: #ef4444;
+}
+
+.marcas-container .btn.exit svg {
+  background: #0ea5e9;
+}
+
+/* TEXTO */
+
+.marcas-container .btn span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+
+  text-align: center;
+  line-height: 1;
+}
+
+/* ========================================= */
+/*                  FORM                     */
+/* ========================================= */
+
+.marcas-container .form-nueva {
+  margin-top: 14px;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+/* HEADER */
+
+.marcas-container .form-header {
+  background: #2563eb;
+  color: white;
+
+  padding: 12px 16px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.marcas-container .form-header::before {
+  content: "🏷️";
+}
+
+/* BODY */
+
+.marcas-container .form-body {
+  padding: 18px;
+}
+
+/* INPUT */
+
+.marcas-container .form-nueva input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: .2s;
+}
+
+.marcas-container .form-nueva input:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* ========================================= */
+/*                  TABLA                    */
+/* ========================================= */
+
+.marcas-container .tabla {
+  width: 100%;
+
+  margin-top: 14px;
+
+  border-collapse: collapse;
+
+  background: white;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* HEADER */
+
+.marcas-container .tabla th {
+  background: #eff6ff;
+
+  color: #1e3a8a;
+
+  text-align: left;
+
+  padding: 14px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  border-bottom: 1px solid #dbeafe;
+}
+
+/* ROWS */
+
+.marcas-container .tabla tr {
+  border-bottom: 1px solid #e5e7eb;
+
+  cursor: pointer;
+
+  transition: .15s;
+}
+
+.marcas-container .tabla tr:hover {
+  background: #f9fafb;
+}
+
+.marcas-container .tabla td {
+  padding: 14px;
+
+  font-size: 14px;
+
+  color: #374151;
+}
+
+/* FILA SELECCIONADA */
+
+.marcas-container .selected {
+  background: #dbeafe !important;
+}
+
+.marcas-container .selected td {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+/* ========================================= */
+/*                BUSCADOR                   */
+/* ========================================= */
+
+.marcas-container .toolbar-right {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.marcas-container .toolbar-right input {
+  height: 36px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  outline: none;
+}
+
+.marcas-container .toolbar-right input:focus {
+  border-color: #2563eb;
+}
+
+/* ========================================= */
+/*               RESPONSIVE                  */
+/* ========================================= */
+
+@media (max-width: 900px) {
+
+  .marcas-container .toolbar {
+    gap: 10px;
+  }
+
+  .marcas-container .btn {
+    width: 88px;
+    height: 74px;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .marcas-container {
+    padding: 10px;
+  }
+
+  .marcas-container .toolbar {
+    justify-content: center;
+  }
+
+  .marcas-container .toolbar-right {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .marcas-container .toolbar-right input {
+    width: 100%;
+  }
+
+  .marcas-container .tabla {
+    display: block;
+    overflow-x: auto;
+  }
+
 }

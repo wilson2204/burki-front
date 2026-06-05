@@ -1,54 +1,307 @@
+/* =========================================
+   GLOBAL THEME SYSTEM
+========================================= */
+
 /* =========================
-   THEME SYSTEM (GLOBAL)
+   LIGHT MODE (DEFAULT)
 ========================= */
 
 :root {
 
-  /* ===== LIGHT MODE ===== */
-
+  /* BACKGROUNDS */
   --bg-primary: #f4f6f9;
   --bg-secondary: #ffffff;
+  --bg-tertiary: #f8fafc;
 
+  /* TEXT */
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
+  --text-muted: #94a3b8;
 
+  /* BORDERS */
   --border-color: #e5e7eb;
 
+  /* TABLES */
   --table-header: #f3f4f6;
   --table-hover: #f9fafb;
 
+  /* BUTTONS */
   --button-bg: #ffffff;
   --button-hover: #f3f4f6;
 
+  /* INPUTS */
   --input-bg: #ffffff;
   --input-border: #d1d5db;
 
-  --shadow-card: 0 8px 25px rgba(0,0,0,0.05);
-}
+  /* CARDS */
+  --card-bg: rgba(255,255,255,0.96);
 
+  /* SHADOWS */
+  --shadow-card: 0 8px 25px rgba(0,0,0,0.05);
+
+  /* SIDEBAR */
+  --sidebar-bg: #0f172a;
+  --sidebar-hover: rgba(255,255,255,0.08);
+
+  /* ACCENT */
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+}
 
 /* =========================
    DARK MODE
 ========================= */
 
-body.dark-mode {
+body.dark {
 
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
+  /* BACKGROUNDS */
+  --bg-primary: #020617;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1e293b;
 
+  /* TEXT */
   --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
 
+  /* BORDERS */
   --border-color: #334155;
 
+  /* TABLES */
   --table-header: #1e293b;
   --table-hover: #334155;
 
+  /* BUTTONS */
   --button-bg: #1e293b;
   --button-hover: #334155;
 
+  /* INPUTS */
   --input-bg: #1e293b;
   --input-border: #334155;
 
+  /* CARDS */
+  --card-bg: rgba(30,41,59,0.92);
+
+  /* SHADOWS */
   --shadow-card: 0 20px 45px rgba(0,0,0,0.6);
+
+  /* SIDEBAR */
+  --sidebar-bg: #020617;
+  --sidebar-hover: rgba(255,255,255,0.06);
+
+  /* ACCENT */
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+}
+
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+/* =========================================
+   BODY
+========================================= */
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  font-family:
+    "Inter",
+    "Segoe UI",
+    sans-serif;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* =========================================
+   LINKS
+========================================= */
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+button {
+  background: var(--button-bg);
+  color: var(--text-primary);
+
+  border: 1px solid var(--border-color);
+
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+input,
+textarea,
+select {
+  background: var(--input-bg);
+  color: var(--text-primary);
+
+  border: 1px solid var(--input-border);
+
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 0 0 4px rgba(37,99,235,0.12);
+}
+
+/* =========================================
+   TABLES
+========================================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+thead {
+  background: var(--table-header);
+}
+
+th,
+td {
+  padding: 12px;
+
+  border-bottom:
+    1px solid var(--border-color);
+
+  text-align: left;
+}
+
+tbody tr:hover {
+  background: var(--table-hover);
+}
+
+/* =========================================
+   GLOBAL CARDS
+========================================= */
+
+.card,
+.box,
+.panel,
+.modal,
+.widget {
+  background: var(--card-bg);
+
+  color: var(--text-primary);
+
+  border:
+    1px solid var(--border-color);
+
+  border-radius: 16px;
+
+  box-shadow: var(--shadow-card);
+
+  transition: all 0.3s ease;
+}
+
+/* =========================================
+   SIDEBAR GLOBAL
+========================================= */
+
+.sidebar {
+  background: var(--sidebar-bg);
+}
+
+/* =========================================
+   TEXT HELPERS
+========================================= */
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* =========================================
+   GLOBAL TRANSITIONS
+========================================= */
+
+.dashboard,
+.dashboard-content,
+.panel-card,
+.kpi-card,
+.quick-access-bar,
+.toolbar,
+.table-container,
+.sidebar,
+.card,
+.box,
+.panel {
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }

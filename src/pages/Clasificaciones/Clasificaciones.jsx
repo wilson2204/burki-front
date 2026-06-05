@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import "./Clasificaciones.css";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function Clasificaciones({ setSection, onUpdate }) {
-
+    const { t } = useLanguage();
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(null);
   const [view, setView] = useState("table");
@@ -134,13 +135,13 @@ export default function Clasificaciones({ setSection, onUpdate }) {
 
       {/* TOOLBAR PRO */}
       <div className="toolbar">
-        <div className="tool nuevo" data-icon="➕" onClick={nuevo}><span>Nuevo</span></div>
-        <div className="tool eliminar" data-icon="🗑️" onClick={eliminar}><span>Eliminar</span></div>
-        <div className="tool duplicar" data-icon="📄" onClick={duplicar}><span>Duplicar</span></div>
-        <div className="tool modificar" data-icon="✏️" onClick={modificar}><span>Modificar</span></div>
-        <div className="tool guardar" data-icon="💾" onClick={guardar}><span>Guardar</span></div>
-        <div className="tool cancelar" data-icon="❌" onClick={() => setView("table")}><span>Cancelar</span></div>
-        <div className="tool salir" data-icon="🚪" onClick={() => setSection && setSection("home")}><span>Salir</span></div>
+        <div className="tool nuevo" data-icon="➕" onClick={nuevo}><span>{t("common.new")}</span></div>
+        <div className="tool eliminar" data-icon="🗑️" onClick={eliminar}><span>{t("common.delete")}</span></div>
+        <div className="tool duplicar" data-icon="📄" onClick={duplicar}><span>{t("common.duplicate")}</span></div>
+        <div className="tool modificar" data-icon="✏️" onClick={modificar}><span>{t("common.edit")}</span></div>
+        <div className="tool guardar" data-icon="💾" onClick={guardar}><span>{t("common.save")}</span></div>
+        <div className="tool cancelar" data-icon="❌" onClick={() => setView("table")}><span>{t("common.cancel")}</span></div>
+        <div className="tool salir" data-icon="🚪" onClick={() => setSection && setSection("home")}><span>{t("common.exit")}</span></div>
       </div>
 
       <div className="contenido">
@@ -150,8 +151,8 @@ export default function Clasificaciones({ setSection, onUpdate }) {
           <table>
             <thead>
               <tr>
-                <th>Código</th>
-                <th>Nombre</th>
+                <th>{t("common.code")}</th>
+<th>{t("common.name")}</th>
               </tr>
             </thead>
             <tbody>
@@ -174,12 +175,12 @@ export default function Clasificaciones({ setSection, onUpdate }) {
           <div className="form">
 
             <div className="row">
-              <label>Código</label>
+              <label>{t("common.code")}</label>
               <input value={form.id || ""} disabled />
             </div>
 
             <div className="row">
-              <label>Nombre</label>
+              <label>{t("common.name")}</label>
               <input
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}

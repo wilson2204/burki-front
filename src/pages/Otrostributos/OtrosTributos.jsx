@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import "./OtrosTributos.css";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function OtrosTributos() {
+export default function OtrosTributos({ setSection }) {
 
   const [data, setData] = useState([]);
   const [modoCrear, setModoCrear] = useState(false);
   const [modoEditar, setModoEditar] = useState(false);
   const [seleccionado, setSeleccionado] = useState(null);
-
+const { t } = useLanguage();
   const [form, setForm] = useState({
     codAfip: "",
     nombre: "",
@@ -15,18 +16,22 @@ export default function OtrosTributos() {
     valor: ""
   });
 
+  const salir = () => {
+  setSection("home");
+};
+
   const API_URL = "http://localhost:8080/back_office/tax";
 
-  const AFIP_CODES = [
-    { value: "NATIONAL_TAX", label: "Impuesto nacional" },
-    { value: "PROVINCIAL_TAX", label: "Impuesto provincial" },
-    { value: "MUNICIPAL_TAX", label: "Impuesto municipal" },
-    { value: "INTERNAL_TAX", label: "Impuesto interno" },
-    { value: "IIBB", label: "Ingresos brutos" },
-    { value: "IVA_PERCEPTION", label: "Percepción de IVA" },
-    { value: "IIBB_PERCEPTION", label: "Percepción de IIBB" },
-    { value: "OTHERS", label: "Otros" }
-  ];
+const AFIP_CODES = [
+  { value: "NATIONAL_TAX", label: t("otrosTributos.nationalTax") },
+  { value: "PROVINCIAL_TAX", label: t("otrosTributos.provincialTax") },
+  { value: "MUNICIPAL_TAX", label: t("otrosTributos.municipalTax") },
+  { value: "INTERNAL_TAX", label: t("otrosTributos.internalTax") },
+  { value: "IIBB", label: t("otrosTributos.iibb") },
+  { value: "IVA_PERCEPTION", label: t("otrosTributos.ivaPerception") },
+  { value: "IIBB_PERCEPTION", label: t("otrosTributos.iibbPerception") },
+  { value: "OTHERS", label: t("otrosTributos.others") }
+];
 
   const cargarDatos = async () => {
     try {
@@ -176,48 +181,52 @@ export default function OtrosTributos() {
       <div className="toolbar">
 
         <div className="tool nuevo" data-icon="+" onClick={handleNuevo}>
-          <span>Nuevo</span>
+          <span>{t("common.new")}</span>
         </div>
 
         <div className={`tool eliminar ${!seleccionado ? "disabled" : ""}`} data-icon="−" onClick={eliminar}>
-          <span>Eliminar</span>
+          <span>{t("common.delete")}</span>
         </div>
 
         <div className={`tool modificar ${!seleccionado ? "disabled" : ""}`} data-icon="✎" onClick={handleModificar}>
-          <span>Modificar</span>
+          <span>{t("common.edit")}</span>
         </div>
 
         <div className={`tool guardar ${!modoCrear && !modoEditar ? "disabled" : ""}`} data-icon="✔" onClick={handleGuardar}>
-          <span>Guardar</span>
+          <span>{t("common.save")}</span>
         </div>
 
         <div className={`tool cancelar ${!modoCrear && !modoEditar ? "disabled" : ""}`} data-icon="✖" onClick={handleCancelar}>
-          <span>Cancelar</span>
+          <span>{t("common.cancel")}</span>
         </div>
+        
+        <div className="tool exit" data-icon="🚪" onClick={salir}>
+  <span>{t("common.exit")}</span>
+</div>
 
       </div>
 
       {(modoCrear || modoEditar) && (
         <div className="formulario">
 
-          <label>Código AFIP</label>
+          <label>{t("otrosTributos.afipCode")}</label>
           <select value={form.codAfip} onChange={e => setForm({ ...form, codAfip: e.target.value })}>
-            <option value="">Seleccionar</option>
+            <option value="">{t("common.select")}</option>
             {AFIP_CODES.map(c => (
               <option key={c.value} value={c.value}>{c.label}</option>
             ))}
           </select>
 
-          <label>Nombre</label>
+          <label>{t("otrosTributos.name")}</label>
           <input value={form.nombre} onChange={e => setForm({ ...form, nombre: e.target.value })} />
 
-          <label>Tipo</label>
+          <label>{t("otrosTributos.type")}</label>
           <select value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value })}>
             <option value="$">$</option>
             <option value="%">%</option>
           </select>
 
-          <label>Valor</label>
+          <label>{t("otrosTributos.value")}</label>
           <input value={form.valor} onChange={e => setForm({ ...form, valor: e.target.value })} />
 
         </div>
@@ -227,11 +236,11 @@ export default function OtrosTributos() {
         <table className="tabla">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Cód.AFIP</th>
-              <th>Nombre</th>
-              <th>Tipo</th>
-              <th>Valor</th>
+              <th>{t("common.id")}</th>
+              <th>{t("otrosTributos.afipCode")}</th>
+              <th>{t("otrosTributos.name")}</th>
+              <th>{t("otrosTributos.type")}</th>
+              <th>{t("otrosTributos.value")}</th>
             </tr>
           </thead>
 

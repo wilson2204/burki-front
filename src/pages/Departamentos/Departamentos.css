@@ -1,42 +1,131 @@
 .departamentos-container {
   padding: 20px;
   font-family: Arial, sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
 }
 
-/* TOOLBAR */
+/* ================= TOOLBAR ================= */
+
 .toolbar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-/* WRAPPER GENERAL */
+.tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  min-height: 78px;
+  padding: 10px 14px;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+.tool:hover:not(.disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+  border-color: #93c5fd;
+}
+
+.tool .emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.tool span:last-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  text-align: center;
+}
+
+/* Colores por acción */
+
+.tool.nuevo .emoji {
+  color: #16a34a;
+}
+
+.tool.modificar .emoji {
+  color: #2563eb;
+}
+
+.tool.guardar .emoji {
+  color: #0ea5e9;
+}
+
+.tool.eliminar .emoji {
+  color: #dc2626;
+}
+
+.tool.cancelar .emoji {
+  color: #f59e0b;
+}
+
+/* Estado deshabilitado */
+
+.tool.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.tool.disabled .emoji,
+.tool.disabled span:last-child {
+  color: #94a3b8;
+}
+
+/* ================= FORMULARIO ================= */
+
 .form-wrapper {
   display: flex;
-  background: #f4f5f7;
-  border-radius: 10px;
+  gap: 30px;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
   padding: 25px;
   margin-bottom: 20px;
   position: relative;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-/* IZQUIERDA */
 .form-left {
   width: 65%;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #e5e7eb;
   padding-right: 30px;
 }
 
-/* DERECHA */
 .form-right {
   width: 35%;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* FILAS */
+/* ================= FILAS ================= */
+
 .row {
   display: flex;
   flex-direction: column;
@@ -44,77 +133,149 @@
 
 .row label {
   font-size: 13px;
-  color: #555;
-  margin-bottom: 4px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
 }
 
-/* INPUTS */
+/* ================= INPUTS ================= */
+
 .row input,
 .row select {
-  padding: 7px;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
   font-size: 14px;
+  background: #ffffff;
+  transition: all 0.2s ease;
 }
 
-/* CHECKBOX */
+.row input:focus,
+.row select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* ================= CHECKBOX ================= */
+
 .checkbox-row {
   flex-direction: row;
   align-items: center;
   gap: 10px;
 }
 
-/* BOTON ACCESO */
-.acceso-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-20%, -50%);
-  background: linear-gradient(#3a7bfd, #2d6cdf);
-  color: white;
-  border: none;
-  padding: 14px 25px;
-  border-radius: 10px;
-  font-size: 15px;
-  cursor: pointer;
+.checkbox-row label {
+  margin: 0;
 }
 
-/* PRECIO FINAL */
+/* ================= BOTÓN ACCESO ================= */
+
+.acceso-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+  transition: all 0.25s ease;
+}
+
+.acceso-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
+}
+
+/* ================= PRECIO FINAL ================= */
+
 .precio-box {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  margin-top: auto;
+  align-self: flex-end;
   text-align: right;
 }
 
 .precio-box span {
   font-size: 13px;
-  color: #666;
+  color: #64748b;
 }
 
 .precio-box h1 {
   margin: 0;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-/* TABLA */
+/* ================= TABLA ================= */
+
 .tabla {
   width: 100%;
   border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.tabla thead {
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
 }
 
 .tabla th {
-  background: #e5e5e5;
+  font-weight: 700;
+  color: #334155;
+  text-align: left;
 }
 
 .tabla th,
 .tabla td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 12px;
   font-size: 14px;
 }
 
+.tabla tbody tr {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tabla tbody tr:hover {
+  background: #f8fafc;
+}
+
 .tabla tr.selected {
-  background: #d0e2ff;
+  background: #dbeafe;
+}
+
+.tabla tr.selected td {
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .form-wrapper {
+    flex-direction: column;
+  }
+
+  .form-left,
+  .form-right {
+    width: 100%;
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .toolbar {
+    justify-content: center;
+  }
+
+  .tool {
+    min-width: 80px;
+    min-height: 72px;
+  }
 }

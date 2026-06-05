@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import "./alert.css";
 
-export default function Alert({ message, type = "info", onClose }) {
-  const [closing, setClosing] = useState(false);
+export default function Alert({
+  message,
+  type = "info",
+  onClose
+}) {
+  const [closing, setClosing] =
+    useState(false);
 
-  // ⏱ cerrar automáticamente
   useEffect(() => {
     const timer = setTimeout(() => {
       handleClose();
-    }, 3000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -16,7 +20,6 @@ export default function Alert({ message, type = "info", onClose }) {
   const handleClose = () => {
     setClosing(true);
 
-    // esperamos animación salida
     setTimeout(() => {
       onClose();
     }, 300);
@@ -26,25 +29,47 @@ export default function Alert({ message, type = "info", onClose }) {
     switch (type) {
       case "success":
         return "✔";
+
       case "error":
         return "✖";
+
       case "warning":
         return "⚠";
+
       default:
         return "ℹ";
     }
   };
 
   return (
-    <div className={`alert ${type} ${closing ? "closing" : ""}`}>
+    <div
+      className={`alert ${type} ${
+        closing ? "closing" : ""
+      }`}
+    >
       <div className="alert-content">
-        <span className="alert-icon">{getIcon()}</span>
-        <span className="alert-message">{message}</span>
+        <span className="alert-icon">
+          {getIcon()}
+        </span>
+
+        <div className="alert-text">
+          <span className="alert-message">
+            {message}
+          </span>
+
+          <small className="alert-time">
+            {new Date().toLocaleTimeString()}
+          </small>
+        </div>
       </div>
 
-      <button onClick={handleClose}>✕</button>
+      <button
+        className="alert-close"
+        onClick={handleClose}
+      >
+        ✕
+      </button>
 
-      {/* barra progreso */}
       <div className="alert-progress" />
     </div>
   );
