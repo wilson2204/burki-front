@@ -14,7 +14,7 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-/* BOTONES PRO */
+/* BOTONES */
 .tool {
   display: flex;
   flex-direction: column;
@@ -24,46 +24,52 @@
   width: 95px;
   height: 80px;
 
-  background: #f3f4f6;
+  background: var(--bg-secondary);
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 
   cursor: pointer;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08),
-              0 6px 12px rgba(0,0,0,0.06);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.08),
+    0 6px 12px rgba(0,0,0,0.06);
 
   transition: all 0.2s ease;
 }
 
 .tool::before {
   content: attr(data-icon);
+
   width: 42px;
   height: 42px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 50%;
   color: white;
+
   margin-bottom: 6px;
+
   background: #9ca3af;
 }
 
 .tool span {
   font-size: 12px;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .tool:hover {
   transform: translateY(-2px);
 }
 
-/* colores */
+/* colores botones */
 .tool.nuevo::before { background: #2563eb; }
 .tool.eliminar::before { background: #1d4ed8; }
 .tool.modificar::before { background: #9ca3af; }
-.tool.guardar::before { background: #9ca3af; }
-.tool.cancelar::before { background: #9ca3af; }
+.tool.guardar::before { background: #059669; }
+.tool.cancelar::before { background: #ef4444; }
 
 /* disabled */
 .tool.disabled {
@@ -75,19 +81,122 @@
 .tabla {
   margin-top: 10px;
   width: 100%;
+
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
-/* FORM */
+/* FORMULARIO */
 .formulario {
   margin-top: 20px;
+
   display: grid;
   grid-template-columns: 140px 1fr;
+
   gap: 12px;
+
   max-width: 600px;
+}
+
+.formulario label {
+  color: var(--text-primary);
 }
 
 .formulario input,
 .formulario select {
   height: 35px;
   padding: 6px;
+
+  background: var(--input-bg);
+  color: var(--text-primary);
+
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+}
+
+.formulario input:focus,
+.formulario select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* =====================================
+   FORZAR DARK MODE
+===================================== */
+
+body.dark .otros-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark .toolbar {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tool {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tool span {
+  color: var(--text-primary) !important;
+}
+
+/* TABLA */
+
+body.dark .tabla {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark .tabla table {
+  background: var(--bg-secondary) !important;
+}
+
+body.dark .tabla th {
+  background: var(--table-header) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla td {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla tr:hover {
+  background: var(--table-hover) !important;
+}
+
+body.dark .tabla tr.selected {
+  background: #1e40af !important;
+}
+
+body.dark .tabla tr.selected td {
+  color: #ffffff !important;
+}
+
+/* FORMULARIO */
+
+body.dark .formulario label {
+  color: var(--text-primary) !important;
+}
+
+body.dark .formulario input,
+body.dark .formulario select {
+  background: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+body.dark .formulario input:focus,
+body.dark .formulario select:focus {
+  border-color: var(--primary-color) !important;
 }

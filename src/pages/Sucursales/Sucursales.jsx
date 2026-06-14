@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Sucursales.css";
 import { useLanguage } from "../../context/LanguageContext";
 
-const API_URL = "http://localhost:8080";
+const API_URL = "/api";
 
 export default function Sucursales({ setSection }) {
 
@@ -51,7 +51,7 @@ const { t } = useLanguage();
     try {
 
       const response = await fetch(
-        `${API_URL}/back_office/branch/companies`,
+        `${API_URL}/branch/companies`,
         {
           method: "GET",
           headers: {
@@ -91,7 +91,7 @@ const { t } = useLanguage();
     try {
 
       const response = await fetch(
-        `${API_URL}/back_office/branch`,
+        `${API_URL}/branch`,
         {
           method: "GET",
           headers: {
@@ -227,7 +227,7 @@ const { t } = useLanguage();
       if (selected) {
 
         const response = await fetch(
-          `${API_URL}/back_office/branch/${selected}`,
+          `${API_URL}/branch/${selected}`,
           {
             method: "PUT",
             headers: {
@@ -275,7 +275,7 @@ const { t } = useLanguage();
       // CREATE
       // =========================
       const response = await fetch(
-        `${API_URL}/back_office/branch`,
+        `${API_URL}/branch`,
         {
           method: "POST",
           headers: {
@@ -346,7 +346,7 @@ const { t } = useLanguage();
     try {
 
       const response = await fetch(
-        `${API_URL}/back_office/branch/${selected}`,
+        `${API_URL}/branch/${selected}`,
         {
           method: "DELETE",
           headers: {

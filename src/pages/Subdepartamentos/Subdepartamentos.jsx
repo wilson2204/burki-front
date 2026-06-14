@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import "./Subdepartamentos.css";
 import { useLanguage } from "../../context/LanguageContext";
 
-const API_SUB = "http://localhost:8080/back_office/item-sub-collection";
-const API_DEP = "http://localhost:8080/back_office/item-collection";
+const API_SUB = "/api/item-sub-collection";
+const API_DEP = "/api/item-collection";
 
 export default function SubDepartamentos({ setSection }) {
 

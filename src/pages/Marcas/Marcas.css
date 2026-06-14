@@ -344,3 +344,100 @@
   }
 
 }
+
+/* ========================================= */
+/*               DARK MODE FIX               */
+/* ========================================= */
+
+body.dark .marcas-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* TOOLBAR */
+
+body.dark .marcas-container .toolbar {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* BOTONES */
+
+body.dark .marcas-container .btn {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  box-shadow: none;
+}
+
+body.dark .marcas-container .btn span {
+  color: var(--text-primary);
+}
+
+/* FORMULARIO */
+
+body.dark .marcas-container .form-nueva {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark .marcas-container .form-body {
+  background: var(--bg-secondary);
+}
+
+body.dark .marcas-container .form-nueva input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .marcas-container .form-nueva input:focus {
+  border-color: var(--primary-color);
+}
+
+/* TABLA */
+
+body.dark .marcas-container .tabla {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla thead {
+  background: var(--table-header);
+}
+
+body.dark .marcas-container .tabla th {
+  background: var(--table-header);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla td {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla tr:hover {
+  background: var(--table-hover);
+}
+
+/* FILA SELECCIONADA */
+
+body.dark .marcas-container .selected {
+  background: rgba(59, 130, 246, 0.25) !important;
+}
+
+body.dark .marcas-container .selected td {
+  color: #93c5fd;
+}
+
+/* BUSCADOR */
+
+body.dark .marcas-container .toolbar-right input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .marcas-container .toolbar-right input:focus {
+  border-color: var(--primary-color);
+}

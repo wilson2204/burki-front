@@ -217,16 +217,60 @@ input[type="number"] {
 /* =========================
    DARK MODE FIX
 ========================= */
-body.dark-mode .tool {
-  background: #1e293b;
-  border-color: #334155;
+
+body.dark .monedas-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-body.dark-mode .tool span {
-  color: #f1f5f9;
+/* BOTONES */
+
+body.dark .tool {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
 }
 
-body.dark-mode .tool::before {
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+body.dark .tool span {
+  color: var(--text-primary);
 }
 
+/* TABLA */
+
+body.dark .tabla {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark .tabla-header {
+  background: var(--table-header);
+  color: var(--text-primary);
+}
+
+body.dark .tabla-header span {
+  border-right: 1px solid var(--border-color);
+}
+
+body.dark .fila {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .fila:hover {
+  background: var(--table-hover);
+}
+
+/* FORMULARIO */
+
+body.dark .formulario label {
+  color: var(--text-primary);
+}
+
+body.dark .formulario input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .formulario input:focus {
+  border-color: var(--primary-color);
+}

@@ -305,3 +305,10 @@ tbody tr:hover {
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 }
+
+body.dark .toolbar {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+}

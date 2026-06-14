@@ -284,3 +284,81 @@
     white-space: nowrap;
   }
 }
+
+/* =====================================
+   DARK MODE FIX SUCURSALES
+===================================== */
+
+body.dark .sucursales-container {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* TOOLBAR */
+
+body.dark .toolbar {
+  background: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+body.dark .tool:not(:last-child)::after {
+  background: var(--border-color) !important;
+}
+
+body.dark .tool-label {
+  color: var(--text-primary) !important;
+}
+
+/* TABLA */
+
+body.dark .tabla {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark .tabla th {
+  background: var(--table-header) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla td {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla tbody tr:hover {
+  background: var(--table-hover) !important;
+}
+
+body.dark .tabla tbody tr.selected {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+/* FORMULARIO */
+
+body.dark .sucursal-field label {
+  color: var(--text-primary) !important;
+}
+
+body.dark .sucursal-field input,
+body.dark .sucursal-field select {
+  background: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+body.dark .sucursal-field input:focus,
+body.dark .sucursal-field select:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.15) !important;
+}
+
+body.dark .sucursal-field input:disabled,
+body.dark .sucursal-field select:disabled {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+}

@@ -1055,3 +1055,36 @@ body.dark textarea::placeholder {
   opacity:.5;
   cursor:not-allowed;
 }
+body.dark .form-wrapper,
+.app.dark .form-wrapper {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.articulos-container .toolbar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.articulos-container .toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* ========================= */
+/* FORM WRAPPER DARK FIX */
+/* ========================= */
+
+body.dark .form-wrapper,
+.app.dark .form-wrapper {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+

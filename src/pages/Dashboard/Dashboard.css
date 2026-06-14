@@ -1113,3 +1113,28 @@ body.dark .profile-preview-placeholder {
   pointer-events: none;
   filter: grayscale(100%);
 }
+
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.simple-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #475569;
+}
+
+.simple-list li:last-child {
+  border-bottom: none;
+}
+
+.kpi-icon.red {
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+}

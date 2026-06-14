@@ -15,7 +15,7 @@ import {
   Moon,
   Menu as MenuIcon
 } from "lucide-react";
-import logo from "../assets/logo_bruki_login-removebg-preview.png";
+import logo from "../assets/logo_con_sombreado-removebg-preview.png";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Menu({
@@ -33,12 +33,15 @@ export default function Menu({
   const [openParametros, setOpenParametros] = useState(false);
   const [openImpuestos, setOpenImpuestos] = useState(false);
   const [openEmpresa, setOpenEmpresa] = useState(false);
+  const [openInformes, setOpenInformes] = useState(false);
+const [openContable, setOpenContable] = useState(false);
   const [foto, setFoto] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
   return localStorage.getItem("theme") === "dark";});
   const navigate = useNavigate();
 const { t } = useLanguage();
+
 
   useEffect(() => {
     const fotoGuardada = localStorage.getItem("fotoPerfil");
@@ -77,7 +80,7 @@ const { t } = useLanguage();
     try {
       setIsLoggingOut(true);
 
-      await fetch("http://localhost:8080/back_office/auth/logout", {
+      await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include"
       });
@@ -337,12 +340,77 @@ const { t } = useLanguage();
   {!collapsed && <span className="folder-label">{t("menu.myInformation")}</span>}
 </div>
 
-<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+{/* INFORMES */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setOpenInformes(!openInformes)}
+>
   <span className="folder-icon">
     <FileText size={18} />
   </span>
-  {!collapsed && <span className="folder-label">{t("menu.reports")}</span>}
+
+  {!collapsed && (
+    <>
+      <span className="folder-label">{t("menu.reports")}</span>
+      <ChevronRight
+        size={16}
+        className={`folder-arrow ${openInformes ? "open" : ""}`}
+      />
+    </>
+  )}
 </div>
+
+{openInformes && !collapsed && (
+  <div className="tree">
+
+    <div className="tree-item disabled">Artículos</div>
+
+    <div className="tree-item disabled">Etiquetas</div>
+
+    <div className="tree-item disabled">Stock</div>
+
+    <div className="tree-item disabled">Departamentos</div>
+
+    <div className="menu-divider"></div>
+
+    <div className="tree-item disabled">Clientes</div>
+
+    <div className="tree-item disabled">Cuentas Corrientes</div>
+
+    <div className="menu-divider"></div>
+
+    <div className="tree-item disabled">Ventas</div>
+
+    <div className="tree-item disabled">Caja diaria</div>
+
+    <div className="tree-item disabled">Finanzas</div>
+
+    <div
+      className="tree-item"
+      onClick={() => setOpenContable(!openContable)}
+    >
+      {openContable ? "▼" : "▶"} Contable
+    </div>
+
+    {openContable && (
+      <div className="tree" style={{ marginLeft: "15px" }}>
+
+        <div className="tree-item disabled">
+          Subdiario IVA ventas
+        </div>
+
+        <div
+          className="tree-item"
+          onClick={() => setSection("iva_alicuotas")}
+        >
+          IVA Alícuotas
+        </div>
+
+      </div>
+    )}
+
+  </div>
+)}
 
 <div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
   <span className="folder-icon">

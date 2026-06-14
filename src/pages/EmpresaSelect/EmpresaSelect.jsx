@@ -37,7 +37,7 @@ export default function EmpresaSelect() {
       setLoading(true);
 
       const res = await fetch(
-        "http://localhost:8080/back_office/auth/login",
+        "/api/auth/login",
         {
           method: "POST",
           credentials: "include", // 🔥 USÁS COOKIE

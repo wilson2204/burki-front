@@ -22,8 +22,8 @@ export default function Proveedores({ setSection }) {
     currencyId: ""
   });
 
-  const API_URL = "http://localhost:8080/back_office/supplier";
-  const API_CURRENCY = "http://localhost:8080/back_office/currency";
+  const API_URL = "/api/supplier";
+  const API_CURRENCY = "/api/currency";
 
   // =====================
   // 🔥 GET

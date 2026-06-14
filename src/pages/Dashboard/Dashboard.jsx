@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import Menu from "../../components/Menu";
 import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip
+} from "recharts";
+import {
   Package,
   Building2,
   Boxes,
@@ -25,10 +34,12 @@ import Combos from "../Combos/Combos";
 import Empresa from "../Empresa/Empresa";
 import Sucursales from "../Sucursales/Sucursales";
 import Terminales from "../Terminales/Terminales";
+import IvaAlicuotas from "../IvaAlicuotas/IvaAlicuotas";
 import {
   useAlert
 } from "../../context/Alertcontext";
 import { useLanguage } from "../../context/LanguageContext";
+import Estadisticas from "../Estadisticas/Estadisticas";
 export default function Dashboard() {
   const [section, setSection] = useState("home");
   const [usuario, setUsuario] = useState(null);
@@ -47,12 +58,26 @@ const {
 const { language, setLanguage } = useLanguage();
 const [showNotifications, setShowNotifications] =
   useState(false);
+  const [todayStats, setTodayStats] = useState({
+  totalRevenue: 0,
+  tickets: 0,
+  averageRevenue: 0,
+});
+
+const [monthStats, setMonthStats] = useState({
+  totalRevenue: 0,
+  tickets: 0,
+  averageRevenue: 0,
+});
+
+const [criticalStock, setCriticalStock] = useState([]);
+const [salesHistory, setSalesHistory] = useState([]);
 
   // 🔥 Cargar sesión + usuario + permisos
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await fetch("http://localhost:8080/back_office/user/me", {
+        const res = await fetch("/api/user/me", {
           method: "GET",
           credentials: "include",
         });
@@ -68,7 +93,7 @@ const [showNotifications, setShowNotifications] =
         setRol(data.userRole || "USER");
 
         const resPerm = await fetch(
-          "http://localhost:8080/back_office/auth/check-permissions",
+          "/api/auth/check-permissions",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -104,6 +129,7 @@ const [showNotifications, setShowNotifications] =
     };
 
     init();
+    cargarDashboardStats();
   }, []);
   const texts = {
   es: {
@@ -221,6 +247,80 @@ const handleProfileImage = (e) => {
   reader.readAsDataURL(file);
 };
 
+const cargarDashboardStats = async () => {
+  try {
+    const [
+      salesRes,
+      todayRes,
+      monthRes,
+      criticalRes
+    ] = await Promise.all([
+      fetch(
+        "/api/report/sales/year-and-month",
+        {
+          credentials: "include",
+        }
+      ),
+
+      fetch(
+        "/api/report/sales/today",
+        {
+          credentials: "include",
+        }
+      ),
+
+      fetch(
+        "/api/report/sales/current-month",
+        {
+          credentials: "include",
+        }
+      ),
+
+      fetch(
+        "/api/report/critical-stock-items",
+        {
+          credentials: "include",
+        }
+      ),
+    ]);
+
+    const salesData = await salesRes.json();
+    const todayData = await todayRes.json();
+    const monthData = await monthRes.json();
+    const criticalData = await criticalRes.json();
+
+    const months = [
+      "",
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ];
+
+    setSalesHistory(
+      salesData.map(item => ({
+        mes: `${months[item.month]}/${item.year}`,
+        ventas: item.revenue
+      }))
+    );
+
+    setTodayStats(todayData);
+    setMonthStats(monthData);
+    setCriticalStock(criticalData);
+
+  } catch (error) {
+    console.error("Error Dashboard:", error);
+  }
+};
+
   return (
   <div className="dashboard">
 <Menu
@@ -329,78 +429,186 @@ const handleProfileImage = (e) => {
     {/* ================= KPI CARDS ================= */}
     <div className="kpi-grid">
       <div className="kpi-card">
-        <div className="kpi-icon purple">📦</div>
+        <div className="kpi-icon red">⚠️</div>
         <div className="kpi-content">
-          <div className="kpi-title">{t.articles}</div>
-          <div className="kpi-value">12.356</div>
-          <div className="kpi-trend positive">↑ 8.2%</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
+          <div className="kpi-title">Stock Crítico</div>
+
+<div className="kpi-value">
+  {criticalStock.length}
+</div>
+
+<div className="kpi-subtitle">
+  Productos críticos
+</div>
         </div>
       </div>
 
-      <div className="kpi-card">
-        <div className="kpi-icon blue">👥</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.clients}</div>
-          <div className="kpi-value">4.872</div>
-          <div className="kpi-trend positive">↑ 6.4%</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
-        </div>
-      </div>
+<div className="kpi-card">
+  <div className="kpi-icon blue">🎟️</div>
 
-      <div className="kpi-card">
-        <div className="kpi-icon green">🏢</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.branches}</div>
-          <div className="kpi-value">8</div>
-          <div className="kpi-trend positive">↑ 2</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
-        </div>
-      </div>
-
-      <div className="kpi-card">
-        <div className="kpi-icon gold">💰</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.monthSales}</div>
-          <div className="kpi-value">$12.450.000</div>
-          <div className="kpi-trend positive">↑ 15.3%</div>
-          <div className="kpi-subtitle">{t.previousMonth}</div>
-        </div>
-      </div>
+  <div className="kpi-content">
+    <div className="kpi-title">
+      Tickets del Mes
     </div>
+
+    <div className="kpi-value">
+      {monthStats.tickets}
+    </div>
+
+    <div className="kpi-subtitle">
+      Ventas registradas
+    </div>
+  </div>
+</div>
+
+    <div className="kpi-card">
+  <div className="kpi-icon green">💵</div>
+
+  <div className="kpi-content">
+    <div className="kpi-title">Ventas Hoy</div>
+
+    <div className="kpi-value">
+      $
+      {Number(
+        todayStats.totalRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+
+    <div className="kpi-trend positive">
+      {todayStats.tickets} tickets
+    </div>
+
+    <div className="kpi-subtitle">
+      Promedio $
+      {Number(
+        todayStats.averageRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+  </div>
+</div>
+
+<div className="kpi-card">
+  <div className="kpi-icon gold">📈</div>
+
+  <div className="kpi-content">
+    <div className="kpi-title">
+      {t.monthSales}
+    </div>
+
+    <div className="kpi-value">
+      $
+      {Number(
+        monthStats.totalRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+
+    <div className="kpi-trend positive">
+      {monthStats.tickets} tickets
+    </div>
+
+    <div className="kpi-subtitle">
+      Promedio $
+      {Number(
+        monthStats.averageRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+  </div>
+</div>
+      </div>
+    
 
     {/* ================= PANEL PRINCIPAL ================= */}
     <div className="home-panels">
       {/* GRÁFICO */}
       <div className="panel-card">
         <h3>📈 {t.salesChart}</h3>
-        <div className="chart-placeholder">
-          {t.salesGraph}
-        </div>
+      <div
+  style={{
+    width: "100%",
+    height: "300px"
+  }}
+>
+  <ResponsiveContainer>
+    <LineChart data={salesHistory}>
+      <CartesianGrid strokeDasharray="3 3" />
+
+      <XAxis dataKey="mes" />
+
+      <YAxis />
+
+      <Tooltip
+        formatter={(value) =>
+          `$${Number(value).toLocaleString("es-AR")}`
+        }
+      />
+
+      <Line
+        type="monotone"
+        dataKey="ventas"
+        stroke="#2563eb"
+        strokeWidth={3}
+      />
+    </LineChart>
+  </ResponsiveContainer>
+</div>
       </div>
 
       {/* STOCK CRÍTICO */}
       <div className="panel-card">
         <h3>⚠️ {t.criticalStock}</h3>
-        <ul className="simple-list">
-          <li>Producto A — 12 u.</li>
-          <li>Producto B — 8 u.</li>
-          <li>Producto C — 5 u.</li>
-          <li>Producto D — 3 u.</li>
-          <li>Producto E — 2 u.</li>
-        </ul>
+     <ul className="simple-list">
+  {criticalStock
+    .slice(0, 5)
+    .map((item, index) => (
+      <li key={index}>
+        {item.item}
+        <br />
+        Stock: {item.currentStock}
+        {" | "}
+        PP: {item.reorderPoint}
+      </li>
+    ))}
+</ul>
       </div>
 
       {/* ACTIVIDAD RECIENTE */}
       <div className="panel-card">
-        <h3>🕒 {t.recentActivity}</h3>
-        <ul className="simple-list">
-          <li>{t.newArticle}</li>
-          <li>{t.newSale}</li>
-          <li>{t.registeredClient}</li>
-          <li>{t.updatedStock}</li>
-          <li>{t.connectedUser}</li>
-        </ul>
+      <h3>📊 Resumen Comercial</h3>
+      <ul className="simple-list">
+  <li>
+    Ventas hoy: {todayStats.tickets}
+  </li>
+
+  <li>
+    Facturación hoy:
+    {" "}
+    $
+    {Number(
+      todayStats.totalRevenue || 0
+    ).toLocaleString("es-AR")}
+  </li>
+
+  <li>
+    Ventas del mes:
+    {" "}
+    {monthStats.tickets}
+  </li>
+
+  <li>
+    Facturación mensual:
+    {" "}
+    $
+    {Number(
+      monthStats.totalRevenue || 0
+    ).toLocaleString("es-AR")}
+  </li>
+
+  <li>
+    Productos críticos:
+    {" "}
+    {criticalStock.length}
+  </li>
+</ul>
       </div>
     </div>
 
@@ -486,7 +694,10 @@ const handleProfileImage = (e) => {
           {section === "config_pos" && <h2>Configuración POS</h2>}
           {section === "config_general" && <h2>Configuración General</h2>}
           {section === "asistente" && <h2>Asistente de configuración</h2>}
-
+          {section === "iva_alicuotas" && (
+  <IvaAlicuotas setSection={setSection} />
+)}
+          {section === "Estadisticas" && <Estadisticas />}
           {section === "Mi Información" && (
             <MiInformacion
               usuario={{

@@ -25,7 +25,7 @@ export default function Clasificaciones({ setSection, onUpdate }) {
   const getAll = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/back_office/item-classification",
+        "/api/item-classification",
         fetchConfig
       );
 
@@ -77,8 +77,8 @@ export default function Clasificaciones({ setSection, onUpdate }) {
   const guardar = async () => {
 
     const url = selected
-      ? `http://localhost:8080/back_office/item-classification/${selected}`
-      : `http://localhost:8080/back_office/item-classification`;
+      ? `/api/item-classification/${selected}`
+      : `/api/item-classification`;
 
     try {
       const res = await fetch(url, {
@@ -110,7 +110,7 @@ export default function Clasificaciones({ setSection, onUpdate }) {
 
     try {
       await fetch(
-        `http://localhost:8080/back_office/item-classification/${selected}`,
+        `/api/item-classification/${selected}`,
         {
           method: "DELETE",
           ...fetchConfig

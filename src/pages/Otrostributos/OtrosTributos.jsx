@@ -20,7 +20,7 @@ const { t } = useLanguage();
   setSection("home");
 };
 
-  const API_URL = "http://localhost:8080/back_office/tax";
+  const API_URL = "/api/tax";
 
 const AFIP_CODES = [
   { value: "NATIONAL_TAX", label: t("otrosTributos.nationalTax") },

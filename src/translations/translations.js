@@ -16,6 +16,7 @@ export const texts = {
       name: "Nombre",
       id: "ID",
       select: "Seleccione",
+      list: "Lista",
     },
 
     dashboard: {
@@ -274,6 +275,57 @@ sucursales: {
     "departmentsShort": "Deptos."
   
 },
+"statistics": {
+  "title": "Estadísticas",
+  "subtitle": "Análisis de ventas e inventario",
+
+  "salesToday": "Ventas Hoy",
+  "ticketsToday": "Tickets Hoy",
+  "averageToday": "Promedio Hoy",
+
+  "salesMonth": "Ventas Mes",
+  "ticketsMonth": "Tickets Mes",
+  "averageMonth": "Promedio Mes",
+
+  "monthlyRevenue": "Facturación por Mes",
+  "paymentMethods": "Métodos de Pago",
+  "criticalStock": "Stock Crítico",
+
+  "code": "Código",
+  "item": "Artículo",
+  "reorderPoint": "Punto Pedido",
+  "stock": "Stock",
+
+  "loading": "Cargando estadísticas..."
+},
+
+"months": {
+  "jan": "Ene",
+  "feb": "Feb",
+  "mar": "Mar",
+  "apr": "Abr",
+  "may": "May",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Ago",
+  "sep": "Sep",
+  "oct": "Oct",
+  "nov": "Nov",
+  "dec": "Dic"
+},
+criticalProducts: "Productos críticos",
+monthTickets: "Tickets del Mes",
+registeredSales: "Ventas registradas",
+todaySales: "Ventas Hoy",
+tickets: "tickets",
+average: "Promedio",
+reorderPoint: "Punto Pedido",
+
+businessSummary: "Resumen Comercial",
+
+todayRevenue: "Facturación Hoy",
+monthSalesCount: "Ventas del Mes",
+monthRevenue: "Facturación Mensual",
 },
 
   en: {
@@ -287,13 +339,14 @@ sucursales: {
       close: "Close",
       loading: "Loading...",
       new: "New",
-duplicate: "Duplicate",
-exit: "Exit",
-code: "Code",
-name: "Name",
-id: "ID",
-select: "Select",
-  none: "None",
+      duplicate: "Duplicate",
+      exit: "Exit",
+      code: "Code",
+      name: "Name",
+      id: "ID",
+      select: "Select",
+      none: "None",
+      list: "List",
     },
 
     dashboard: {
@@ -552,6 +605,57 @@ sucursales: {
     "darkMode": "Dark Mode",
     "departmentsShort": "Depts."
 },
+"statistics": {
+  "title": "Statistics",
+  "subtitle": "Sales and Inventory Analysis",
+
+  "salesToday": "Today's Sales",
+  "ticketsToday": "Today's Tickets",
+  "averageToday": "Today's Average",
+
+  "salesMonth": "Monthly Sales",
+  "ticketsMonth": "Monthly Tickets",
+  "averageMonth": "Monthly Average",
+
+  "monthlyRevenue": "Revenue by Month",
+  "paymentMethods": "Payment Methods",
+  "criticalStock": "Critical Stock",
+
+  "code": "Code",
+  "item": "Item",
+  "reorderPoint": "Reorder Point",
+  "stock": "Stock",
+
+  "loading": "Loading statistics..."
+},
+
+"months": {
+  "jan": "Jan",
+  "feb": "Feb",
+  "mar": "Mar",
+  "apr": "Apr",
+  "may": "May",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Aug",
+  "sep": "Sep",
+  "oct": "Oct",
+  "nov": "Nov",
+  "dec": "Dec"
+},
+criticalProducts: "Critical Products",
+monthTickets: "Monthly Tickets",
+registeredSales: "Registered Sales",
+todaySales: "Today's Sales",
+tickets: "tickets",
+average: "Average",
+reorderPoint: "Reorder Point",
+
+businessSummary: "Business Summary",
+
+todayRevenue: "Today's Revenue",
+monthSalesCount: "Monthly Sales",
+monthRevenue: "Monthly Revenue",
 },
 
   pt: {
@@ -565,13 +669,14 @@ sucursales: {
       close: "Fechar",
       loading: "Carregando...",
       new: "Novo",
-duplicate: "Duplicar",
-exit: "Sair",
-code: "Código",
-name: "Nome",
-id: "ID",
-select: "Selecionar",
-none: "Nenhum",
+      duplicate: "Duplicar",
+      exit: "Sair",
+      code: "Código",
+      name: "Nome",
+      id: "ID",
+      select: "Selecionar",
+      none: "Nenhum",
+      list: "Lista",
     },
 
     dashboard: {
@@ -829,5 +934,56 @@ sucursales: {
     "darkMode": "Modo Escuro",
     "departmentsShort": "Deptos."
   },
+  "statistics": {
+  "title": "Estatísticas",
+  "subtitle": "Análise de vendas e estoque",
+
+  "salesToday": "Vendas Hoje",
+  "ticketsToday": "Cupons Hoje",
+  "averageToday": "Média Hoje",
+
+  "salesMonth": "Vendas do Mês",
+  "ticketsMonth": "Cupons do Mês",
+  "averageMonth": "Média do Mês",
+
+  "monthlyRevenue": "Faturamento por Mês",
+  "paymentMethods": "Métodos de Pagamento",
+  "criticalStock": "Estoque Crítico",
+
+  "code": "Código",
+  "item": "Artigo",
+  "reorderPoint": "Ponto de Reposição",
+  "stock": "Estoque",
+
+  "loading": "Carregando estatísticas..."
+},
+
+"months": {
+  "jan": "Jan",
+  "feb": "Fev",
+  "mar": "Mar",
+  "apr": "Abr",
+  "may": "Mai",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Ago",
+  "sep": "Set",
+  "oct": "Out",
+  "nov": "Nov",
+  "dec": "Dez"
+},
+criticalProducts: "Produtos Críticos",
+monthTickets: "Tickets do Mês",
+registeredSales: "Vendas Registradas",
+todaySales: "Vendas Hoje",
+tickets: "tickets",
+average: "Média",
+reorderPoint: "Ponto de Pedido",
+
+businessSummary: "Resumo Comercial",
+
+todayRevenue: "Faturamento Hoje",
+monthSalesCount: "Vendas do Mês",
+monthRevenue: "Faturamento Mensal",
 },
 };

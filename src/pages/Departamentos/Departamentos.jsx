@@ -5,9 +5,9 @@ import { useLanguage } from "../../context/LanguageContext";
 export default function Departamentos({ setSection }) {
 
   const { t } = useLanguage();
-  const API_URL = "http://localhost:8080/back_office/item-collection";
-  const API_IVA = "http://localhost:8080/back_office/iva";
-  const API_TAX = "http://localhost:8080/back_office/tax/item-collection";
+  const API_URL = "/api/item-collection";
+  const API_IVA = "/api/iva";
+  const API_TAX = "/api/tax/item-collection";
 
   const [data, setData] = useState([]);
   const [ivas, setIvas] = useState([]);

@@ -4,7 +4,7 @@ import { useLanguage } from "../../context/LanguageContext";
 
 export default function Monedas({ setSection }) {
 
-  const API_URL = "http://localhost:8080/back_office/currency";
+  const API_URL = "/api/currency";
 const { t } = useLanguage();
   const [data, setData] = useState([]);
   const [modoCrear, setModoCrear] = useState(false);

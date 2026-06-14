@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import logo from "../../assets/logo_bruki_login-removebg-preview.png";
+import logo from "../../assets/logo_con_sombreado-removebg-preview.png";
 import { useAlert } from "../../context/Alertcontext";
 
 export default function Login() {
@@ -83,7 +83,7 @@ const t = texts[language];
       setLoading(true);
 
 const res = await fetch(
-  "http://localhost:8080/back_office/auth/login",
+  "/api/auth/login",
   {
     method: "POST",
     credentials: "include",

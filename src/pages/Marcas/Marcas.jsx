@@ -14,7 +14,7 @@ export default function Marcas({ setSection }) {
 
   const [seleccionada, setSeleccionada] = useState(null);
 
-  const API_URL = "http://localhost:8080/back_office/brand";
+  const API_URL = "/api/brand";
 
   // =========================
   // 🔥 GET
