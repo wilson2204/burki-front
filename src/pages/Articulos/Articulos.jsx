@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./Articulos.css";
 
-const API = "/api";
+const API = "http://localhost:8080/back_office";
 
 const fetchConfig = {
   credentials: "include",
@@ -798,7 +798,7 @@ useEffect(() => {
             <button onClick={() => setTab("otros")} className={tab === "otros" ? "active" : ""}>Otros</button>
             <button onClick={() => setTab("stock")} className={tab === "stock" ? "active" : ""}>Stock</button>
             <button onClick={() => setTab("listas")} className={tab === "listas" ? "active" : ""}>Listas y Promos</button>
-            <button
+           <button disabled
   onClick={() => setTab("combo")}
   className={tab === "combo" ? "active" : ""}
 >
@@ -916,16 +916,88 @@ Códigos de barras
       <div className="otros-box">
         <h3>Envase</h3>
 
-        <div className="field-row">
-          <label>Artículo Envase</label>
+        <div className="otros-box">
+  <h3>Artículo Envase</h3>
 
-          <select>
-            <option>Sin envase</option>
-            <option>Botella</option>
-            <option>Caja</option>
-            <option>Pack</option>
-          </select>
-        </div>
+  {linkedItems.map((l) => (
+    <div
+      key={l.linkedItemId}
+      style={{
+        display: "flex",
+        gap: "10px",
+        marginBottom: "5px"
+      }}
+    >
+      <span>
+        {l.linkedItemName || l.linkedItemId}
+      </span>
+
+      <button
+        type="button"
+        onClick={async () => {
+          await eliminarLinkedItem(
+            form.id,
+            l.linkedItemId
+          );
+
+          setLinkedItems(prev =>
+            prev.filter(
+              x => x.linkedItemId !== l.linkedItemId
+            )
+          );
+        }}
+      >
+        Quitar
+      </button>
+    </div>
+  ))}
+
+  <div
+    style={{
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px"
+    }}
+  >
+    <input
+      type="number"
+      placeholder="ID Envase"
+      value={nuevoCodigo}
+      onChange={e =>
+        setNuevoCodigo(e.target.value)
+      }
+    />
+
+    <button
+  type="button"
+  className="btn-vincular-envase"
+  onClick={async () => {
+    if (!form.id) {
+      alert(
+        "Primero guardá el artículo"
+      );
+      return;
+    }
+
+    const res = await vincularItem(
+      form.id,
+      nuevoCodigo
+    );
+
+    if (!res.ok) {
+      alert(
+        await res.text()
+      );
+      return;
+    }
+
+    setNuevoCodigo("");
+  }}
+>
+  Vincular Envase
+</button>
+  </div>
+</div>
       </div>
 
       {/* SUSPENDER */}
