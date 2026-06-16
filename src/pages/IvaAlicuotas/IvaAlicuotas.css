@@ -566,8 +566,6 @@ body.dark .btn-salir:hover {
 body.dark .table-header {
   background: linear-gradient(180deg, #0f172a, #111827);
   border-bottom: 1px solid var(--border-color);
-<<<<<<< HEAD
-=======
 }
 
 thead {
@@ -619,5 +617,4 @@ tr {
 .date-group input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   transform: scale(1.4);
->>>>>>> b0a1b94 (save local changes)
 }

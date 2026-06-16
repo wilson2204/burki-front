@@ -1088,8 +1088,6 @@ body.dark .form-wrapper,
   box-shadow: var(--shadow-card) !important;
 }
 
-<<<<<<< HEAD
-=======
 .barcode-deleted {
   text-decoration: line-through;
   opacity: 0.5;
@@ -1109,4 +1107,3 @@ body.dark .form-wrapper,
   color: #856404;
   font-weight: 600;
 }
->>>>>>> b0a1b94 (save local changes)

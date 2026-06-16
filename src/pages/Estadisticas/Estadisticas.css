@@ -319,8 +319,6 @@ body.dark .recharts-bar-rectangle:focus {
   outline: none;
 }
 
-<<<<<<< HEAD
-=======
 .payment-methods-list {
   display: flex;
   flex-direction: column;
@@ -375,4 +373,3 @@ body.dark .recharts-bar-rectangle:focus {
 
   opacity: .8;
 }
->>>>>>> b0a1b94 (save local changes)
