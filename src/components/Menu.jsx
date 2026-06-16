@@ -403,7 +403,7 @@ const { t } = useLanguage();
           className="tree-item"
           onClick={() => setSection("iva_alicuotas")}
         >
-          IVA Alícuotas
+          IVA VENTAS
         </div>
 
       </div>
