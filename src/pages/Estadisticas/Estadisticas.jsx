@@ -135,14 +135,10 @@ const months = [
       mes: `${months[item.month - 1]}/${item.year}`,
       ingresos: item.revenue,
     }));
-<<<<<<< HEAD
-
-=======
 const totalPaymentRevenue = paymentMethods.reduce(
   (acc, item) => acc + Number(item.revenue || 0),
   0
 );
->>>>>>> b0a1b94 (save local changes)
   const money = (value) =>
     Number(value || 0).toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -263,32 +259,6 @@ const totalPaymentRevenue = paymentMethods.reduce(
       <div className="bottom-grid">
 
         <div className="chart-card">
-<<<<<<< HEAD
-          <h2>💳 {t("statistics.paymentMethods")}</h2>
-
-          <ResponsiveContainer width="100%" height={350}>
-            <PieChart>
-              <Pie
-                data={paymentMethods || []}
-                dataKey="revenue"
-                nameKey="paymentMethod"
-                outerRadius={120}
-                label
-              >
-                {(paymentMethods || []).map((_, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-=======
   <h2>💳 {t("statistics.paymentMethods")}</h2>
 
   <div className="payment-methods-list">
@@ -330,7 +300,6 @@ const totalPaymentRevenue = paymentMethods.reduce(
 
   </div>
 </div>
->>>>>>> b0a1b94 (save local changes)
 
         <div className="table-card">
           <h2>🚨 {t("statistics.criticalStock")}</h2>

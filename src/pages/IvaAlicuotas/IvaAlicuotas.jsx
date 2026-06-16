@@ -1,13 +1,10 @@
 import { useState } from "react";
 import "./IvaAlicuotas.css";
-<<<<<<< HEAD
-=======
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
->>>>>>> b0a1b94 (save local changes)
 const API_URL =
   "/api/report/iva";
 
@@ -99,8 +96,6 @@ const fin =
 
 const datosPaginados =
   datos.slice(inicio, fin);
-<<<<<<< HEAD
-=======
 const exportarExcel = () => {
   const worksheet = XLSX.utils.json_to_sheet(
     datos.map((item) => ({
@@ -159,7 +154,7 @@ const exportarPDF = () => {
 
   doc.setFontSize(14);
   doc.text(
-    "IVA Ventas Alícuotas",
+    "IVA Ventas",
     140,
     15,
     { align: "center" }
@@ -291,7 +286,7 @@ const imprimir = () => {
   ventana.document.write(`
     <html>
       <head>
-        <title>IVA Ventas Alícuotas</title>
+        <title>IVA Ventas</title>
 
         <style>
           @page {
@@ -378,7 +373,7 @@ const imprimir = () => {
         </div>
 
         <div class="titulo">
-          <h2>IVA Ventas Alícuotas</h2>
+          <h2>IVA Ventas</h2>
         </div>
 
         <div class="info">
@@ -423,7 +418,6 @@ const imprimir = () => {
     ventana.close();
   }, 500);
 };
->>>>>>> b0a1b94 (save local changes)
 
 return (
   <div className="iva-container">
@@ -438,7 +432,7 @@ return (
         </div>
 
         <div>
-          <h1>IVA Ventas alícuotas</h1>
+          <h1>IVA Ventas</h1>
           <p>
             Detalle de ventas por alícuota de IVA
           </p>
@@ -495,7 +489,7 @@ return (
 
         <div>
           <h2>
-            IVA Ventas Alícuotas
+            IVA Ventas 
           </h2>
 
           <span>
@@ -525,11 +519,6 @@ return (
 
         <div className="actions-center">
 
-<<<<<<< HEAD
-          <button>⬇ Exportar</button>
-          <button>🖨 Imprimir</button>
-          <button>📄 PDF</button>
-=======
           <button onClick={exportarExcel}>
   ⬇ Exportar Excel
 </button>
@@ -541,7 +530,6 @@ return (
 <button onClick={exportarPDF}>
   📄 PDF
 </button>
->>>>>>> b0a1b94 (save local changes)
 
         </div>
 
@@ -562,11 +550,7 @@ return (
 
       </div>
 
-<<<<<<< HEAD
-      <div className="table-wrapper">
-=======
       <div className="table-wrapper printable-table">
->>>>>>> b0a1b94 (save local changes)
 
         <table className="iva-table">
 

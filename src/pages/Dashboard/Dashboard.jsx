@@ -278,44 +278,28 @@ const cargarDashboardStats = async () => {
       criticalRes
     ] = await Promise.all([
       fetch(
-<<<<<<< HEAD
         "/api/report/sales/year-and-month",
-=======
-        "/report/sales/year-and-month",
->>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
-<<<<<<< HEAD
         "/api/report/sales/today",
-=======
-        "/report/sales/today",
->>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
-<<<<<<< HEAD
         "/api/report/sales/current-month",
-=======
-        "/report/sales/current-month",
->>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
-<<<<<<< HEAD
         "/api/report/critical-stock-items",
-=======
-        "/report/critical-stock-items",
->>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
