@@ -108,9 +108,10 @@ const res = await fetch(
 
       // Usuario con una sola empresa
   if (data.code === "COMPLETED") {
-  showAlert("Login exitoso 👋", "success");
+  localStorage.setItem("auth", "true");
+  localStorage.setItem("usuario", PIN);
 
-  await new Promise(resolve => setTimeout(resolve, 50)); // 🔥 importante
+  showAlert("Login exitoso 👋", "success");
 
   navigate("/dashboard");
   return;
