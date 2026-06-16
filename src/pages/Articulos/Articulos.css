@@ -1088,3 +1088,25 @@ body.dark .form-wrapper,
   box-shadow: var(--shadow-card) !important;
 }
 
+<<<<<<< HEAD
+=======
+.barcode-deleted {
+  text-decoration: line-through;
+  opacity: 0.5;
+  color: #dc3545;
+}
+
+.btn-codigo.restaurar {
+  background: #198754;
+  color: white;
+}
+
+.codigo-delete-warning {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #fff3cd;
+  color: #856404;
+  font-weight: 600;
+}
+>>>>>>> b0a1b94 (save local changes)

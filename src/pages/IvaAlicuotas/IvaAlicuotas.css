@@ -566,4 +566,58 @@ body.dark .btn-salir:hover {
 body.dark .table-header {
   background: linear-gradient(180deg, #0f172a, #111827);
   border-bottom: 1px solid var(--border-color);
+<<<<<<< HEAD
+=======
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-group label {
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date-group input[type="date"] {
+  width: 180px;
+  height: 52px;
+
+  padding: 0 14px;
+
+  background: #16213b;
+  color: #fff;
+
+  border: 2px solid #2b3f66;
+  border-radius: 12px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: text;
+
+  transition: all .2s ease;
+}
+
+.date-group input[type="date"]:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 4px rgba(79,140,255,.15);
+}
+
+.date-group input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  transform: scale(1.4);
+>>>>>>> b0a1b94 (save local changes)
 }

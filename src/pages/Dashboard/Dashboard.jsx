@@ -131,6 +131,28 @@ const [salesHistory, setSalesHistory] = useState([]);
     init();
     cargarDashboardStats();
   }, []);
+  const handleLogout = async () => {
+  try {
+    const res = await fetch(
+      "/api/auth/logout",
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    if (res.status === 204) {
+      navigate("/login");
+      return;
+    }
+
+    console.error("Error logout:", res.status);
+    navigate("/login");
+  } catch (error) {
+    console.error("Error logout:", error);
+    navigate("/login");
+  }
+};
   const texts = {
   es: {
     settings: "Configuración",
@@ -256,28 +278,44 @@ const cargarDashboardStats = async () => {
       criticalRes
     ] = await Promise.all([
       fetch(
+<<<<<<< HEAD
         "/api/report/sales/year-and-month",
+=======
+        "/report/sales/year-and-month",
+>>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
+<<<<<<< HEAD
         "/api/report/sales/today",
+=======
+        "/report/sales/today",
+>>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
+<<<<<<< HEAD
         "/api/report/sales/current-month",
+=======
+        "/report/sales/current-month",
+>>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
       ),
 
       fetch(
+<<<<<<< HEAD
         "/api/report/critical-stock-items",
+=======
+        "/report/critical-stock-items",
+>>>>>>> b0a1b94 (save local changes)
         {
           credentials: "include",
         }
@@ -649,9 +687,9 @@ const cargarDashboardStats = async () => {
     </div>
 
     <div
-      className="quick-item salir"
-      onClick={() => navigate("/login")}
-    >
+  className="quick-item salir"
+  onClick={handleLogout}
+>
       <LogOut size={42} />
       <span>{t.logout}</span>
     </div>

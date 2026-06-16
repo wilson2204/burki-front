@@ -92,7 +92,18 @@ const [linkedItems, setLinkedItems] = useState([]);
     base * (1 + margin / 100) * (1 + iva / 100) * 100
   ) / 100;
 };
+const costoConIva = (() => {
+  const ivaObj = ivas.find(i => i.id === Number(form.iva));
+  const iva = ivaObj ? Number(ivaObj.value) : 0;
 
+<<<<<<< HEAD
+=======
+  return (
+    (Number(form.costo) || 0) *
+    (1 + iva / 100)
+  ).toFixed(2);
+})();
+>>>>>>> b0a1b94 (save local changes)
   // ================= GET ARTICULOS =================
   const getArticulos = useCallback(async () => {
     console.log("FORM ACTUAL:", form);
@@ -103,6 +114,7 @@ console.log("SELECTED:", selected);
   );
 
   const data = await res.json();
+<<<<<<< HEAD
 
   setArticulos(data.content || []);
   setTotalPages(data.totalPages || 0);
@@ -475,8 +487,149 @@ const guardar = async () => {
   : buildCreatePayload(
       form,
       measurementUnits
-    );
+=======
 
+  setArticulos(data.content || []);
+  setTotalPages(data.totalPages || 0);
+
+  setMeta({
+    hasNext: data.hasNext,
+    hasPrevious: data.hasPrevious
+  });
+}, [page]);
+  // ================= GET ITEM =================
+const getItemById = useCallback(async (id) => {
+  console.log(
+  "FORM BARCODES:",
+  form.barCodes
+);
+  const res = await fetch(
+    `${API}/items/${id}`,
+    fetchConfig
+  );
+
+  if (!res.ok) {
+    console.error(await res.text());
+    return;
+  }
+
+  const data = await res.json();
+  const item = data.item;
+  console.log(
+  "BARCODES RECIBIDOS:",
+  item.barCodes
+);
+  console.log("ITEM GET", item);
+  console.log("TYPE PRINCIPAL", data.item.typeId);
+const originalBarcodes = (item.barCodes || []).map(b => b.value);
+setForm({
+  ...emptyForm,
+
+  id: item.id ?? "",
+
+  nombre: item.name ?? "",
+
+  codigo: item.barCode ?? item.barcode ?? "",
+  adicional: item.extraBarCode ?? "",
+
+  costo: item.cost ?? 0,
+  margen: item.margin ?? 0,
+  precioFinal: item.price ?? 0,
+
+  iva: item.ivaId ?? "",
+  taxId: item.taxId ?? "",
+  currencyId: item.currencyId ?? "",
+
+  clasificacionId:
+    item.classificationId ??
+    item.itemClassificationId ??
+    "",
+
+  departamentoId:
+    item.itemCollectionId ??
+    item.collectionId ??
+    "",
+
+  subDepartamentoId:
+    item.itemSubCollectionId ??
+    item.subCollectionId ??
+    "",
+
+  proveedorId: item.supplierId ?? "",
+
+  marcaId:
+    item.brandId ??
+    item.itemBrandId ??
+    "",
+
+  itemTypeId:
+    item.itemTypeId ??
+    item.typeId ??
+    "",
+
+  measurementUnitId: item.measurementUnitId ?? "",
+
+  reorderPoint:
+    item.reorderPoint ??
+    item.itemStock?.reorderPoint ??
+    "",
+
+  controlMeasurementUnitId:
+    item.controlMeasurementUnitId ??
+    item.itemStock?.controlMeasurementUnitId ??
+    "",
+
+  expirationDays: item.expirationDays ?? "",
+
+  itemPresentation:
+    item.itemPresentation ??
+    item.presentation ??
+    "",
+
+  useLabel: item.useLabel ?? false,
+
+  price_2: item.price_2 ?? 0,
+  price_3: item.price_3 ?? 0,
+  price_4: item.price_4 ?? 0,
+  price_5: item.price_5 ?? 0,
+
+  precioAnterior: item.previousPrice ?? 0,
+  fechaCambio: item.lastPriceUpdate ?? "",
+
+  barCodes: (item.barCodes || []).map(b => ({
+  value: b.value,
+  detail: b.detail ?? b.description ?? "",
+  deleted: false,
+})),
+barCodesOriginal: (item.barCodes || []).map(b => b.value)
+});
+  setStock(
+    (item.stocks || []).map(s => ({
+      ...s,
+      itemId: item.id,
+      itemName: item.name,
+      editableStock: s.currentStock
+    }))
+  );
+}, []);
+
+  // ================= STOCK =================
+  const getStock = useCallback(async (itemId) => {
+    const res = await fetch(`${API}/items/stocks?page=0&size=500`, fetchConfig);
+    const data = await res.json();
+
+    setStock(
+      (data.content || [])
+        .filter(s => s.itemId === itemId)
+        .map(s => ({
+          ...s,
+          editableStock: s.currentStock
+        }))
+>>>>>>> b0a1b94 (save local changes)
+    );
+  }, []);
+
+<<<<<<< HEAD
   // 👇 DESPUÉS usarlo
   console.log("SELECTED:", selected);
   console.log("PAYLOAD:", payload);
@@ -521,6 +674,316 @@ console.log(
       console.log("Nuevo ID:", itemId);
     }
 
+=======
+  // ================= UPDATE STOCK =================
+
+const updateStock = async (row) => {
+  console.log("ACTUALIZANDO STOCK", row);
+
+  const res = await fetch(
+    `${API}/items/${row.itemId}/branches/${row.branchId}/stocks`,
+    {
+      method: "PUT",
+      ...fetchConfig,
+      body: JSON.stringify({
+        currentStock: Number(row.editableStock)
+      })
+    }
+  );
+
+  console.log("STATUS:", res.status);
+
+  if (!res.ok) {
+    console.error(await res.text());
+  }
+};
+  // ================= CRUD =================
+  const nuevo = () => {
+    setForm(emptyForm);
+    setSelected(null);
+    setView("form");
+    setTab("basicos");
+  };
+  const buildCreatePayload = (form, measurementUnits) => {
+  const toNumber = (v) =>
+    v !== "" && v !== null && v !== undefined ? Number(v) : null;
+
+  const controlMeasurementUnitId = form.controlMeasurementUnitId
+    ? Number(form.controlMeasurementUnitId)
+    : null;
+
+return {
+  item: {
+    name: form.nombre ?? "",
+
+    barCode: form.codigo?.trim() || null,
+    extraBarCode: form.adicional?.trim() || null,
+
+    cost: Number(form.costo) || 0,
+    margin: Number(form.margen) || 0,
+    price: Number(form.precioFinal) || 0,
+
+    price_2: Number(form.price_2) || 0,
+    price_3: Number(form.price_3) || 0,
+    price_4: Number(form.price_4) || 0,
+    price_5: Number(form.price_5) || 0,
+
+    currencyId: Number(form.currencyId) || 1,
+    supplierId: Number(form.proveedorId) || 0,
+
+    itemCollectionId: Number(form.departamentoId) || 0,
+    itemSubCollectionId: Number(form.subDepartamentoId) || 0,
+
+    ivaId: Number(form.iva) || 1,
+    taxId: Number(form.taxId) || 0,
+
+    itemTypeId: Number(form.itemTypeId) || 1,
+
+    classificationId: Number(form.clasificacionId) || 0,
+    brandId: Number(form.marcaId) || 0,
+
+    measurementUnitId: Number(form.measurementUnitId) || 0,
+
+    measurementUnitName:
+      measurementUnits.find(
+        m => m.id === Number(form.measurementUnitId)
+      )?.name || "",
+
+    expirationDays: Number(form.expirationDays) || 1,
+
+    itemPresentation: Number(form.itemPresentation) || 2.0,
+
+    useLabel: !!form.useLabel
+  },
+
+  itemStock: {
+    reorderPoint: Number(form.reorderPoint) || 0,
+
+    controlMeasurementUnitId:
+      form.controlMeasurementUnitId
+        ? Number(form.controlMeasurementUnitId)
+        : null
+  }
+};
+  };
+
+
+const buildUpdatePayload = (form, measurementUnits) => ({
+  name: form.nombre,
+
+  //barCode: form.codigo?.trim() || null,
+  //extraBarCode: form.adicional?.trim() || null,
+
+  cost: Number(form.costo) || 0,
+  margin: Number(form.margen) || 0,
+  price: Number(form.precioFinal) || 0,
+
+  currencyId: Number(form.currencyId) || 1,
+  supplierId: Number(form.proveedorId) || 0,
+
+  itemCollectionId: Number(form.departamentoId) || 0,
+  itemSubCollectionId: Number(form.subDepartamentoId) || 0,
+
+  ivaId: Number(form.iva),
+
+  taxId: Number(form.taxId) || 0,
+
+  itemTypeId: Number(form.itemTypeId),
+
+  classificationId: Number(form.clasificacionId) || 0,
+
+  brandId: Number(form.marcaId) || 0,
+
+  measurementUnitId:
+    Number(form.measurementUnitId) || 0,
+
+  measurementUnitName:
+    measurementUnits.find(
+      m => m.id === Number(form.measurementUnitId)
+    )?.name || "",
+
+  expirationDays:
+    Number(form.expirationDays) || 1,
+
+  itemPresentation:
+    Number(form.itemPresentation) || 1,
+
+  price_2: Number(form.price_2) || 0,
+  price_3: Number(form.price_3) || 0,
+  price_4: Number(form.price_4) || 0,
+  price_5: Number(form.price_5) || 0,
+
+  useLabel: !!form.useLabel
+}
+);
+
+  // ================= BARCODES =================
+
+const guardarBarcodes = async (itemId, barCodes) => {
+  console.log("BARCODES QUE SE VAN A ENVIAR:", barCodes);
+  console.log("=== GUARDAR BARCODES ===");
+  console.log("ITEM ID:", itemId);
+  console.log("BARCODES:", barCodes);
+
+  const res = await fetch(`${API}/items/${itemId}/barcodes`, {
+    method: "POST",
+    ...fetchConfig,
+    body: JSON.stringify({
+      barCodes
+    })
+  });
+
+  console.log("STATUS BARCODES:", res.status);
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.log("ERROR BARCODES:", err);
+
+    if (res.status === 409) {
+      console.warn("Barcode duplicado ignorado");
+      return;
+    }
+
+    throw new Error(err);
+  }
+};
+const eliminarBarcode = async (itemId, barCodeValue) => {
+  await fetch(
+    `${API}/items/${itemId}/barcodes/${barCodeValue}`,
+    {
+      method: "DELETE",
+      ...fetchConfig
+    }
+  );
+};
+  // ================= ARTICULOS VINCULADOS =================
+
+const vincularItem = async (itemId, linkedItemId) => {
+
+  const body = {
+    linkedItemId: Number(linkedItemId)
+  };
+
+  console.log("URL:",
+    `${API}/items/${itemId}/linked-items`
+  );
+
+  console.log("BODY:", body);
+
+  const res = await fetch(
+    `${API}/items/${itemId}/linked-items`,
+    {
+      method: "POST",
+      ...fetchConfig,
+      body: JSON.stringify(body)
+    }
+  );
+
+  console.log("STATUS LINK:", res.status);
+
+  if (!res.ok) {
+    console.log(await res.text());
+  }
+  return res;
+};
+const eliminarLinkedItem = async (itemId, linkedItemId) => {
+  await fetch(
+    `${API}/items/${itemId}/linked-items/${linkedItemId}`,
+    {
+      method: "DELETE",
+      ...fetchConfig
+    }
+  );
+};
+  // ================= GUARDAR =================
+
+const guardar = async () => {
+  const url = selected
+    ? `${API}/items/${selected}`
+    : `${API}/items`;
+
+  const method = selected ? "PUT" : "POST";
+
+  if (!form.itemTypeId) {
+    alert("Debes seleccionar el tipo de artículo");
+    return;
+  }
+
+  // 👇 PRIMERO crear payload
+  console.log(
+  "BARCODES ANTES DE GUARDAR:",
+  form.barCodes
+);
+  const payload = selected
+  ? buildUpdatePayload(
+      form,
+      measurementUnits
+    )
+  : buildCreatePayload(
+      form,
+      measurementUnits
+    );
+
+  // 👇 DESPUÉS usarlo
+  console.log("SELECTED:", selected);
+  console.log("PAYLOAD:", payload);
+console.log(
+  "PAYLOAD FINAL",
+  JSON.stringify(payload, null, 2)
+);
+  try {
+    console.log(
+  "TIPO A GUARDAR:",
+  form.itemTypeId
+);
+    const res = await fetch(url, {
+      method,
+      ...fetchConfig,
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("ERROR UPDATE ITEM:", err, res.status);
+      alert(err);
+      return;
+    }
+
+    await getArticulos();
+
+   const itemId = selected
+  ? selected
+  : Number(
+      res.headers
+        .get("location")
+        .split("/")
+        .pop()
+    );
+
+
+const actuales = form.barCodes || [];
+const originales = form.barCodesOriginal || [];
+
+// nuevos reales
+const nuevos = actuales.filter(b =>
+  !b.deleted && !originales.includes(b.value)
+);
+
+// eliminados reales
+const eliminados = actuales.filter(b =>
+  b.deleted && originales.includes(b.value)
+);
+// 1. eliminar primero
+for (const b of eliminados) {
+  await eliminarBarcode(itemId, b.value);
+}
+
+// 2. luego agregar nuevos
+if (nuevos.length > 0) {
+  await guardarBarcodes(itemId, nuevos);
+}
+
+>>>>>>> b0a1b94 (save local changes)
     setView("table");
 
   } catch (err) {
@@ -610,11 +1073,37 @@ useEffect(() => {
 }, [form.costo, form.margen, form.iva, ivas]);
 
 
+<<<<<<< HEAD
   // ================= FILTRO =================
   const filtrados = articulos.filter(a =>
     String(a.id).includes(search) ||
     (a.name || "").toLowerCase().includes(search.toLowerCase())
   );
+=======
+useEffect(() => {
+  console.log(
+    "BARCODES CAMBIARON:",
+    form.barCodes
+  );
+}, [form.barCodes]);
+
+
+  // ================= FILTRO =================
+ const filtrados = articulos.filter(a => {
+  const q = search.toLowerCase().trim();
+
+  if (!q) return true;
+
+  return (
+    String(a.id).includes(q) ||
+    (a.name || "").toLowerCase().includes(q) ||
+    (a.barcode || "").toLowerCase().includes(q) ||
+    (a.extraBarCode || "").toLowerCase().includes(q) ||
+    (a.brandName || "").toLowerCase().includes(q) ||
+    (a.supplierName || "").toLowerCase().includes(q)
+  );
+});
+>>>>>>> b0a1b94 (save local changes)
 
 
   return (
@@ -721,7 +1210,11 @@ useEffect(() => {
 </button>
 
 <span>
+<<<<<<< HEAD
  Página {page} de {totalPages - 1}
+=======
+  Página {page + 1} de {Math.max(totalPages, page + 1)}
+>>>>>>> b0a1b94 (save local changes)
 </span>
 
 <button
@@ -807,7 +1300,7 @@ Códigos de barras
                 <input value={form.costo} onChange={e => setForm({...form, costo: e.target.value})}/>
 
                 <label>Costo con IVA</label>
-                <input value={form.costoConIva} disabled />
+                <input value={costoConIva} disabled />
 
                 <label>Margen %</label>
                 <input value={form.margen} onChange={e => setForm({...form, margen: e.target.value})}/>
@@ -1197,11 +1690,11 @@ Códigos de barras
       <div className="codigo-add-row">
 
         <input
-          type="number"
-          placeholder="Ingrese código de barras"
-          value={nuevoCodigo}
-onChange={e => setNuevoCodigo(e.target.value)}
-        />
+  type="text"
+  placeholder="Ingrese código de barras"
+  value={nuevoCodigo}
+  onChange={e => setNuevoCodigo(e.target.value)}
+/>
 
         <button
   type="button"
@@ -1225,9 +1718,16 @@ onChange={e => setNuevoCodigo(e.target.value)}
     barCodes: [
       ...prev.barCodes,
       {
+<<<<<<< HEAD
         value: nuevoCodigo.trim(),
         detail: "Adicional"
       }
+=======
+  value: nuevoCodigo.trim(),
+  detail: "Adicional",
+  deleted: false
+}
+>>>>>>> b0a1b94 (save local changes)
     ]
   }));
 
@@ -1252,7 +1752,10 @@ onChange={e => setNuevoCodigo(e.target.value)}
 <tbody>
 
   {form.barCodes.map((b, index) => (
-    <tr key={index}>
+    <tr
+  key={index}
+  className={b.deleted ? "barcode-deleted" : ""}
+>
 
       <td>
         <input type="radio" readOnly />
@@ -1260,10 +1763,11 @@ onChange={e => setNuevoCodigo(e.target.value)}
 
       <td>{b.value}</td>
 
-      <td>{b.details}</td>
+      <td>{b.detail}</td>
 
       <td>
 
+<<<<<<< HEAD
       <button
     
   type="button"
@@ -1292,6 +1796,43 @@ onChange={e => setNuevoCodigo(e.target.value)}
 >
   Eliminar
 </button>
+=======
+      {!b.deleted ? (
+  <button
+    type="button"
+    className="btn-codigo eliminar"
+    onClick={() => {
+      setForm(prev => ({
+        ...prev,
+        barCodes: prev.barCodes.map((bc, i) =>
+          i === index
+            ? { ...bc, deleted: true }
+            : bc
+        )
+      }));
+    }}
+  >
+    Eliminar
+  </button>
+) : (
+  <button
+    type="button"
+    className="btn-codigo restaurar"
+    onClick={() => {
+      setForm(prev => ({
+        ...prev,
+        barCodes: prev.barCodes.map((bc, i) =>
+          i === index
+            ? { ...bc, deleted: false }
+            : bc
+        )
+      }));
+    }}
+  >
+    Restaurar
+  </button>
+)}
+>>>>>>> b0a1b94 (save local changes)
 
       </td>
 
@@ -1305,6 +1846,11 @@ onChange={e => setNuevoCodigo(e.target.value)}
       <div className="codigo-info">
         <div className="codigo-info">
   Total de códigos: {form.barCodes.length}
+  {form.barCodes.some(b => b.deleted) && (
+  <div className="codigo-delete-warning">
+    ⚠ Los códigos tachados serán eliminados al guardar.
+  </div>
+)}
 </div>
       </div>
 

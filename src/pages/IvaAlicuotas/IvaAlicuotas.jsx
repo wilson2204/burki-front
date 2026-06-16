@@ -1,5 +1,13 @@
 import { useState } from "react";
 import "./IvaAlicuotas.css";
+<<<<<<< HEAD
+=======
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+>>>>>>> b0a1b94 (save local changes)
 const API_URL =
   "/api/report/iva";
 
@@ -91,6 +99,331 @@ const fin =
 
 const datosPaginados =
   datos.slice(inicio, fin);
+<<<<<<< HEAD
+=======
+const exportarExcel = () => {
+  const worksheet = XLSX.utils.json_to_sheet(
+    datos.map((item) => ({
+      Fecha: item.fecha,
+      "Razón Social": item.razonSocial,
+      DNI: item.documento,
+      Tipo: item.tipo,
+      Comprobante: item.comprobante,
+      "Neto Gravado": item.netoGravado,
+      "IVA %": item.ivaTasa,
+      "IVA Importe": item.ivaImporte,
+      CAE: item.cae,
+    }))
+  );
+
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "IVA"
+  );
+
+  const excelBuffer = XLSX.write(
+    workbook,
+    {
+      bookType: "xlsx",
+      type: "array",
+    }
+  );
+
+  const file = new Blob(
+    [excelBuffer],
+    {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    }
+  );
+
+  saveAs(
+    file,
+    `IVA_${desde}_${hasta}.xlsx`
+  );
+};
+
+const exportarPDF = () => {
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4"
+  });
+
+  // Encabezado
+  doc.setFontSize(18);
+  doc.text("BRUKI", 14, 15);
+
+  doc.setFontSize(14);
+  doc.text(
+    "IVA Ventas Alícuotas",
+    140,
+    15,
+    { align: "center" }
+  );
+
+  doc.setFontSize(10);
+  doc.text(
+    `Desde: ${desde}  Hasta: ${hasta}`,
+    14,
+    25
+  );
+
+  doc.text(
+    `Generado: ${new Date().toLocaleString("es-AR")}`,
+    230,
+    25
+  );
+
+  autoTable(doc, {
+    startY: 35,
+
+    head: [[
+      "Fecha",
+      "Razón Social",
+      "DNI",
+      "Comp.",
+      "Comprobante",
+      "Neto Gravado",
+      "IVA %",
+      "IVA Importe",
+      "CAE"
+    ]],
+
+    body: datos.map(item => [
+      item.fecha,
+      item.razonSocial,
+      item.documento,
+      item.comp,
+      item.comprobante,
+      `$${Number(item.netoGravado).toLocaleString("es-AR")}`,
+      `${item.ivaTasa}%`,
+      `$${Number(item.ivaImporte).toLocaleString("es-AR")}`,
+      item.cae
+    ]),
+
+    styles: {
+      fontSize: 8
+    },
+
+    headStyles: {
+      fillColor: [52, 73, 94]
+    }
+  });
+
+  const finalY =
+    doc.lastAutoTable.finalY + 10;
+
+  doc.setFontSize(11);
+
+  doc.text(
+    `Neto Gravado: $${totalNeto.toLocaleString("es-AR")}`,
+    180,
+    finalY
+  );
+
+  doc.text(
+    `IVA: $${totalIva.toLocaleString("es-AR")}`,
+    180,
+    finalY + 7
+  );
+
+  doc.text(
+    `TOTAL: $${(
+      totalNeto + totalIva
+    ).toLocaleString("es-AR")}`,
+    180,
+    finalY + 14
+  );
+
+  doc.save(
+    `IVA_${desde}_${hasta}.pdf`
+  );
+};
+
+
+const imprimir = () => {
+  const contenido = `
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Razón Social</th>
+      <th>DNI</th>
+      <th>Tipo</th>
+      <th>Comp</th>
+      <th>Comprobante</th>
+      <th>Neto Gravado</th>
+      <th>IVA %</th>
+      <th>IVA Importe</th>
+      <th>CAE</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    ${datos.map(item => `
+      <tr>
+        <td>${item.fecha}</td>
+        <td>${item.razonSocial}</td>
+        <td>${item.documento}</td>
+        <td>${item.tipo}</td>
+        <td>${item.comp}</td>
+        <td>${item.comprobante}</td>
+        <td>$${Number(item.netoGravado).toLocaleString("es-AR")}</td>
+        <td>${item.ivaTasa}%</td>
+        <td>$${Number(item.ivaImporte).toLocaleString("es-AR")}</td>
+        <td>${item.cae}</td>
+      </tr>
+    `).join("")}
+  </tbody>
+</table>
+`;
+
+  const ventana = window.open(
+    "",
+    "",
+    "width=1400,height=900"
+  );
+
+  ventana.document.write(`
+    <html>
+      <head>
+        <title>IVA Ventas Alícuotas</title>
+
+        <style>
+          @page {
+            size: landscape;
+            margin: 15mm;
+          }
+
+          body {
+            font-family: Arial, sans-serif;
+            color: #000;
+          }
+
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+          }
+
+          .empresa {
+            font-size: 24px;
+            font-weight: bold;
+          }
+
+          .titulo {
+            text-align: center;
+            margin-bottom: 15px;
+          }
+
+          .titulo h2 {
+            margin: 0;
+          }
+
+          .info {
+            margin-bottom: 15px;
+            font-size: 14px;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+          }
+
+          th {
+            background: #e5e7eb;
+            border: 1px solid #000;
+            padding: 6px;
+          }
+
+          td {
+            border: 1px solid #000;
+            padding: 6px;
+          }
+
+          .totales {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 14px;
+            font-weight: bold;
+          }
+
+          .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+          }
+        </style>
+      </head>
+
+      <body>
+
+        <div class="header">
+          <div class="empresa">
+            BRUKI
+          </div>
+
+          <div>
+            ${new Date().toLocaleString("es-AR")}
+          </div>
+        </div>
+
+        <div class="titulo">
+          <h2>IVA Ventas Alícuotas</h2>
+        </div>
+
+        <div class="info">
+          <strong>Desde:</strong> ${desde}
+          &nbsp;&nbsp;&nbsp;
+          <strong>Hasta:</strong> ${hasta}
+        </div>
+
+        ${contenido}
+
+        <div class="totales">
+          <div>
+            Neto Gravado:
+            $${totalNeto.toLocaleString("es-AR")}
+          </div>
+
+          <div>
+            IVA:
+            $${totalIva.toLocaleString("es-AR")}
+          </div>
+
+          <div>
+            Total:
+            $${(
+              totalNeto + totalIva
+            ).toLocaleString("es-AR")}
+          </div>
+        </div>
+
+        <div class="footer">
+          Reporte generado por BRUKI
+        </div>
+
+      </body>
+    </html>
+  `);
+
+  ventana.document.close();
+
+  setTimeout(() => {
+    ventana.print();
+    ventana.close();
+  }, 500);
+};
+>>>>>>> b0a1b94 (save local changes)
 
 return (
   <div className="iva-container">
@@ -192,9 +525,23 @@ return (
 
         <div className="actions-center">
 
+<<<<<<< HEAD
           <button>⬇ Exportar</button>
           <button>🖨 Imprimir</button>
           <button>📄 PDF</button>
+=======
+          <button onClick={exportarExcel}>
+  ⬇ Exportar Excel
+</button>
+
+<button onClick={imprimir}>
+  🖨 Imprimir
+</button>
+
+<button onClick={exportarPDF}>
+  📄 PDF
+</button>
+>>>>>>> b0a1b94 (save local changes)
 
         </div>
 
@@ -215,7 +562,11 @@ return (
 
       </div>
 
+<<<<<<< HEAD
       <div className="table-wrapper">
+=======
+      <div className="table-wrapper printable-table">
+>>>>>>> b0a1b94 (save local changes)
 
         <table className="iva-table">
 

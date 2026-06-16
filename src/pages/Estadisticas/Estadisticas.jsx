@@ -135,7 +135,14 @@ const months = [
       mes: `${months[item.month - 1]}/${item.year}`,
       ingresos: item.revenue,
     }));
+<<<<<<< HEAD
 
+=======
+const totalPaymentRevenue = paymentMethods.reduce(
+  (acc, item) => acc + Number(item.revenue || 0),
+  0
+);
+>>>>>>> b0a1b94 (save local changes)
   const money = (value) =>
     Number(value || 0).toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -256,6 +263,7 @@ const months = [
       <div className="bottom-grid">
 
         <div className="chart-card">
+<<<<<<< HEAD
           <h2>💳 {t("statistics.paymentMethods")}</h2>
 
           <ResponsiveContainer width="100%" height={350}>
@@ -280,6 +288,49 @@ const months = [
             </PieChart>
           </ResponsiveContainer>
         </div>
+=======
+  <h2>💳 {t("statistics.paymentMethods")}</h2>
+
+  <div className="payment-methods-list">
+
+    {paymentMethods.map((method, index) => {
+      const percentage =
+        totalPaymentRevenue > 0
+          ? (method.revenue * 100) / totalPaymentRevenue
+          : 0;
+
+      return (
+        <div
+          key={`${method.paymentMethod}-${index}`}
+          className="payment-method-card"
+        >
+          <div className="payment-method-header">
+            <span>{method.paymentMethod}</span>
+
+            <span>
+              ${money(method.revenue)}
+            </span>
+          </div>
+
+          <div className="payment-bar">
+            <div
+              className="payment-bar-fill"
+              style={{
+                width: `${percentage}%`
+              }}
+            />
+          </div>
+
+          <div className="payment-percentage">
+            {percentage.toFixed(1)}%
+          </div>
+        </div>
+      );
+    })}
+
+  </div>
+</div>
+>>>>>>> b0a1b94 (save local changes)
 
         <div className="table-card">
           <h2>🚨 {t("statistics.criticalStock")}</h2>
