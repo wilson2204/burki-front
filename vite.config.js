@@ -3,8 +3,11 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/', // 🔥 IMPORTANTE PARA PRODUCCIÓN
+
   plugins: [
     react(),
+
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
@@ -22,11 +25,15 @@ export default defineConfig({
         name: 'Bruki Backoffice',
         short_name: 'Bruki',
         description: 'Sistema de gestión',
+
         theme_color: '#0f172a',
         background_color: '#020617',
+
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+
+        start_url: '/', // ✔ correcto para tu dominio
+        scope: '/',     // 🔥 recomendado para evitar bugs de instalación
 
         icons: [
           {
@@ -54,15 +61,5 @@ export default defineConfig({
         ]
       }
     })
-  ],
-
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "")
-      }
-    }
-  }
+  ]
 })
