@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./Articulos.css";
 
-const API = "http://localhost:8080/back_office";
+const API = "/api";
 
 const fetchConfig = {
   credentials: "include",
@@ -60,6 +60,8 @@ const [meta, setMeta] = useState({
 
   const [stock, setStock] = useState([]);
 const [linkedItems, setLinkedItems] = useState([]);
+const [availableLinkedItems, setAvailableLinkedItems] =
+  useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -138,6 +140,19 @@ const getItemById = useCallback(async (id) => {
 
   const data = await res.json();
   const item = data.item;
+console.log(
+  "LINKED ITEMS DEL GET:",
+  JSON.stringify(
+    item.linkedItems,
+    null,
+    2
+  )
+);
+console.log("LINK OBJECT COMPLETO:", item.linkedItems);
+
+ setLinkedItems(
+  item.linkedItems || []
+);
   console.log(
   "BARCODES RECIBIDOS:",
   item.barCodes
@@ -462,14 +477,36 @@ const vincularItem = async (itemId, linkedItemId) => {
   }
   return res;
 };
-const eliminarLinkedItem = async (itemId, linkedItemId) => {
-  await fetch(
+const eliminarLinkedItem = async (
+  itemId,
+  linkedItemId
+) => {
+  console.log(
+    "DELETE:",
+    `${API}/items/${itemId}/linked-items/${linkedItemId}`
+  );
+
+  const res = await fetch(
     `${API}/items/${itemId}/linked-items/${linkedItemId}`,
     {
       method: "DELETE",
       ...fetchConfig
     }
   );
+
+  console.log(
+    "STATUS DELETE:",
+    res.status
+  );
+
+  if (!res.ok) {
+    console.log(
+      "ERROR:",
+      await res.text()
+    );
+  }
+
+  return res;
 };
   // ================= GUARDAR =================
 
@@ -613,12 +650,15 @@ const subDeptosGenericos =
     s => s.collectionId === 0
   );
 
+
 setDepartamentos(departamentosGenericos);
 setSubDeptos(subDeptosGenericos);
     setIvas(data.IVAs || []);
     setMeasurementUnits(data.measurementUnits || []);
     setItemTypes(data.types || []);
-
+    setAvailableLinkedItems(
+  data.linkedItems || []
+);
   } catch (e) {
     console.error(e);
   }
@@ -914,43 +954,55 @@ Códigos de barras
 
       {/* ENVASE */}
       <div className="otros-box">
-        <h3>Envase</h3>
+        
 
         <div className="otros-box">
   <h3>Artículo Envase</h3>
 
   {linkedItems.map((l) => (
-    <div
-      key={l.linkedItemId}
-      style={{
-        display: "flex",
-        gap: "10px",
-        marginBottom: "5px"
-      }}
+  <div
+    key={l.linkedItemId}
+    className="linked-item-row"
+  >
+    <span className="linked-item-name">
+      {l.linkedItemName}
+    </span>
+
+    <button
+      type="button"
+      className="btn-remove-linked"
+   onClick={async () => {
+  console.log("ITEM ID:", form.id);
+  console.log(
+    "LINKED ITEM ID:",
+    l.linkedItemId
+  );
+
+  const res = await eliminarLinkedItem(
+    form.id,
+    l.linkedItemId
+  );
+
+  if (res.ok) {
+    setLinkedItems(prev =>
+      prev.filter(
+        x =>
+          x.linkedItemId !==
+          l.linkedItemId
+      )
+    );
+  } else {
+    alert(
+      "No se pudo eliminar el vínculo"
+    );
+  }
+}}
+
     >
-      <span>
-        {l.linkedItemName || l.linkedItemId}
-      </span>
-
-      <button
-        type="button"
-        onClick={async () => {
-          await eliminarLinkedItem(
-            form.id,
-            l.linkedItemId
-          );
-
-          setLinkedItems(prev =>
-            prev.filter(
-              x => x.linkedItemId !== l.linkedItemId
-            )
-          );
-        }}
-      >
-        Quitar
-      </button>
-    </div>
-  ))}
+      Quitar
+    </button>
+  </div>
+))}
 
   <div
     style={{
@@ -959,14 +1011,25 @@ Códigos de barras
       marginTop: "10px"
     }}
   >
-    <input
-      type="number"
-      placeholder="ID Envase"
-      value={nuevoCodigo}
-      onChange={e =>
-        setNuevoCodigo(e.target.value)
-      }
-    />
+    <select
+  value={nuevoCodigo}
+  onChange={e =>
+    setNuevoCodigo(e.target.value)
+  }
+>
+  <option value="">
+    Seleccione un artículo
+  </option>
+
+  {availableLinkedItems.map(item => (
+    <option
+      key={item.linkedItemId}
+      value={item.linkedItemId}
+    >
+      {item.linkedItemName}
+    </option>
+  ))}
+</select>
 
     <button
   type="button"
@@ -985,6 +1048,7 @@ Códigos de barras
     );
 
     if (!res.ok) {
+      await getItemById(form.id);
       alert(
         await res.text()
       );
@@ -1000,14 +1064,23 @@ Códigos de barras
 </div>
       </div>
 
-      {/* SUSPENDER */}
       <div className="otros-box">
-        <h3>Suspender ventas</h3>
+  <h3>Suspender ventas</h3>
 
-        <label className="check-row">
-          Quitar este artículo de la venta
-        </label>
-      </div>
+  <label className="check-row">
+    <input
+      type="checkbox"
+      checked={form.suspendido || false}
+      onChange={(e) =>
+        setForm({
+          ...form,
+          suspendido: e.target.checked
+        })
+      }
+    />
+    Quitar este artículo de la venta
+  </label>
+</div>
 
       {/* GASTRONOMIA */}
       <div className="otros-box">
@@ -1471,8 +1544,7 @@ Códigos de barras
 <div className="combo-body">
 
   {linkedItems.map((l) => (
-    <div key={l.linkedItemId} className="combo-row">
-
+  <div key={l.id}>
       <span>{l.linkedItemName || l.linkedItemId}</span>
 
       <button
@@ -1522,6 +1594,8 @@ onClick={async () => {
 
   const dataItem = await resItem.json();
   const item = dataItem.item;
+
+setLinkedItems(item.linkedItems || []);
 
   console.log("ITEM A VINCULAR:", item);
 
