@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Subdepartamentos.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
-const API_SUB = "http://localhost:8080/back_office/item-sub-collection";
-const API_DEP = "http://localhost:8080/back_office/item-collection";
 
 export default function SubDepartamentos({ setSection }) {
 
@@ -24,10 +23,7 @@ const { t } = useLanguage();
   // =========================
   const cargarSubdepartamentos = async () => {
     try {
-      const res = await fetch(API_SUB, {
-        method: "GET",
-        credentials: "include"
-      });
+      const res = await apiFetch("/item-sub-collection");
 
       if (!res.ok) throw new Error("Error subdepartamentos");
 
@@ -44,11 +40,7 @@ const { t } = useLanguage();
   // =========================
   const cargarDepartamentos = async () => {
     try {
-      const res = await fetch(API_DEP, {
-        method: "GET",
-        credentials: "include"
-      });
-
+     const res = await apiFetch("/item-collection");
       if (!res.ok) throw new Error("Error departamentos");
 
       const data = await res.json();
@@ -104,33 +96,25 @@ const { t } = useLanguage();
 
         const id = subdepartamentos[seleccionado].id;
 
-        const res = await fetch(`${API_SUB}/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name: nombre,
-            itemCollectionId: Number(departamento)
-          })
-        });
+      const res = await apiFetch(`/item-sub-collection/${id}`, {
+  method: "PUT",
+  body: JSON.stringify({
+    name: nombre,
+    itemCollectionId: Number(departamento)
+  })
+});
 
         if (!res.ok) throw new Error();
 
       } else {
 
-        const res = await fetch(API_SUB, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name: nombre,
-            itemCollectionId: Number(departamento)
-          })
-        });
+        const res = await apiFetch("/item-sub-collection", {
+  method: "POST",
+  body: JSON.stringify({
+    name: nombre,
+    itemCollectionId: Number(departamento)
+  })
+});
 
         if (!res.ok) throw new Error();
       }
@@ -170,10 +154,9 @@ const { t } = useLanguage();
 
       const id = subdepartamentos[seleccionado].id;
 
-      const res = await fetch(`${API_SUB}/${id}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const res = await apiFetch(`/item-sub-collection/${id}`, {
+  method: "DELETE",
+});
 
       if (!res.ok) throw new Error();
 
@@ -187,53 +170,55 @@ const { t } = useLanguage();
   };
 
   const salir = () => {
-  setSection("home"); // ⚠️ cambiar si tu app usa otro nombre
+  setSection("home"); 
 };
 
   return (
     <div className="sub-container">
 
-      <h2>{t("subdepartamentos.title")}</h2>
-
       {/* ================= TOOLBAR PRO ================= */}
       <div className="toolbar">
 
-        <button className="tool nuevo" data-icon="➕" onClick={nuevo}>
-          <span>{t("common.new")}</span>
-        </button>
+  <button className="tool nuevo" data-icon="＋" onClick={nuevo}>
+    <span>{t("common.new")}</span>
+  </button>
 
-        <button
-          className={`tool eliminar ${seleccionado === null ? "disabled" : ""}`}
-          data-icon="🗑️"
-          onClick={eliminar}
-        >
-          <span>{t("common.delete")}</span>
-        </button>
+  <button
+    className={`tool eliminar ${seleccionado === null ? "disabled" : ""}`}
+    data-icon="🗑"
+    onClick={eliminar}
+  >
+    <span>{t("common.delete")}</span>
+  </button>
 
-        <button
-          className={`tool modificar ${seleccionado === null ? "disabled" : ""}`}
-          data-icon="✏️"
-          onClick={modificar}
-        >
-          <span>{t("common.edit")}</span>
-        </button>
+  <button
+    className={`tool modificar ${seleccionado === null ? "disabled" : ""}`}
+    data-icon="✎"
+    onClick={modificar}
+  >
+    <span>{t("common.edit")}</span>
+  </button>
 
-        <button className="tool guardar" data-icon="💾" onClick={guardar}>
-          <span>{t("common.save")}</span>
-        </button>
+  <button className="tool guardar" data-icon="✓" onClick={guardar}>
+    <span>{t("common.save")}</span>
+  </button>
 
-        <button className="tool cancelar" data-icon="❌" onClick={cancelar}>
-          <span>{t("common.cancel")}</span>
-        </button>
-        <button className="tool salir" data-icon="🚪" onClick={salir}>
-        <span>{t("common.exit")}</span>
-        </button>
-      </div>
+  <button className="tool cancelar" data-icon="✕" onClick={cancelar}>
+    <span>{t("common.cancel")}</span>
+  </button>
+
+  <button className="tool salir" data-icon="↪" onClick={salir}>
+    <span>{t("common.exit")}</span>
+  </button>
+
+</div>
 
       {/* ================= TABLA ================= */}
-      {modo === "tabla" && (
+{modo === "tabla" && (
 
-        <table className="sub-table">
+  <div className="sub-table-wrapper">
+
+    <table className="sub-table">
 
           <thead>
             <tr>
@@ -263,9 +248,11 @@ const { t } = useLanguage();
 
           </tbody>
 
-        </table>
+  </table>
 
-      )}
+  </div>
+
+)}
 
       {/* ================= FORM ================= */}
       {modo !== "tabla" && (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Marcas.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
 export default function Marcas({ setSection }) {
 
@@ -21,9 +22,7 @@ export default function Marcas({ setSection }) {
   // =========================
   const cargarMarcas = async () => {
     try {
-      const res = await fetch(API_URL, {
-        credentials: "include"
-      });
+      const res = await apiFetch("/brand");
 
       if (res.status === 401) {
         alert(t("marcas.sessionExpired"));
@@ -62,14 +61,12 @@ export default function Marcas({ setSection }) {
   // =========================
   const crearMarca = async () => {
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name: nuevaMarca })
-      });
+      const res = await apiFetch("/brand", {
+  method: "POST",
+  body: JSON.stringify({
+    name: nuevaMarca,
+  }),
+});
 
       if (res.status === 201) {
 
@@ -122,14 +119,12 @@ export default function Marcas({ setSection }) {
   // =========================
   const modificarMarca = async () => {
     try {
-      const res = await fetch(`${API_URL}/${seleccionada}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name: marcaEditada })
-      });
+     const res = await apiFetch(`/brand/${seleccionada}`, {
+  method: "PUT",
+  body: JSON.stringify({
+    name: marcaEditada,
+  }),
+});
 
       if (res.status === 204) {
         const actualizadas = marcas.map(m =>
@@ -185,10 +180,9 @@ export default function Marcas({ setSection }) {
     if (!confirmar) return;
 
     try {
-      const res = await fetch(`${API_URL}/${seleccionada}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const res = await apiFetch(`/brand/${seleccionada}`, {
+  method: "DELETE"
+});
 
       if (res.status === 204) {
         setMarcas(marcas.filter(m => m.codigo !== seleccionada));
@@ -218,6 +212,26 @@ export default function Marcas({ setSection }) {
       alert("Error de conexión");
     }
   };
+
+  // =========================
+  // Cancelar
+  // =========================
+
+
+const handleCancelar = () => {
+  // Salir de cualquier modo
+  setModoCrear(false);
+  setModoEditar(false);
+
+  // Limpiar campos
+  setNuevaMarca("");
+  setMarcaEditada("");
+
+  // 🔥 QUITAR SELECCIÓN
+  setSeleccionada(null);
+};
+
+
   // =========================
   // Salir
   // =========================
@@ -231,67 +245,93 @@ export default function Marcas({ setSection }) {
 
       {/* 🔥 TOOLBAR */}
       <div className="toolbar">
-        <button
-          className="btn"
-          onClick={() => {
-            setModoCrear(true);
-            setModoEditar(false);
-          }}
-        >
-          ➕ {t("common.new")}
-        </button>
 
-        <button className="btn" onClick={eliminarMarca}>
-          🗑 {t("common.delete")}
-        </button>
+<button
+  className="btn new"
+  onClick={() => {
+    setModoCrear(true);
+    setModoEditar(false);
 
-        <button
-          className="btn"
-          onClick={() => {
-            if (!seleccionada) {
-              alert(t("marcas.selectBrand"));
-              return;
-            }
-
-            const marca = marcas.find(m => m.codigo === seleccionada);
-
-            setMarcaEditada(marca.nombre);
-            setModoEditar(true);
-            setModoCrear(false);
-          }}
-        >
-          ✏️ {t("common.edit")}
-        </button>
-
-        <button
-          className="btn"
-          disabled={!modoCrear && !modoEditar}
-          onClick={modoCrear ? crearMarca : modificarMarca}
-        >
-          💾 {t("common.save")}
-        </button>
-
-        <button
-          className="btn"
-          disabled={!modoCrear && !modoEditar}
-          onClick={() => {
-            setModoCrear(false);
-            setModoEditar(false);
-            setNuevaMarca("");
-            setMarcaEditada("");
-          }}
-        >
-          ❌ {t("common.cancel")}
-        </button>
-
-        <button className="btn" onClick={cargarMarcas}>
-          🔄 {t("marcas.reload")}
-        </button>
-        <button className="btn" onClick={salir}>
-  🚪 {t("common.exit")}
+    setSeleccionada(null);
+    setMarcaEditada("");
+    setNuevaMarca("");
+  }}
+>
+  <div className="tool-icon">＋</div>
+  <span>{t("common.new")}</span>
 </button>
-      </div>
 
+
+
+  <button
+    className="btn delete"
+    onClick={eliminarMarca}
+  >
+    <div className="tool-icon">🗑</div>
+    <span>{t("common.delete")}</span>
+  </button>
+
+  <button
+    className="btn edit"
+    onClick={() => {
+      if (!seleccionada) {
+        alert(t("marcas.selectBrand"));
+        return;
+      }
+
+      const marca = marcas.find(m => m.codigo === seleccionada);
+
+      setMarcaEditada(marca.nombre);
+      setModoEditar(true);
+      setModoCrear(false);
+    }}
+  >
+    <div className="tool-icon">✎</div>
+    <span>{t("common.edit")}</span>
+  </button>
+
+  <button
+    className="btn save"
+    disabled={!modoCrear && !modoEditar}
+    onClick={modoCrear ? crearMarca : modificarMarca}
+  >
+    <div className="tool-icon">✓</div>
+    <span>{t("common.save")}</span>
+  </button>
+
+  
+<button
+  type="button"
+  className="btn cancel"
+  disabled={
+    !modoCrear &&
+    !modoEditar &&
+    seleccionada === null
+  }
+  onClick={handleCancelar}
+>
+  <div className="tool-icon">✕</div>
+  <span>{t("common.cancel")}</span>
+</button>
+
+
+  <button
+    className="btn"
+    onClick={cargarMarcas}
+  >
+    <div className="tool-icon">↻</div>
+    <span>{t("marcas.reload")}</span>
+  </button>
+
+  <button
+    className="btn exit"
+    onClick={salir}
+  >
+    <div className="tool-icon">↪</div>
+    <span>{t("common.exit")}</span>
+  </button>
+
+</div>
       {/* 🔥 INPUT */}
       {(modoCrear || modoEditar) && (
         <div className="form-nueva">
@@ -309,28 +349,32 @@ export default function Marcas({ setSection }) {
       )}
 
       {/* 🔥 TABLA */}
-      <table className="tabla">
-        <thead>
-          <tr>
-            <th>{t("common.id")}</th>
-            <th>{t("common.name")}</th>
-          </tr>
-        </thead>
+  <div className="tabla-wrapper">
 
-        <tbody>
-          {marcas.map((m) => (
-            <tr
-              key={m.codigo}
-              className={seleccionada === m.codigo ? "selected" : ""}
-              onClick={() => setSeleccionada(m.codigo)}
-            >
-              <td>{m.codigo}</td>
-              <td>{m.nombre}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  <table className="tabla">
+    <thead>
+      <tr>
+        <th>{t("common.id")}</th>
+        <th>{t("common.name")}</th>
+      </tr>
+    </thead>
 
-    </div>
-  );
+    <tbody>
+      {marcas.map((m) => (
+        <tr
+          key={m.codigo}
+          className={seleccionada === m.codigo ? "selected" : ""}
+          onClick={() => setSeleccionada(m.codigo)}
+        >
+          <td>{m.codigo}</td>
+          <td>{m.nombre}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+</div>
+
+</div>
+);
 }

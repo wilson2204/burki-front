@@ -1,200 +1,1121 @@
-.combos-container {
+.combo-container {
   padding: 20px;
-  background: #f8fbff;
+  background: #f5f6fa;
   min-height: 100vh;
-  font-family: "Segoe UI", Arial, sans-serif;
-  color: #1e3a8a;
-  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-/* ================= TOOLBAR ================= */
-
-.combos-toolbar {
+/* =========================
+   TOOLBAR
+========================= */
+.toolbar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.toolbar .tool {
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.toolbar-btn {
-  border: 1px solid #2563eb;
-  padding: 10px 18px;
-  border-radius: 10px;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 600;
+.toolbar button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2f3640;
+  color: white;
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  transition: 0.2s;
 }
 
-.toolbar-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
+.toolbar button:hover {
+  background: #414b57;
 }
 
-.toolbar-btn:active {
-  transform: translateY(0);
-}
-
-.toolbar-btn:disabled {
-  opacity: 0.6;
+.toolbar button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* ================= FORMULARIOS ================= */
-
-.combos-form {
-  margin-bottom: 18px;
-  background: #ffffff;
-  border: 1px solid #dbeafe;
-  border-radius: 12px;
-  padding: 16px;
-  box-sizing: border-box;
+/* =========================
+   SECCIONES
+========================= */
+.seccion {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* Fila principal */
-.form-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
-  align-items: flex-end;
+.seccion h3 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  border-left: 4px solid #00a8ff;
+  padding-left: 8px;
+  color: #2f3640;
 }
 
-/* Contenedor de cada campo */
-.form-group {
-  flex: 1;
+/* =========================
+   GRID
+========================= */
+.grid-combo {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 15px;
+}
+
+.grid-articulo {
+  display: grid;
+  grid-template-columns: 180px 1fr 120px 100px auto;
+  gap: 10px;
+  align-items: end;
+}
+.buscar svg {
+  flex-shrink: 0;
+  font-size: 18px;
+  cursor: pointer;
+  color: #2563eb;
+}
+/* =========================
+   CAMPOS
+========================= */
+.campo {
   display: flex;
   flex-direction: column;
-  min-width: 0; /* evita desbordes */
 }
 
-/* Anchos específicos */
-.form-group.small {
-  flex: 0 0 120px;
+.campo label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #353b48;
 }
 
-.form-group.medium {
-  flex: 0 0 180px;
-}
-
-.add-btn-group {
-  flex: 0 0 120px;
-}
-
-/* Etiquetas */
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #1e3a8a;
-  font-size: 14px;
-}
-
-/* Inputs */
-.form-group input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  border: 1px solid #bfdbfe;
-  border-radius: 8px;
+.campo input {
+  padding: 8px;
+  border: 1px solid #dcdde1;
+  border-radius: 6px;
   outline: none;
-  background: #ffffff;
-  color: #1e3a8a;
-  font-size: 14px;
+  transition: 0.2s;
 }
 
-.form-group input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+.campo input:focus {
+  border-color: #00a8ff;
 }
 
-/* Botón Agregar */
-.add-btn {
-  width: 100%;
-  border: 1px solid #2563eb;
-  padding: 10px;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 600;
+/* =========================
+   BUSCADOR
+========================= */
+.buscar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dcdde1;
+  border-radius: 6px;
+  padding: 0 6px;
+  background: white;
+}
+
+.buscar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 8px;
+}
+
+/* =========================
+   BOTÓN AGREGAR
+========================= */
+.btnAgregar {
+  background: #44bd32;
+  color: white;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+  height: 40px;
 }
 
-.add-btn:hover {
-  background: #1d4ed8;
+.btnAgregar:hover {
+  background: #3aa528;
 }
 
-/* ================= TABLA ================= */
-
-.table-container {
-  margin-top: 20px;
-  background: #ffffff;
-  border: 1px solid #dbeafe;
-  border-radius: 12px;
-  overflow-x: auto;
-}
-
-.combos-table {
+/* =========================
+   TABLA
+========================= */
+.tabla {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  font-size: 14px;
 }
 
-.combos-table th {
-  background: #eff6ff;
-  color: #1e3a8a;
+.tabla thead {
+  background: #2f3640;
+  color: white;
+}
+
+.tabla th,
+.tabla td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
   text-align: left;
-  padding: 12px;
-  font-weight: 700;
-  border-bottom: 1px solid #dbeafe;
 }
 
-.combos-table td {
-  padding: 12px;
-  border-top: 1px solid #eff6ff;
-  color: #1e3a8a;
+.tabla tbody tr:hover {
+  background: #f1f2f6;
 }
 
-.combos-table tbody tr:hover {
-  background: #f8fbff;
+/* fila seleccionada */
+.tabla tbody tr:has(input:checked) {
+  background: #dff9fb;
 }
 
-.empty {
-  text-align: center;
-  color: #2563eb;
-  padding: 30px;
+/* checkbox */
+.tabla input[type="checkbox"] {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
-/* ================= SEPARADOR ================= */
+/* =========================
+   TOTAL
+========================= */
+.total {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 16px;
+  padding: 10px;
+  background: #f1f2f6;
+  border-radius: 6px;
+}
 
-hr {
+.total strong {
+  font-size: 18px;
+  color: #2f3640;
+}
+
+/* =========================
+   DELETE DROPDOWN
+========================= */
+.delete-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-menu {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  z-index: 100;
+  min-width: 220px;
+  overflow: hidden;
+}
+
+.delete-menu button {
+  width: 100%;
+  padding: 10px;
   border: none;
-  border-top: 2px solid #2563eb;
-  margin: 24px 0;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-/* ================= RESPONSIVE ================= */
+.delete-menu button:hover {
+  background: #f1f2f6;
+}
 
-@media (max-width: 768px) {
-  .form-row {
-    flex-wrap: wrap;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .grid-combo,
+  .grid-articulo {
+    grid-template-columns: 1fr;
   }
 
-  .form-group,
-  .form-group.small,
-  .form-group.medium,
-  .add-btn-group {
-    flex: 1 1 100%;
-  }
-
-  .toolbar-btn {
-    width: 100%;
+  .toolbar {
     justify-content: center;
   }
 
-  .combos-table {
-    min-width: 100%;
+  .total {
+    text-align: center;
   }
+}
+
+
+/* =========================
+   FIX MODO OSCURO GLOBAL
+========================= */
+
+/* Variables base (fallback claro) */
+:root {
+  --bg-primary: #f5f6fa;
+  --bg-card: #ffffff;
+
+  --text-primary: #2f3640;
+  --text-secondary: #718093;
+
+  --border: #dcdde1;
+  --hover: #f1f2f6;
+
+  --primary: #00a8ff;
+}
+
+/* Modo oscuro */
+body.dark {
+  --bg-primary: #0b0f19;
+  --bg-card: #111827;
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #94a3b8;
+
+  --border: #334155;
+  --hover: #1e293b;
+
+  --primary: #3b82f6;
+}
+
+/* =========================
+   FIX FORZADO COMPONENTES
+   (evita estilos viejos)
+========================= */
+
+.combo-container {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.seccion {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.seccion h3 {
+  color: var(--text-primary) !important;
+  border-left: 4px solid var(--primary) !important;
+}
+
+.campo input {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.campo input:focus {
+  border-color: var(--primary) !important;
+}
+
+/* TABLA FIX */
+.tabla {
+  color: var(--text-primary) !important;
+}
+
+.tabla thead {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.tabla td,
+.tabla th {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.tabla tbody tr:hover {
+  background: var(--hover) !important;
+}
+
+/* =========================
+   DELETE DROPDOWN
+========================= */
+
+.delete-wrapper {
+  position: relative;
+}
+
+.delete-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+
+  min-width: 230px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+
+  z-index: 9999;
+}
+
+.delete-menu button {
+  all: unset;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  box-sizing: border-box;
+  width: 100%;
+
+  padding: 12px 16px;
+
+  font-size: 14px;
+  color: var(--text-primary);
+
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.delete-menu button:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.delete-menu button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+body.dark .buscar {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+}
+
+body.dark .buscar input {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark .buscar svg {
+  color: var(--text-secondary) !important;
+}
+
+body.dark .buscar:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+.selected-row {
+  background: #dbeafe;
+}
+
+.selected-row:hover {
+  background: #bfdbfe;
+}
+.grid-articulo .campo.articulo {
+  width: 100%;
+}
+
+.grid-articulo .buscar {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.grid-articulo .buscar input {
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   LISTA DE COMBOS
+========================================================= */
+
+.combos-lista{
+    max-height: 550px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--bg-card);
+}
+
+
+/* =========================================================
+   CABECERA
+========================================================= */
+
+.combo-lista-header {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr) 140px;
+
+    background: var(--bg-card);
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.combo-lista-header > div {
+    padding: 10px 12px;
+}
+
+
+/* =========================================================
+   ITEM
+========================================================= */
+
+.combo-item {
+    width: 100%;
+    background: var(--bg-card);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.combo-item:last-child {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   FILA PRINCIPAL
+========================================================= */
+
+.combo-row {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr) 140px;
+
+    align-items: center;
+
+    min-height: 48px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        padding 0.18s ease;
+}
+
+.combo-row > div {
+    min-width: 0;
+    padding: 12px;
+}
+
+.combo-row:hover {
+    background: var(--hover);
+}
+
+
+/* =========================================================
+   COMBO SELECCIONADO
+========================================================= */
+
+.combo-item-selected > .combo-row {
+    background: rgba(37, 99, 235, 0.08);
+}
+
+.combo-item-selected > .combo-row:hover {
+    background: rgba(37, 99, 235, 0.12);
+}
+
+.combo-item-selected > .combo-row {
+    border-left: 3px solid var(--primary);
+}
+
+
+/* =========================================================
+   NOMBRE
+========================================================= */
+
+.combo-nombre {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   DETALLE DESPLEGABLE
+========================================================= */
+
+.combo-detalle-expandido {
+    margin: 0 12px 12px 12px;
+    padding: 14px;
+
+    background: var(--bg-primary);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    animation: comboExpand 0.18s ease-out;
+}
+
+
+/* =========================================================
+   HEADER DETALLE
+========================================================= */
+
+.combo-detalle-expandido .detalle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 12px;
+}
+
+.combo-detalle-expandido .detalle-header > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.combo-detalle-expandido .detalle-header strong {
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.combo-detalle-expandido .detalle-header span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.combo-detalle-expandido .detalle-precio {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+
+/* =========================================================
+   HEADER DE ARTÍCULOS
+========================================================= */
+
+.detalle-items-header,
+.detalle-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 110px 90px 110px;
+    align-items: center;
+    gap: 12px;
+}
+
+
+/* CABECERA */
+
+.detalle-items-header {
+    padding: 8px 10px;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+    border-bottom: none;
+
+    border-radius: 6px 6px 0 0;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: var(--text-secondary);
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   ARTÍCULO
+========================================================= */
+
+.detalle-item {
+    min-height: 40px;
+
+    padding: 0 10px;
+
+    background: var(--bg-card);
+
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    font-size: 13px;
+
+    color: var(--text-primary);
+}
+
+.detalle-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+.detalle-item:hover {
+    background: var(--hover);
+}
+
+
+/* =========================================================
+   NOMBRE ARTÍCULO
+========================================================= */
+
+.detalle-item .item-nombre {
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.detalle-item input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   SIN ARTÍCULOS
+========================================================= */
+
+.detalle-vacio {
+    padding: 15px;
+
+    text-align: center;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.detalle-total {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.detalle-total strong {
+    font-size: 16px;
+    color: var(--text-primary);
+}
+
+
+/* =========================================================
+   ANIMACIÓN
+========================================================= */
+
+@keyframes comboExpand {
+
+    from {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .combo-lista-header,
+    .combo-row {
+        grid-template-columns: 70px minmax(0, 1fr) 100px;
+    }
+
+    .combo-detalle-expandido {
+        margin: 0 6px 8px;
+        padding: 10px;
+
+        overflow-x: auto;
+    }
+
+    .detalle-items {
+        min-width: 550px;
+    }
+
+}
+
+.combo-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 10px;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* =========================================
+   TOOLBAR PROFESIONAL
+========================================= */
+
+.combo-container .toolbar {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+  padding: 14px;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.04);
+
+  overflow-x: visible;
+}
+
+
+/* =========================================
+   BOTONES
+========================================= */
+
+.combo-container .toolbar .tool {
+  width: 100px;
+  height: 88px;
+
+  min-width: 100px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 8px;
+
+  box-sizing: border-box;
+
+  background: var(--button-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+
+  cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.combo-container .toolbar .tool:hover {
+  transform: translateY(-3px);
+
+  background: var(--button-hover);
+
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================
+   ICONO
+========================================= */
+
+.combo-container .toolbar .tool::before {
+  content: attr(data-icon);
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .18),
+    0 2px 4px rgba(0, 0, 0, .12);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+
+/* =========================================
+   ICONO HOVER
+========================================= */
+
+.combo-container .toolbar .tool:hover::before {
+  transform: scale(1.06);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .22),
+    0 4px 8px rgba(0, 0, 0, .15);
+}
+
+
+/* =========================================
+   TEXTO
+========================================= */
+
+.combo-container .toolbar .tool span {
+  margin: 0;
+  padding: 0;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  color: var(--text-primary);
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   COLORES
+========================================= */
+
+.combo-container .toolbar .tool.nuevo::before {
+  background: #2563eb;
+}
+
+.combo-container .toolbar .tool.eliminar::before {
+  background: #64748b;
+}
+
+.combo-container .toolbar .tool.duplicar::before {
+  background: #8b5cf6;
+}
+
+.combo-container .toolbar .tool.modificar::before {
+  background: #0ea5e9;
+}
+
+.combo-container .toolbar .tool.guardar::before {
+  background: #059669;
+}
+
+.combo-container .toolbar .tool.cancelar::before {
+  background: #ef4444;
+}
+
+.combo-container .toolbar .tool.salir::before {
+  background: #0891b2;
+}
+
+
+/* =========================================
+   SCROLL HORIZONTAL
+========================================= */
+
+.combo-container .toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.combo-container .toolbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.combo-container .toolbar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+
+body.dark .combo-container .toolbar {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, .25);
+}
+
+body.dark .combo-container .toolbar .tool {
+  background: var(--button-bg);
+  border-color: var(--border-color);
+}
+
+body.dark .combo-container .toolbar .tool:hover {
+  background: var(--button-hover);
+}
+
+
+/* =========================================
+   MENÚ ELIMINAR
+========================================= */
+
+.combo-container .delete-wrapper {
+  position: relative;
+}
+
+.combo-container .delete-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+
+  min-width: 210px;
+
+  padding: 8px;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, .15);
+
+  z-index: 100;
+}
+
+.combo-container .delete-menu button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: var(--text-primary);
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+.combo-container .delete-menu button:hover:not(:disabled) {
+  background: var(--button-hover);
+}
+
+.combo-container .delete-menu button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   TABLA CON SCROLL
+========================================= */
+
+.combo-container .tabla-scroll {
+  width: 100%;
+  max-height: 500px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+
+  border-radius: 16px;
+}
+
+
+/* encabezado fijo */
+
+.combo-container .tabla-scroll thead th {
+  position: sticky;
+  top: 0;
+
+  z-index: 5;
+}
+
+
+/* tabla */
+
+.combo-container .tabla-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+/* scroll bonito */
+
+.combo-container .tabla-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.combo-container .tabla-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
 }

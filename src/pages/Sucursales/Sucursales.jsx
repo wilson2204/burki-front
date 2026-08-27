@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Sucursales.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
-const API_URL = "http://localhost:8080";
 
 export default function Sucursales({ setSection }) {
 
@@ -50,16 +50,7 @@ const { t } = useLanguage();
 
     try {
 
-      const response = await fetch(
-        `${API_URL}/back_office/branch/companies`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include"
-        }
-      );
+      const response = await apiFetch("/branch/companies");
 
       if (response.status === 401) {
         setError("Sesión expirada");
@@ -90,16 +81,7 @@ const { t } = useLanguage();
 
     try {
 
-      const response = await fetch(
-        `${API_URL}/back_office/branch`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include"
-        }
-      );
+     const response = await apiFetch("/branch");
 
       if (response.status === 401) {
         setError("Sesión expirada");
@@ -191,13 +173,13 @@ const { t } = useLanguage();
   // =========================
   // CANCELAR
   // =========================
-  const cancelar = () => {
-
-    setForm(emptyForm);
-    setSelected(null);
-    setEditando(false);
-    setView("table");
-  };
+ const cancelar = () => {
+  setForm({ ...emptyForm });
+  setSelected(null);
+  setEditando(false);
+  setView("table");
+  setError("");
+};
 
   // =========================
   // GUARDAR
@@ -226,17 +208,10 @@ const { t } = useLanguage();
       // =========================
       if (selected) {
 
-        const response = await fetch(
-          `${API_URL}/back_office/branch/${selected}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify(body)
-          }
-        );
+        const response = await apiFetch(`/branch/${selected}`, {
+  method: "PUT",
+  body: JSON.stringify(body),
+});
 
         if (response.status === 204) {
 
@@ -274,17 +249,10 @@ const { t } = useLanguage();
       // =========================
       // CREATE
       // =========================
-      const response = await fetch(
-        `${API_URL}/back_office/branch`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include",
-          body: JSON.stringify(body)
-        }
-      );
+      const response = await apiFetch("/branch", {
+  method: "POST",
+  body: JSON.stringify(body),
+});
 
       if (response.status === 201) {
 
@@ -345,16 +313,9 @@ const { t } = useLanguage();
 
     try {
 
-      const response = await fetch(
-        `${API_URL}/back_office/branch/${selected}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include"
-        }
-      );
+     const response = await apiFetch(`/branch/${selected}`, {
+  method: "DELETE",
+});
 
       if (response.status === 204) {
 
@@ -426,72 +387,71 @@ const { t } = useLanguage();
     <div className="sucursales-container">
 
       {/* TOOLBAR */}
-      <div className="toolbar">
+     <div className="toolbar">
 
-        <div
-          className="tool new"
-          onClick={nuevo}
-        >
-          <span className="tool-icon">➕</span>
-          <span className="tool-label">{t("common.new")}</span>
-        </div>
+  <div
+    className="tool new"
+    onClick={nuevo}
+  >
+    <span className="tool-icon">＋</span>
+    <span className="tool-label">{t("common.new")}</span>
+  </div>
 
-        <div
-          className="tool delete"
-          onClick={eliminar}
-        >
-          <span className="tool-icon">➖</span>
-          <span className="tool-label">{t("common.delete")}</span>
-        </div>
+  <div
+    className={`tool delete ${!selected ? "disabled" : ""}`}
+    onClick={selected ? eliminar : undefined}
+  >
+    <span className="tool-icon">🗑</span>
+    <span className="tool-label">
+      {t("common.delete")}
+    </span>
+  </div>
 
-        <div
-          className="tool modify"
-          onClick={modificar}
-        >
-          <span className="tool-icon">✏️</span>
-          <span className="tool-label">
-            {t("common.edit")}
-          </span>
-        </div>
+  <div
+    className="tool modify"
+    onClick={modificar}
+  >
+    <span className="tool-icon">✎</span>
+    <span className="tool-label">
+      {t("common.edit")}
+    </span>
+  </div>
 
-        <div
-          className={`tool save ${
-            !editando ? "disabled" : ""
-          }`}
-          onClick={
-            editando ? guardar : undefined
-          }
-        >
-          <span className="tool-icon">💾</span>
-          <span className="tool-label">
-            {t("common.save")}
-          </span>
-        </div>
+  <div
+    className={`tool save ${!editando ? "disabled" : ""}`}
+    onClick={editando ? guardar : undefined}
+  >
+    <span className="tool-icon">✓</span>
+    <span className="tool-label">
+      {t("common.save")}
+    </span>
+  </div>
 
-        <div
-          className={`tool cancel ${
-            !editando ? "disabled" : ""
-          }`}
-          onClick={
-            editando ? cancelar : undefined
-          }
-        >
-          <span className="tool-icon">❌</span>
-          <span className="tool-label">
-            {t("common.cancel")}
-          </span>
-        </div>
+  <div
+  className={`tool cancel ${
+    !selected && !editando ? "disabled" : ""
+  }`}
+  onClick={
+    selected || editando
+      ? cancelar
+      : undefined
+  }
+>
+  <span className="tool-icon">✕</span>
+  <span className="tool-label">
+    {t("common.cancel")}
+  </span>
+</div>
 
-        <div
-          className="tool exit"
-          onClick={() =>
-            setSection("home")
-          }
-        >
-          <span className="tool-icon">🚪</span>
-          <span className="tool-label">{t("common.exit")}</span>
-        </div>
-      </div>
+  <div
+    className="tool exit"
+    onClick={() => setSection("home")}
+  >
+    <span className="tool-icon">↪</span>
+    <span className="tool-label">{t("common.exit")}</span>
+  </div>
+
+</div>
 
       {/* ERROR */}
       {error && (
@@ -520,32 +480,24 @@ const { t } = useLanguage();
                 onClick={() =>
                   setSelected(s.id)
                 }
-                onDoubleClick={() => {
+onDoubleClick={() => {
+  setSelected(s.id);
 
-                  setSelected(s.id);
+  setForm({
+    id: s.id,
+    companyId: s.companyId || "",
+    name: s.name || "",
+    address: s.address || "",
+    email: s.email || "",
+    phone1: s.phone1 || "",
+    phone2: s.phone2 || "",
+    priceListId: s.priceListId || 1,
+    branchIdStockDepot: s.branchIdStockDepot || ""
+  });
 
-                  setForm({
-                    id: s.id,
-                    companyId:
-                      s.companyId || "",
-                    name: s.name || "",
-                    address:
-                      s.address || "",
-                    email: s.email || "",
-                    phone1:
-                      s.phone1 || "",
-                    phone2:
-                      s.phone2 || "",
-                    priceListId:
-                      s.priceListId || 1,
-                    branchIdStockDepot:
-                      s.branchIdStockDepot ||
-                      ""
-                  });
-
-                  setEditando(true);
-                  setView("form");
-                }}
+  setEditando(true);
+  setView("form");
+}}
                 className={
                   selected === s.id
                     ? "selected"

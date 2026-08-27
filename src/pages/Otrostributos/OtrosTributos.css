@@ -14,7 +14,7 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-/* BOTONES PRO */
+/* BOTONES */
 .tool {
   display: flex;
   flex-direction: column;
@@ -24,46 +24,52 @@
   width: 95px;
   height: 80px;
 
-  background: #f3f4f6;
+  background: var(--bg-secondary);
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 
   cursor: pointer;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08),
-              0 6px 12px rgba(0,0,0,0.06);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.08),
+    0 6px 12px rgba(0,0,0,0.06);
 
   transition: all 0.2s ease;
 }
 
 .tool::before {
   content: attr(data-icon);
+
   width: 42px;
   height: 42px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 50%;
   color: white;
+
   margin-bottom: 6px;
+
   background: #9ca3af;
 }
 
 .tool span {
   font-size: 12px;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .tool:hover {
   transform: translateY(-2px);
 }
 
-/* colores */
+/* colores botones */
 .tool.nuevo::before { background: #2563eb; }
 .tool.eliminar::before { background: #1d4ed8; }
 .tool.modificar::before { background: #9ca3af; }
-.tool.guardar::before { background: #9ca3af; }
-.tool.cancelar::before { background: #9ca3af; }
+.tool.guardar::before { background: #059669; }
+.tool.cancelar::before { background: #ef4444; }
 
 /* disabled */
 .tool.disabled {
@@ -75,19 +81,383 @@
 .tabla {
   margin-top: 10px;
   width: 100%;
+
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
-/* FORM */
+/* FORMULARIO */
 .formulario {
   margin-top: 20px;
+
   display: grid;
   grid-template-columns: 140px 1fr;
+
   gap: 12px;
+
   max-width: 600px;
+}
+
+.formulario label {
+  color: var(--text-primary);
 }
 
 .formulario input,
 .formulario select {
   height: 35px;
   padding: 6px;
+
+  background: var(--input-bg);
+  color: var(--text-primary);
+
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+}
+
+.formulario input:focus,
+.formulario select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* =====================================
+   FORZAR DARK MODE
+===================================== */
+
+body.dark .otros-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark .toolbar {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tool {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tool span {
+  color: var(--text-primary) !important;
+}
+
+/* TABLA */
+
+body.dark .tabla {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark .tabla table {
+  background: var(--bg-secondary) !important;
+}
+
+body.dark .tabla th {
+  background: var(--table-header) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla td {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .tabla tr:hover {
+  background: var(--table-hover) !important;
+}
+
+body.dark .tabla tr.selected {
+  background: #1e40af !important;
+}
+
+body.dark .tabla tr.selected td {
+  color: #ffffff !important;
+}
+
+/* FORMULARIO */
+
+body.dark .formulario label {
+  color: var(--text-primary) !important;
+}
+
+body.dark .formulario input,
+body.dark .formulario select {
+  background: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+body.dark .formulario input:focus,
+body.dark .formulario select:focus {
+  border-color: var(--primary-color) !important;
+}
+
+/* ===== FIX TOOLBAR ===== */
+
+.toolbar{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:14px;
+    padding:12px;
+    background:var(--bg-secondary);
+    border-bottom:1px solid var(--border-color);
+}
+
+.tool{
+    width:95px;
+    height:78px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+
+    padding-top:8px;
+    gap:8px;
+
+    background:var(--button-bg);
+
+    border:1px solid var(--border-color);
+    border-radius:12px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.10),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    transition:.2s;
+}
+
+.tool:hover:not(.disabled){
+    transform:translateY(-2px);
+    background:var(--button-hover);
+}
+
+.tool::before{
+    content:attr(data-icon);
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    color:#fff;
+    font-size:20px;
+
+    margin:0;
+}
+
+.tool span{
+    font-size:14px;
+    font-weight:500;
+    color:var(--text-primary);
+    text-align:center;
+}
+/* ==========================================================
+   FIX DEFINITIVO TOOLBAR - OTROS TRIBUTOS
+========================================================== */
+
+.otros-container > .toolbar{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    flex-wrap:wrap !important;
+
+    gap:12px !important;
+    padding:14px !important;
+
+    background:var(--bg-secondary) !important;
+
+    border:1px solid var(--border-color) !important;
+    border-radius:16px !important;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.06),
+        0 8px 20px rgba(0,0,0,.04) !important;
+}
+
+.otros-container > .toolbar > .tool{
+    width:100px !important;
+    min-width:100px !important;
+    height:88px !important;
+
+    display:flex !important;
+    flex-direction:column !important;
+
+    justify-content:center !important;
+    align-items:center !important;
+
+    gap:8px !important;
+    padding:8px !important;
+
+    background:var(--button-bg) !important;
+
+    border:1px solid var(--border-color) !important;
+    border-radius:14px !important;
+
+    transition:.2s !important;
+}
+
+.otros-container > .toolbar > .tool:hover:not(.disabled){
+    transform:translateY(-3px);
+    background:var(--button-hover) !important;
+}
+
+.otros-container > .toolbar > .tool::before{
+    width:46px !important;
+    height:46px !important;
+
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    margin:0 !important;
+
+    border-radius:12px !important;
+
+    color:#fff !important;
+    font-size:24px !important;
+}
+
+.otros-container > .toolbar > .tool span{
+    font-size:13px !important;
+    font-weight:600 !important;
+    line-height:1.2 !important;
+
+    color:var(--text-primary) !important;
+
+    text-align:center !important;
+    white-space:nowrap !important;
+}
+
+/* DARK */
+
+body.dark .otros-container > .toolbar{
+    background:var(--bg-secondary) !important;
+    border-color:var(--border-color) !important;
+}
+
+body.dark .otros-container > .toolbar > .tool{
+    background:var(--button-bg) !important;
+}
+
+/* ==========================================
+   FIX TOOLBAR OTROS TRIBUTOS
+========================================== */
+
+.otros-container .toolbar{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+
+    padding:14px;
+
+    background:var(--bg-secondary);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.06),
+        0 8px 20px rgba(0,0,0,.04);
+}
+
+.otros-container .tool{
+    width:100px;
+    height:88px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    background:var(--button-bg);
+
+    border:1px solid var(--border-color);
+    border-radius:14px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.otros-container .tool:hover:not(.disabled){
+    transform:translateY(-3px);
+    background:var(--button-hover);
+}
+
+.otros-container .tool-icon{
+    width:46px;
+    height:46px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    color:#fff;
+    font-size:24px;
+    font-weight:600;
+
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.18),
+        0 2px 4px rgba(0,0,0,.12);
+
+    transition:.2s;
+}
+
+.otros-container .tool:hover .tool-icon{
+    transform:scale(1.06);
+}
+
+.otros-container .tool-label{
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-primary);
+    text-align:center;
+}
+
+/* COLORES */
+
+.otros-container .tool.new .tool-icon{
+    background:#2563eb;
+}
+
+.otros-container .tool.delete .tool-icon{
+    background:#64748b;
+}
+
+.otros-container .tool.edit .tool-icon{
+    background:#0ea5e9;
+}
+
+.otros-container .tool.save .tool-icon{
+    background:#059669;
+}
+
+.otros-container .tool.cancel .tool-icon{
+    background:#ef4444;
+}
+
+.otros-container .tool.exit .tool-icon{
+    background:#0891b2;
 }

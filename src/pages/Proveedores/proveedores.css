@@ -1,107 +1,814 @@
+/* =========================================================
+   PROVEEDORES - GENERAL
+========================================================= */
+
 .proveedores-container {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 10px;
+
   background: var(--bg-primary);
   color: var(--text-primary);
-  padding: 10px;
+
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* TOOLBAR */
-.toolbar {
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.proveedores-container .toolbar {
   display: flex;
-  gap: 14px;
-  padding: 12px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  width: 100%;
+
+  padding: 18px;
+
   background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.04);
+
+  scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   TOOLBAR SCROLLBAR
+========================================================= */
+
+.proveedores-container .toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.proveedores-container .toolbar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 999px;
+}
+
+.proveedores-container .toolbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.proveedores-container .toolbar .tool {
+  flex: 0 0 110px;
+
+  width: 110px;
+  min-width: 110px;
+  height: 95px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 8px;
+
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+
+  cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   ICONOS
+========================================================= */
+
+.proveedores-container .toolbar .tool::before {
+  content: attr(data-icon);
+
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #fff;
+
+  font-size: 30px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  background: #9ca3af;
+
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+
+/* =========================================================
+   TEXTO BOTONES
+========================================================= */
+
+.proveedores-container .toolbar .tool span {
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   HOVER BOTONES
+========================================================= */
+
+.proveedores-container .toolbar .tool:hover:not(.disabled) {
+  transform: translateY(-3px);
+
+  background: var(--button-hover, var(--bg-secondary));
+
+  border-color: var(--primary-color, #3483fa);
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.12);
+}
+
+.proveedores-container .toolbar .tool:hover:not(.disabled)::before {
+  filter: brightness(1.08);
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   BOTONES DESHABILITADOS
+========================================================= */
+
+.proveedores-container .toolbar .tool.disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+  pointer-events: none;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   COLORES ICONOS
+========================================================= */
+
+.proveedores-container .tool.nuevo::before {
+  background: #2563eb;
+}
+
+.proveedores-container .tool.eliminar::before {
+  background: #64748b;
+}
+
+.proveedores-container .tool.modificar::before {
+  background: #0ea5e9;
+}
+
+.proveedores-container .tool.guardar::before {
+  background: #059669;
+}
+
+.proveedores-container .tool.cancelar::before {
+  background: #ef4444;
+}
+
+.proveedores-container .tool.salir::before {
+  background: #0891b2;
+}
+
+
+/* =========================================================
+   TABLA PRINCIPAL
+========================================================= */
+
+.proveedores-container .tabla {
+  width: 100%;
+
+  margin-top: 16px;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   HEADER TABLA
+========================================================= */
+
+.proveedores-container .tabla-header {
+  display: grid;
+
+  /*
+    IMPORTANTE:
+    estas columnas deben ser EXACTAMENTE
+    iguales a las de .fila
+  */
+
+  grid-template-columns:
+    80px
+    1.2fr
+    1fr
+    140px;
+
+  width: 100%;
+
+  min-height: 60px;
+
+  align-items: center;
+
+  padding: 0 16px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-primary);
+
+  font-size: 15px;
+  font-weight: 600;
+
   border-bottom: 1px solid var(--border-color);
 }
 
-/* BOTONES */
-.tool {
-  display: flex;
-  flex-direction: column;
+
+/* =========================================================
+   CUERPO TABLA
+========================================================= */
+
+.proveedores-container .tabla-body {
+  width: 100%;
+
+  height: 350px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   SCROLLBAR TABLA
+========================================================= */
+
+.proveedores-container .tabla-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.proveedores-container .tabla-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.proveedores-container .tabla-body::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   FILAS
+========================================================= */
+
+.proveedores-container .fila {
+  display: grid;
+
+  /*
+    EXACTAMENTE IGUAL AL HEADER
+  */
+
+  grid-template-columns:
+    80px
+    1.2fr
+    1fr
+    140px;
+
+  width: 100%;
+
+  min-height: 65px;
+
   align-items: center;
-  justify-content: center;
 
-  width: 95px;
-  height: 80px;
+  padding: 0 16px;
 
-  background: #f3f4f6;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  color: var(--text-primary);
+
+  font-size: 15px;
 
   cursor: pointer;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08),
-              0 6px 12px rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--border-color);
 
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-.tool::before {
-  content: attr(data-icon);
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: white;
-  margin-bottom: 6px;
-  background: #9ca3af;
+
+/* =========================================================
+   CELDAS
+========================================================= */
+
+.proveedores-container .tabla-header > span,
+.proveedores-container .fila > span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
 }
 
-.tool span {
-  font-size: 12px;
+
+/* =========================================================
+   HOVER FILA
+========================================================= */
+
+.proveedores-container .fila:hover {
+  background: rgba(59, 130, 246, 0.08);
 }
 
-.tool.nuevo::before { background: #2563eb; }
-.tool.eliminar::before { background: #1d4ed8; }
-.tool.salir::before { background: #06b6d4; }
 
-.tool.disabled {
-  opacity: 0.5;
-  pointer-events: none;
+/* =========================================================
+   FILA SELECCIONADA
+========================================================= */
+
+.proveedores-container .fila.activa {
+  background: #0d6efd;
+
+  color: #fff;
 }
 
-/* TABLA */
-.tabla {
-  margin-top: 10px;
+.proveedores-container .fila.activa > span {
+  color: #fff;
 }
 
-.tabla-header {
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.proveedores-container .formulario {
+  width: 95%;
+
+  max-width: none;
+
+  margin: 25px auto;
+
+  padding: 28px;
+
   display: grid;
-  grid-template-columns: 80px 150px 200px 120px;
+
+  grid-template-columns:
+    180px
+    minmax(0, 1fr);
+
+  gap: 18px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-primary);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+.proveedores-container .formulario label {
+  display: flex;
+
+  align-items: center;
+
+  color: var(--text-primary);
+
+  font-size: 14px;
   font-weight: 600;
 }
 
-.tabla-body {
-  height: 250px;
-  overflow-y: auto;
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.proveedores-container .formulario input,
+.proveedores-container .formulario select,
+.proveedores-container .formulario textarea {
+  width: 100%;
+
+  min-width: 0;
+
+  min-height: 42px;
+
+  padding: 8px 10px;
+
+  background: var(--input-bg);
+
+  color: var(--text-primary);
+
+  border: 1px solid var(--input-border);
+
+  border-radius: 8px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.fila {
-  display: grid;
-  grid-template-columns: 80px 150px 200px 120px;
-  padding: 10px;
-  cursor: pointer;
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.proveedores-container .formulario input:focus,
+.proveedores-container .formulario select:focus,
+.proveedores-container .formulario textarea:focus {
+  outline: none;
+
+  border-color: var(--primary-color, #3483fa);
+
+  box-shadow:
+    0 0 0 3px rgba(52, 131, 250, 0.15);
 }
 
-.fila.activa {
-  background: #0d6efd;
-  color: white;
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.proveedores-container .formulario textarea {
+  min-height: 90px;
+
+  resize: vertical;
 }
 
-/* FORM */
-.formulario {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 12px;
-  max-width: 700px;
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .proveedores-container .toolbar {
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    padding: 14px;
+  }
+
+  .proveedores-container .formulario {
+    width: 100%;
+
+    grid-template-columns:
+      150px
+      minmax(0, 1fr);
+
+    padding: 20px;
+  }
 }
 
-.formulario input,
-.formulario select,
-.formulario textarea {
-  padding: 7px;
-  border-radius: 6px;
+
+/* =========================================================
+   RESPONSIVE - CELULAR
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .proveedores-container {
+    padding: 8px;
+  }
+
+
+  /* TOOLBAR */
+
+  .proveedores-container .toolbar {
+    justify-content: flex-start;
+
+    overflow-x: auto;
+
+    padding: 10px;
+
+    gap: 10px;
+  }
+
+  .proveedores-container .toolbar .tool {
+    flex: 0 0 90px;
+
+    width: 90px;
+    min-width: 90px;
+
+    height: 82px;
+  }
+
+  .proveedores-container .toolbar .tool::before {
+    width: 42px;
+    height: 42px;
+
+    font-size: 23px;
+  }
+
+  .proveedores-container .toolbar .tool span {
+    font-size: 12px;
+  }
+
+
+  /* FORMULARIO */
+
+  .proveedores-container .formulario {
+    width: 100%;
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+
+    padding: 16px;
+
+    margin: 15px auto;
+  }
+
+  .proveedores-container .formulario label {
+    margin-top: 6px;
+  }
+
+
+  /* TABLA */
+
+  .proveedores-container .tabla {
+    overflow-x: auto;
+  }
+
+  .proveedores-container .tabla-header,
+  .proveedores-container .fila {
+    min-width: 700px;
+  }
+
+  .proveedores-container .tabla-header {
+    padding-right: 16px;
+  }
+}
+
+
+/* =========================================================
+   CELULAR PEQUEÑO
+========================================================= */
+
+@media (max-width: 450px) {
+
+  .proveedores-container .toolbar .tool {
+    flex: 0 0 82px;
+
+    width: 82px;
+    min-width: 82px;
+
+    height: 78px;
+  }
+
+  .proveedores-container .toolbar .tool::before {
+    width: 38px;
+    height: 38px;
+
+    font-size: 21px;
+  }
+
+  .proveedores-container .toolbar .tool span {
+    font-size: 11px;
+  }
+}
+/* =========================================================
+   FIX DEFINITIVO - TABLA PROVEEDORES
+   ========================================================= */
+
+.proveedores-container .tabla {
+  width: 100% !important;
+  margin: 16px 0 0 0 !important;
+
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+
+  overflow: hidden !important;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+
+  position: relative;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.proveedores-container .tabla-header {
+  display: grid !important;
+
+  grid-template-columns:
+    80px
+    minmax(220px, 1fr)
+    minmax(140px, 220px)
+    140px !important;
+
+  width: 100% !important;
+  min-height: 58px !important;
+
+  padding: 0 12px !important;
+
+  align-items: center !important;
+
+  background: var(--table-header, #1e293b) !important;
+  color: var(--text-primary) !important;
+
+  border-bottom: 1px solid var(--border-color) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.proveedores-container .tabla-body {
+  display: block !important;
+
+  width: 100% !important;
+  height: 350px !important;
+  max-height: 350px !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  background: var(--bg-secondary) !important;
+
+  position: relative !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   FILAS
+   ========================================================= */
+
+.proveedores-container .fila {
+  display: grid !important;
+
+  grid-template-columns:
+    80px
+    minmax(220px, 1fr)
+    minmax(140px, 220px)
+    140px !important;
+
+  width: 100% !important;
+  min-height: 65px !important;
+  height: 65px !important;
+
+  padding: 0 12px !important;
+
+  align-items: center !important;
+
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+
+  border-bottom: 1px solid var(--border-color) !important;
+
+  box-sizing: border-box !important;
+
+  position: relative !important;
+}
+
+
+/* =========================================================
+   CELDAS
+   ========================================================= */
+
+.proveedores-container .tabla-header > span,
+.proveedores-container .fila > span {
+  min-width: 0 !important;
+  max-width: 100% !important;
+
+  overflow: hidden !important;
+
+  white-space: nowrap !important;
+
+  text-overflow: ellipsis !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   SELECCIONADA
+   ========================================================= */
+
+.proveedores-container .fila.activa {
+  background: #334155 !important;
+  color: #fff !important;
+}
+
+.proveedores-container .fila.activa > span {
+  color: #fff !important;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.proveedores-container .fila:hover:not(.activa) {
+  background: var(--table-hover, #1e293b) !important;
+}
+
+
+/* =========================================================
+   EVITAR FONDOS / IMÁGENES HEREDADAS
+   ========================================================= */
+
+.proveedores-container .tabla,
+.proveedores-container .tabla-header,
+.proveedores-container .tabla-body,
+.proveedores-container .fila,
+.proveedores-container .fila > span {
+  background-image: none !important;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.proveedores-container .tabla-body::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.proveedores-container .tabla-body::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.proveedores-container .tabla-body::-webkit-scrollbar-thumb {
+  background: var(--border-color) !important;
+  border-radius: 10px !important;
 }

@@ -5,282 +5,809 @@
 .sucursales-container {
   background: #dcdcdc;
   min-height: 100vh;
+  width: 100%;
+
   font-family: "Segoe UI", Tahoma, sans-serif;
   color: #000;
+
+  box-sizing: border-box;
 }
+
+.sucursales-container *,
+.sucursales-container *::before,
+.sucursales-container *::after {
+  box-sizing: border-box;
+}
+
 
 /* ==========================================
    TOOLBAR
 ========================================== */
 
-.toolbar {
+.sucursales-container .toolbar {
+  width: calc(100% - 20px);
+
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 10px 14px;
-  background: linear-gradient(to bottom, #f4f4f4, #dcdcdc);
-  border-bottom: 1px solid #b8b8b8;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
+
+  gap: 16px;
+
+  padding: 18px;
+  margin: 10px;
+
+  background: var(--bg-secondary, #f4f4f4);
+
+  border: 1px solid var(--border-color, #b8b8b8);
+  border-radius: 16px;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 8px 18px rgba(0, 0, 0, 0.04);
+
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
-.tool {
-  width: 92px;
+
+/* ==========================================
+   BOTONES TOOL
+========================================== */
+
+.sucursales-container .tool {
+  width: 100px;
+  min-width: 100px;
+  height: 90px;
+
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+
+  gap: 5px;
+
+  position: relative;
+
+  background: var(--button-bg, #ffffff);
+
+  border: 1px solid var(--border-color, #d0d0d0);
+  border-radius: 14px;
+
   cursor: pointer;
   user-select: none;
-  position: relative;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* Separador vertical entre botones */
-.tool:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: -7px;
-  top: 4px;
-  width: 1px;
-  height: 58px;
-  background: #bcbcbc;
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.sucursales-container .tool:hover:not(.disabled) {
+  transform: translateY(-3px);
+
+  background: var(--button-hover, #f5f5f5);
+
+  border-color: var(--primary-color, #2563eb);
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Círculo del icono */
-.tool-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+
+/* ==========================================
+   CLICK
+========================================== */
+
+.sucursales-container .tool:active:not(.disabled) {
+  transform: scale(0.97);
+}
+
+
+/* ==========================================
+   ICONO / EMOJI
+========================================== */
+
+.sucursales-container .tool-icon {
+  width: 52px;
+  height: 52px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 22px;
-  color: #fff;
-  margin-bottom: 4px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 32px;
+  line-height: 1;
+
+  color: #ffffff;
+
+  margin: 0;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 1px 3px rgba(0, 0, 0, 0.25);
+    0 2px 4px rgba(0, 0, 0, 0.20);
 
-  transition: all 0.15s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Texto debajo */
-.tool-label {
-  font-size: 12px;
-  color: #000;
+
+/* ==========================================
+   HOVER ICONO
+========================================== */
+
+.sucursales-container .tool:hover:not(.disabled) .tool-icon {
+  transform: scale(1.08);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ==========================================
+   TEXTO
+========================================== */
+
+.sucursales-container .tool-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  color: var(--text-primary, #000);
+
   text-align: center;
+
+  white-space: nowrap;
 }
 
-/* Hover */
-.tool:hover .tool-icon {
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 2px 6px rgba(0, 0, 0, 0.30);
+
+/* ==========================================
+   COLORES DE LOS BOTONES
+========================================== */
+
+.sucursales-container .tool.new .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #3b82f6,
+    #2563eb
+  );
 }
 
-/* Click */
-.tool:active .tool-icon {
-  transform: scale(0.96);
+.sucursales-container .tool.delete .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #94a3b8,
+    #64748b
+  );
 }
 
-/* Colores por botón */
-.tool.new .tool-icon {
-  background: linear-gradient(to bottom, #0f7ac2, #085b96);
+.sucursales-container .tool.modify .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #38bdf8,
+    #0284c7
+  );
 }
 
-.tool.delete .tool-icon {
-  background: linear-gradient(to bottom, #8e8e8e, #6c6c6c);
+.sucursales-container .tool.save .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #10b981,
+    #059669
+  );
 }
 
-.tool.modify .tool-icon {
-  background: linear-gradient(to bottom, #00a8e8, #007db0);
+.sucursales-container .tool.cancel .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #f87171,
+    #ef4444
+  );
 }
 
-.tool.save .tool-icon {
-  background: linear-gradient(to bottom, #0a7cae, #075d83);
+.sucursales-container .tool.exit .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #22d3ee,
+    #0891b2
+  );
 }
 
-.tool.cancel .tool-icon {
-  background: linear-gradient(to bottom, #0a7cae, #075d83);
-}
 
-.tool.exit .tool-icon {
-  background: linear-gradient(to bottom, #1dc1e8, #0b9fc8);
-}
+/* ==========================================
+   TOOL DESHABILITADO
+========================================== */
 
-/* Deshabilitado */
-.tool.disabled {
+.sucursales-container .tool.disabled {
   cursor: default;
   pointer-events: none;
+  opacity: 0.5;
 }
 
-.tool.disabled .tool-icon {
-  background: linear-gradient(to bottom, #c7c7c7, #a9a9a9);
+.sucursales-container .tool.disabled .tool-icon {
+  background: linear-gradient(
+    to bottom,
+    #c7c7c7,
+    #a9a9a9
+  );
+
   color: #f5f5f5;
+
   box-shadow: none;
 }
 
-.tool.disabled .tool-label {
+.sucursales-container .tool.disabled .tool-label {
   color: #777;
 }
+
+
+/* ==========================================
+   ELIMINAR SEPARADORES ANTIGUOS
+========================================== */
+
+.sucursales-container .tool::after {
+  display: none !important;
+}
+
 
 /* ==========================================
    TABLA
 ========================================== */
 
-.tabla {
+.sucursales-container .tabla {
   width: calc(100% - 20px);
+
   margin: 10px;
+
   border-collapse: collapse;
-  background: #fff;
-  border: 1px solid #7a7a7a;
-}
 
-.tabla th,
-.tabla td {
-  border: 1px solid #bdbdbd;
-  padding: 4px 8px;
-  font-size: 14px;
-  text-align: left;
-}
-
-.tabla th {
   background: #ffffff;
-  font-weight: 400;
+
+  border: 1px solid #7a7a7a;
+
+  table-layout: auto;
 }
 
-.tabla tbody tr {
+
+/* ==========================================
+   CELDAS
+========================================== */
+
+.sucursales-container .tabla th,
+.sucursales-container .tabla td {
+  border: 1px solid #bdbdbd;
+
+  padding: 4px 8px;
+
+  font-size: 14px;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================
+   CABECERA
+========================================== */
+
+.sucursales-container .tabla th {
+  background: #ffffff;
+
+  font-weight: 400;
+
+  color: #000000;
+}
+
+
+/* ==========================================
+   FILAS
+========================================== */
+
+.sucursales-container .tabla tbody tr {
   cursor: pointer;
 }
 
-.tabla tbody tr:hover {
+
+/* ==========================================
+   HOVER FILA
+========================================== */
+
+.sucursales-container .tabla tbody tr:hover {
   background: #eaf3ff;
 }
 
-.tabla tbody tr.selected {
+
+/* ==========================================
+   FILA SELECCIONADA
+========================================== */
+
+.sucursales-container .tabla tbody tr.selected {
   background: #0078d7;
-  color: #fff;
+
+  color: #ffffff;
 }
+
 
 /* ==========================================
    FORMULARIO
 ========================================== */
 
 .sucursal-form-container {
+  width: 100%;
+
   padding: 22px 24px 40px;
 }
 
+
 .sucursal-form {
+  width: 100%;
   max-width: 980px;
 }
 
-/* Filas horizontales */
+
+/* ==========================================
+   FILAS HORIZONTALES
+========================================== */
+
 .sucursal-row {
   display: flex;
+
+  align-items: flex-start;
+
   gap: 28px;
+
+  width: 100%;
+
   margin-bottom: 18px;
 }
 
+
+/* ==========================================
+   FILA SUPERIOR
+========================================== */
+
 .sucursal-row-top .sucursal-nro {
   width: 100px;
+  min-width: 100px;
+
   flex: none;
 }
 
 .sucursal-row-top .sucursal-empresa {
   flex: 1;
+
+  min-width: 0;
 }
+
+
+/* ==========================================
+   FILA INFERIOR
+========================================== */
 
 .sucursal-row-bottom .sucursal-field {
   flex: 1;
+
+  min-width: 0;
 }
 
 .sucursal-row-bottom .sucursal-lista {
   max-width: 140px;
 }
 
-/* Campo individual */
+
+/* ==========================================
+   CAMPO INDIVIDUAL
+========================================== */
+
 .sucursal-field {
   display: flex;
+
   flex-direction: column;
+
+  width: 100%;
+
   margin-bottom: 14px;
 }
 
+
+/* ==========================================
+   LABEL
+========================================== */
+
 .sucursal-field label {
   font-size: 14px;
+
   margin-bottom: 4px;
-  color: #000;
+
+  color: #000000;
 }
 
-/* Inputs y selects */
+
+/* ==========================================
+   INPUTS Y SELECTS
+========================================== */
+
 .sucursal-field input,
 .sucursal-field select {
+  width: 100%;
+
   height: 28px;
+
   padding: 3px 6px;
+
   font-size: 14px;
+
   font-family: "Segoe UI", Tahoma, sans-serif;
 
+  color: #000000;
+
+  background: #ffffff;
+
   border: 1px solid #8a8a8a;
-  background: #fff;
+
+  border-radius: 2px;
+
   outline: none;
 }
+
+
+/* ==========================================
+   FOCUS
+========================================== */
 
 .sucursal-field input:focus,
 .sucursal-field select:focus {
   border-color: #0078d7;
-  box-shadow: 0 0 0 1px rgba(0, 120, 215, 0.15);
+
+  box-shadow:
+    0 0 0 1px rgba(0, 120, 215, 0.15);
 }
+
+
+/* ==========================================
+   DISABLED
+========================================== */
 
 .sucursal-field input:disabled,
 .sucursal-field select:disabled {
   background: #f3f3f3;
-  color: #000;
+
+  color: #000000;
+
+  cursor: default;
 }
 
+
 /* ==========================================
-   RESPONSIVE
+   DARK MODE
+========================================== */
+
+body.dark .sucursales-container {
+  background: var(--bg-primary) !important;
+
+  color: var(--text-primary) !important;
+}
+
+
+/* ==========================================
+   DARK - TOOLBAR
+========================================== */
+
+body.dark .sucursales-container .toolbar {
+  background: var(--bg-secondary) !important;
+
+  border-color: var(--border-color) !important;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.20),
+    0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ==========================================
+   DARK - TOOL
+========================================== */
+
+body.dark .sucursales-container .tool {
+  background: var(--button-bg) !important;
+
+  border-color: var(--border-color) !important;
+}
+
+
+body.dark .sucursales-container .tool:hover:not(.disabled) {
+  background: var(--button-hover) !important;
+
+  border-color: var(--primary-color) !important;
+}
+
+
+body.dark .sucursales-container .tool-label {
+  color: var(--text-primary) !important;
+}
+
+
+/* ==========================================
+   DARK - TABLA
+========================================== */
+
+body.dark .sucursales-container .tabla {
+  background: var(--bg-secondary) !important;
+
+  border-color: var(--border-color) !important;
+
+  color: var(--text-primary) !important;
+}
+
+
+body.dark .sucursales-container .tabla th {
+  background: var(--table-header) !important;
+
+  color: var(--text-primary) !important;
+
+  border-color: var(--border-color) !important;
+}
+
+
+body.dark .sucursales-container .tabla td {
+  background: var(--bg-secondary) !important;
+
+  color: var(--text-primary) !important;
+
+  border-color: var(--border-color) !important;
+}
+
+
+body.dark .sucursales-container .tabla tbody tr:hover {
+  background: var(--table-hover) !important;
+}
+
+
+body.dark .sucursales-container .tabla tbody tr.selected {
+  background: #1d4ed8 !important;
+
+  color: #ffffff !important;
+}
+
+
+/* ==========================================
+   DARK - FORMULARIO
+========================================== */
+
+body.dark .sucursal-field label {
+  color: var(--text-primary) !important;
+}
+
+
+body.dark .sucursal-field input,
+body.dark .sucursal-field select {
+  background: var(--input-bg) !important;
+
+  color: var(--text-primary) !important;
+
+  border-color: var(--input-border) !important;
+}
+
+
+body.dark .sucursal-field input:focus,
+body.dark .sucursal-field select:focus {
+  border-color: var(--primary-color) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+
+body.dark .sucursal-field input:disabled,
+body.dark .sucursal-field select:disabled {
+  background: var(--bg-tertiary) !important;
+
+  color: var(--text-secondary) !important;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLET
 ========================================== */
 
 @media (max-width: 900px) {
-  .toolbar {
-    gap: 10px;
+
+  .sucursales-container .toolbar {
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 14px;
   }
 
-  .tool {
-    width: 78px;
+
+  .sucursales-container .tool {
+    width: 88px;
+    min-width: 88px;
+
+    height: 84px;
   }
 
-  .tool-label {
-    font-size: 11px;
+
+  .sucursales-container .tool-icon {
+    width: 48px;
+    height: 48px;
+
+    font-size: 29px;
   }
+
+
+  .sucursales-container .tool-label {
+    font-size: 12px;
+  }
+
 
   .sucursal-row {
     flex-direction: column;
+
     gap: 0;
   }
+
 
   .sucursal-row-top .sucursal-nro,
   .sucursal-row-top .sucursal-empresa,
   .sucursal-row-bottom .sucursal-field,
   .sucursal-row-bottom .sucursal-lista {
     width: 100%;
+
     max-width: none;
+
+    min-width: 0;
   }
+
 
   .sucursal-form-container {
     padding: 18px;
   }
 }
 
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+========================================== */
+
 @media (max-width: 600px) {
-  .tool:not(:last-child)::after {
-    display: none;
+
+  .sucursales-container .toolbar {
+    justify-content: flex-start;
+
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+
+    padding: 12px;
+
+    gap: 10px;
   }
 
-  .tabla {
+
+  .sucursales-container .tool {
+    width: 82px;
+    min-width: 82px;
+
+    height: 80px;
+  }
+
+
+  .sucursales-container .tool-icon {
+    width: 46px;
+    height: 46px;
+
+    font-size: 27px;
+  }
+
+
+  .sucursales-container .tool-label {
+    font-size: 11px;
+  }
+
+
+  /* ==========================================
+     TABLA CON SCROLL HORIZONTAL
+  ========================================== */
+
+  .sucursales-container .tabla {
     display: block;
+
+    width: calc(100% - 20px);
+
     overflow-x: auto;
+
     white-space: nowrap;
   }
+
+
+  .sucursales-container .tabla thead,
+  .sucursales-container .tabla tbody {
+    width: max-content;
+  }
+
+
+  .sucursal-form-container {
+    padding: 14px;
+  }
+
+
+  .sucursal-row {
+    width: 100%;
+  }
+}
+
+
+/* ==========================================
+   RESPONSIVE - MUY PEQUEÑO
+========================================== */
+
+@media (max-width: 400px) {
+
+  .sucursales-container .toolbar {
+    margin: 6px;
+
+    width: calc(100% - 12px);
+
+    padding: 10px;
+  }
+
+
+  .sucursales-container .tool {
+    width: 76px;
+    min-width: 76px;
+
+    height: 76px;
+  }
+
+
+  .sucursales-container .tool-icon {
+    width: 42px;
+    height: 42px;
+
+    font-size: 25px;
+  }
+
+
+  .sucursales-container .tool-label {
+    font-size: 10px;
+  }
+
+
+  .sucursal-form-container {
+    padding: 10px;
+  }
+}
+/* ==========================================
+   FIX FINAL - EMOJI DEL TOOLBAR
+   SOLO AGRANDA EL EMOJI
+========================================== */
+
+.sucursales-container .tool-icon {
+  width: 52px !important;
+  height: 52px !important;
+
+  font-size: 42px !important;
+  line-height: 1 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

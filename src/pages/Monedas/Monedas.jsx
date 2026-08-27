@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import "./Monedas.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
 export default function Monedas({ setSection }) {
-
-  const API_URL = "http://localhost:8080/back_office/currency";
+  
 const { t } = useLanguage();
   const [data, setData] = useState([]);
   const [modoCrear, setModoCrear] = useState(false);
@@ -22,9 +22,7 @@ const { t } = useLanguage();
   // =====================
   const cargarDatos = async () => {
     try {
-      const res = await fetch(API_URL, {
-        credentials: "include"
-      });
+      const res = await apiFetch("/currency");
 
       if (res.status === 401) {
         alert(t("monedas.sessionExpired"));
@@ -72,18 +70,14 @@ const { t } = useLanguage();
   // =====================
   const crear = async () => {
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: form.name,
-          symbol: form.symbol,
-          value: parseFloat(form.value)
-        })
-      });
+      const res = await apiFetch("/currency", {
+  method: "POST",
+  body: JSON.stringify({
+    name: form.name,
+    symbol: form.symbol,
+    value: parseFloat(form.value),
+  }),
+});
 
       if (res.status === 201) {
         cargarDatos();
@@ -111,18 +105,14 @@ const { t } = useLanguage();
   // =====================
   const modificar = async () => {
     try {
-      const res = await fetch(`${API_URL}/${seleccionado.id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: form.name,
-          symbol: form.symbol,
-          value: parseFloat(form.value)
-        })
-      });
+      const res = await apiFetch(`/currency/${seleccionado.id}`, {
+  method: "PUT",
+  body: JSON.stringify({
+    name: form.name,
+    symbol: form.symbol,
+    value: parseFloat(form.value),
+  }),
+});
 
       if (res.status === 204) {
         cargarDatos();
@@ -155,10 +145,9 @@ const { t } = useLanguage();
     if (!ok) return;
 
     try {
-      const res = await fetch(`${API_URL}/${seleccionado.id}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const res = await apiFetch(`/currency/${seleccionado.id}`, {
+  method: "DELETE",
+});
 
       if (res.status === 204) {
         cargarDatos();
@@ -193,62 +182,81 @@ const { t } = useLanguage();
   // CANCELAR
   // =====================
   const handleCancelar = () => {
-    setModoCrear(false);
-    setModoEditar(false);
-  };
+  setModoCrear(false);
+  setModoEditar(false);
+
+  setSeleccionado(null);
+
+  setForm({
+    name: "",
+    symbol: "",
+    value: ""
+  });
+};
 
   return (
     <div className="monedas-container">
 
-      {/* 🔥 TOOLBAR */}
-      <div className="toolbar">
+     {/* 🔥 TOOLBAR */}
+<div className="toolbar">
 
-        <div className="tool nuevo" data-icon="+"
-          onClick={handleNuevo}>
-          <span>{t("common.new")}</span>
-        </div>
+  <div
+    className="tool nuevo"
+    data-icon="＋"
+    onClick={handleNuevo}
+  >
+    <span>{t("common.new")}</span>
+  </div>
 
-        <div
-          className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
-          data-icon="−"
-          onClick={eliminar}
-        >
-          <span>{t("common.delete")}</span>
-        </div>
+  <div
+    className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="🗑"
+    onClick={eliminar}
+  >
+    <span>{t("common.delete")}</span>
+  </div>
 
-        <div
-          className={`tool modificar ${!seleccionado ? "disabled" : ""}`}
-          data-icon="✎"
-          onClick={handleModificar}
-        >
-          <span>{t("common.edit")}</span>
-        </div>
+  <div
+    className={`tool modificar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="✎"
+    onClick={handleModificar}
+  >
+    <span>{t("common.edit")}</span>
+  </div>
 
-        <div
-          className={`tool guardar ${!modoCrear && !modoEditar ? "disabled" : ""}`}
-          data-icon="✔"
-          onClick={handleGuardar}
-        >
-          <span>{t("common.save")}</span>
-        </div>
+  <div
+    className={`tool guardar ${!modoCrear && !modoEditar ? "disabled" : ""}`}
+    data-icon="✓"
+    onClick={handleGuardar}
+  >
+    <span>{t("common.save")}</span>
+  </div>
 
-        <div
-          className={`tool cancelar ${!modoCrear && !modoEditar ? "disabled" : ""}`}
-          data-icon="✖"
-          onClick={handleCancelar}
-        >
-          <span>{t("common.cancel")}</span>
-        </div>
-
-        <div
-  className="tool salir"
-  data-icon="←"
-  onClick={() => setSection("home")}
+  <div
+  className={`tool cancelar ${
+    !seleccionado && !modoCrear && !modoEditar
+      ? "disabled"
+      : ""
+  }`}
+  data-icon="✕"
+  onClick={
+    seleccionado || modoCrear || modoEditar
+      ? handleCancelar
+      : undefined
+  }
 >
-  <span>{t("common.exit")}</span>
+  <span>{t("common.cancel")}</span>
 </div>
 
-      </div>
+  <div
+    className="tool salir"
+    data-icon="↪"
+    onClick={() => setSection("home")}
+  >
+    <span>{t("common.exit")}</span>
+  </div>
+
+</div>
 
       {/* 🔥 FORM */}
       {(modoCrear || modoEditar) && (

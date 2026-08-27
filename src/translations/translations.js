@@ -16,6 +16,8 @@ export const texts = {
       name: "Nombre",
       id: "ID",
       select: "Seleccione",
+      list: "Lista",
+      all:"Todos",
     },
 
     dashboard: {
@@ -271,11 +273,185 @@ sucursales: {
     "statistics": "Estadísticas",
     "loggingOut": "Cerrando sesión...",
     "darkMode": "Modo Oscuro",
-    "departmentsShort": "Deptos."
+    "departmentsShort": "Deptos.",
+      reportArticles: "Artículos",
+reportLabels: "Etiquetas",
+reportStock: "Stock",
+reportDepartments: "Departamentos",
+reportCustomers: "Clientes",
+reportAccounts: "Cuentas Corrientes",
+reportSales: "Ventas",
+reportCash: "Caja diaria",
+reportFinance: "Finanzas",
+accounting: "Contable",
+vatSalesJournal: "Subdiario IVA ventas",
+vatRates: "IVA Alícuotas",
+confirmLogout: "¿Seguro que querés cerrar sesión?",
   
 },
-},
+"statistics": {
+  "title": "Estadísticas",
+  "subtitle": "Análisis de ventas e inventario",
 
+  "salesToday": "Ventas Hoy",
+  "ticketsToday": "Tickets Hoy",
+  "averageToday": "Promedio Hoy",
+
+  "salesMonth": "Ventas Mes",
+  "ticketsMonth": "Tickets Mes",
+  "averageMonth": "Promedio Mes",
+
+  "monthlyRevenue": "Facturación por Mes",
+  "paymentMethods": "Métodos de Pago",
+  "criticalStock": "Stock Crítico",
+
+  "code": "Código",
+  "item": "Artículo",
+  "reorderPoint": "Punto Pedido",
+  "stock": "Stock",
+
+  "loading": "Cargando estadísticas..."
+},
+combos: {
+  title: "Combos",
+  availableCombos: "Combos disponibles",
+  comboData: "Datos del Combo",
+  addArticle: "Agregar Artículo",
+  comboDetail: "Detalle del Combo",
+  comboTotal: "TOTAL DEL COMBO",
+  add: "Agregar",
+  comboName: "Nombre del Combo",
+  finalPrice: "Precio Final",
+
+  article: "Artículo",
+  quantity: "Cantidad",
+  total: "Total",
+  price: "Precio",
+
+  comboDeleted: "Combo eliminado",
+  comboSaved: "Combo guardado",
+
+  articleAdded: "Agregar",
+
+  deleteCombo: "Eliminar combo",
+  deleteAllItems: "Todos los items",
+  deleteSelected: "Seleccionados",
+
+  deleteComboQuestion: "¿Eliminar el combo completo?",
+  deleteItemsQuestion: "¿Eliminar todos los artículos del combo?",
+
+  itemDeleted: "Artículos eliminados",
+
+  comboNotFound: "Combo no encontrado",
+  articleNotFound: "Artículo no encontrado",
+
+  selectCombo: "Seleccioná un combo",
+  selectArticle: "Seleccioná al menos un artículo",
+  selectComboFirst: "Primero seleccioná un combo",
+
+  code: "Código",
+  id: "ID",
+  name: "Nombre"
+},
+"months": {
+  "jan": "Ene",
+  "feb": "Feb",
+  "mar": "Mar",
+  "apr": "Abr",
+  "may": "May",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Ago",
+  "sep": "Sep",
+  "oct": "Oct",
+  "nov": "Nov",
+  "dec": "Dic"
+},
+"promotions": {
+  "accessDenied": "Acceso denegado",
+  "errorLoading": "Error al obtener promociones",
+  "unauthorized": "No autorizado",
+  "invalidData": "Datos inválidos. Revisá fechas o campos obligatorios.",
+  "errorSaving": "Error al guardar la promoción",
+  "deleted": "Promoción eliminada correctamente",
+  "deleteError": "No se pudo eliminar la promoción",
+  "confirmDelete": "¿Seguro que querés eliminar la promoción \"{{name}}\"?",
+  "type": "Tipo",
+  "name": "Nombre de la promoción",
+  "typeBuyNUseList": "Más de N usa lista X",
+  "typeBuyNPayM": "Llevando N paga M (2x1)",
+  "typeFixedDiscount": "Porcentaje de descuento fijo",
+  "typeSecondUnitDiscount": "Porc. de desc. en la 2 unidad",
+  "buyQuantity": "N. Llevando",
+  "discountPercentage": "% Descuento",
+  "payQuantity": "Cantidad M",
+  "discountAmount": "Monto descuento",
+  "priceList": "Lista de precios",
+  "setAvailableDays": "Establecer días vigente",
+  "active": "Promo ACTIVA"
+},
+"days": {
+  "monday": "Lunes",
+  "tuesday": "Martes",
+  "wednesday": "Miércoles",
+  "thursday": "Jueves",
+  "friday": "Viernes",
+  "saturday": "Sábado",
+  "sunday": "Domingo"
+},
+criticalProducts: "Productos críticos",
+monthTickets: "Tickets del Mes",
+registeredSales: "Ventas registradas",
+todaySales: "Ventas Hoy",
+tickets: "tickets",
+average: "Promedio",
+reorderPoint: "Punto Pedido",
+
+businessSummary: "Resumen Comercial",
+
+todayRevenue: "Facturación Hoy",
+monthSalesCount: "Ventas del Mes",
+monthRevenue: "Facturación Mensual",
+
+ivaAlicuotas: {
+  title: "IVA Ventas Alícuotas",
+  subtitle: "Detalle de ventas por alícuota de IVA",
+
+  from: "Desde",
+  to: "Hasta",
+  list: "Listar",
+  exit: "Salir",
+
+  date: "Fecha",
+  legalName: "Razón Social",
+  document: "DNI",
+  type: "Tipo",
+  comp: "Comp",
+  invoice: "Comprobante",
+  taxableAmount: "Neto Gravado",
+  vatRate: "IVA %",
+  vatAmount: "IVA Importe",
+  cae: "CAE",
+
+  noData: "No hay datos para mostrar",
+
+  exportExcel: "Exportar Excel",
+  print: "Imprimir",
+  pdf: "PDF",
+
+  search: "Buscar...",
+
+  previous: "Anterior",
+  next: "Siguiente",
+  page: "Página",
+
+  taxableSales: "Ventas Gravadas",
+  vat: "IVA",
+  totalSales: "Total Ventas",
+of: "de",
+  generatedBy: "Reporte generado por BRUKI"
+}
+  },
   en: {
     common: {
       save: "Save",
@@ -287,15 +463,89 @@ sucursales: {
       close: "Close",
       loading: "Loading...",
       new: "New",
-duplicate: "Duplicate",
-exit: "Exit",
-code: "Code",
-name: "Name",
-id: "ID",
-select: "Select",
-  none: "None",
+      duplicate: "Duplicate",
+      exit: "Exit",
+      code: "Code",
+      name: "Name",
+      id: "ID",
+      select: "Select",
+      none: "None",
+      list: "List",
+      all:"All",
     },
+    "promotions": {
+  "accessDenied": "Access denied",
+  "errorLoading": "Error loading promotions",
+  "unauthorized": "Unauthorized",
+  "invalidData": "Invalid data. Check the dates and required fields.",
+  "errorSaving": "Error saving promotion",
+  "deleted": "Promotion deleted successfully",
+  "deleteError": "Could not delete the promotion",
+  "confirmDelete": "Are you sure you want to delete the promotion \"{{name}}\"?",
+  "type": "Promotion Type",
+  "name": "Promotion Name",
+  "typeBuyNUseList": "Buy more than N, use price list X",
+  "typeBuyNPayM": "Buy N, Pay M (2x1)",
+  "typeFixedDiscount": "Fixed Discount Percentage",
+  "typeSecondUnitDiscount": "Second Item Discount Percentage",
+  "buyQuantity": "Buy Quantity",
+  "discountPercentage": "Discount %",
+  "payQuantity": "Pay Quantity",
+  "discountAmount": "Discount Amount",
+  "priceList": "Price List",
+  "setAvailableDays": "Set available days",
+  "active": "Promotion ACTIVE"
+},
+"days": {
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday"
+},
+combos: {
+  title: "Combos",
+  availableCombos: "Available Combos",
+  comboData: "Combo Information",
+  addArticle: "Add Item",
+  comboDetail: "Combo Details",
+  comboTotal: "COMBO TOTAL",
+add: "Add",
+  comboName: "Combo Name",
+  finalPrice: "Final Price",
 
+  article: "Item",
+  quantity: "Quantity",
+  total: "Total",
+  price: "Price",
+
+  comboDeleted: "Combo deleted",
+  comboSaved: "Combo saved",
+
+  articleAdded: "Add",
+
+  deleteCombo: "Delete combo",
+  deleteAllItems: "All items",
+  deleteSelected: "Selected",
+
+  deleteComboQuestion: "Delete the entire combo?",
+  deleteItemsQuestion: "Delete all items from the combo?",
+
+  itemDeleted: "Items deleted",
+
+  comboNotFound: "Combo not found",
+  articleNotFound: "Item not found",
+
+  selectCombo: "Select a combo",
+  selectArticle: "Select at least one item",
+  selectComboFirst: "Select a combo first",
+
+  code: "Code",
+  id: "ID",
+  name: "Name"
+},
     dashboard: {
       hello: "Hello",
       welcome: "Welcome to the administration panel",
@@ -550,8 +800,111 @@ sucursales: {
     "statistics": "Statistics",
     "loggingOut": "Logging out...",
     "darkMode": "Dark Mode",
-    "departmentsShort": "Depts."
+    "departmentsShort": "Depts.",
+    reportArticles: "Articles",
+reportLabels: "Labels",
+reportStock: "Stock",
+reportDepartments: "Departments",
+reportCustomers: "Customers",
+reportAccounts: "Accounts Receivable",
+reportSales: "Sales",
+reportCash: "Daily Cash",
+reportFinance: "Finance",
+accounting: "Accounting",
+vatSalesJournal: "VAT Sales Journal",
+vatRates: "VAT Rates",
+confirmLogout: "Are you sure you want to log out?",
 },
+"statistics": {
+  "title": "Statistics",
+  "subtitle": "Sales and Inventory Analysis",
+
+  "salesToday": "Today's Sales",
+  "ticketsToday": "Today's Tickets",
+  "averageToday": "Today's Average",
+
+  "salesMonth": "Monthly Sales",
+  "ticketsMonth": "Monthly Tickets",
+  "averageMonth": "Monthly Average",
+
+  "monthlyRevenue": "Revenue by Month",
+  "paymentMethods": "Payment Methods",
+  "criticalStock": "Critical Stock",
+
+  "code": "Code",
+  "item": "Item",
+  "reorderPoint": "Reorder Point",
+  "stock": "Stock",
+
+  "loading": "Loading statistics..."
+},
+
+"months": {
+  "jan": "Jan",
+  "feb": "Feb",
+  "mar": "Mar",
+  "apr": "Apr",
+  "may": "May",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Aug",
+  "sep": "Sep",
+  "oct": "Oct",
+  "nov": "Nov",
+  "dec": "Dec"
+},
+criticalProducts: "Critical Products",
+monthTickets: "Monthly Tickets",
+registeredSales: "Registered Sales",
+todaySales: "Today's Sales",
+tickets: "tickets",
+average: "Average",
+reorderPoint: "Reorder Point",
+
+businessSummary: "Business Summary",
+
+todayRevenue: "Today's Revenue",
+monthSalesCount: "Monthly Sales",
+monthRevenue: "Monthly Revenue",
+
+ivaAlicuotas: {
+  title: "VAT Sales Rates",
+  subtitle: "Sales detail by VAT rate",
+
+  from: "From",
+  to: "To",
+  list: "Search",
+  exit: "Exit",
+
+  date: "Date",
+  legalName: "Business Name",
+  document: "ID",
+  type: "Type",
+  comp: "Doc.",
+  invoice: "Invoice",
+  taxableAmount: "Taxable Amount",
+  vatRate: "VAT %",
+  vatAmount: "VAT Amount",
+  cae: "CAE",
+
+  noData: "No data available",
+
+  exportExcel: "Export Excel",
+  print: "Print",
+  pdf: "PDF",
+
+  search: "Search...",
+
+  previous: "Previous",
+  next: "Next",
+  page: "Page",
+
+  taxableSales: "Taxable Sales",
+  vat: "VAT",
+  totalSales: "Total Sales",
+of: "of",
+  generatedBy: "Report generated by BRUKI"
+}
 },
 
   pt: {
@@ -565,13 +918,15 @@ sucursales: {
       close: "Fechar",
       loading: "Carregando...",
       new: "Novo",
-duplicate: "Duplicar",
-exit: "Sair",
-code: "Código",
-name: "Nome",
-id: "ID",
-select: "Selecionar",
-none: "Nenhum",
+      duplicate: "Duplicar",
+      exit: "Sair",
+      code: "Código",
+      name: "Nome",
+      id: "ID",
+      select: "Selecionar",
+      none: "Nenhum",
+      list: "Lista",
+      all: "Tudo",
     },
 
     dashboard: {
@@ -654,6 +1009,38 @@ departamentos: {
   inUse: "Não é possível excluir: está sendo usado por outros registros",
   pressNewOrEdit: "Primeiro pressione Novo ou Editar",
   saveError: "Erro ao salvar"
+},
+"promotions": {
+  "accessDenied": "Acesso negado",
+  "errorLoading": "Erro ao carregar promoções",
+  "unauthorized": "Não autorizado",
+  "invalidData": "Dados inválidos. Verifique as datas e os campos obrigatórios.",
+  "errorSaving": "Erro ao salvar a promoção",
+  "deleted": "Promoção removida com sucesso",
+  "deleteError": "Não foi possível remover a promoção",
+  "confirmDelete": "Tem certeza de que deseja remover a promoção \"{{name}}\"?",
+  "type": "Tipo de Promoção",
+  "name": "Nome da Promoção",
+  "typeBuyNUseList": "Compre mais de N e use a lista X",
+  "typeBuyNPayM": "Leve N e pague M (2x1)",
+  "typeFixedDiscount": "Percentual de desconto fixo",
+  "typeSecondUnitDiscount": "Desconto percentual na segunda unidade",
+  "buyQuantity": "Qtd. Comprada",
+  "discountPercentage": "% Desconto",
+  "payQuantity": "Qtd. Paga",
+  "discountAmount": "Valor do desconto",
+  "priceList": "Lista de Preços",
+  "setAvailableDays": "Definir dias de vigência",
+  "active": "Promoção ATIVA"
+},
+"days": {
+  "monday": "Segunda-feira",
+  "tuesday": "Terça-feira",
+  "wednesday": "Quarta-feira",
+  "thursday": "Quinta-feira",
+  "friday": "Sexta-feira",
+  "saturday": "Sábado",
+  "sunday": "Domingo"
 },
 monedas: {
   title: "Moedas",
@@ -827,7 +1214,151 @@ sucursales: {
     "statistics": "Estatísticas",
     "loggingOut": "Saindo...",
     "darkMode": "Modo Escuro",
-    "departmentsShort": "Deptos."
+    "departmentsShort": "Deptos.",
+          reportArticles: "Artigos",
+    reportLabels: "Etiquetas",
+    reportStock: "Estoque",
+  reportDepartments: "Departamentos",
+  reportCustomers: "Clientes",
+  reportAccounts: "Contas Correntes",
+  reportSales: "Vendas",
+  reportCash: "Caixa Diário",
+  reportFinance: "Finanças",
+  accounting: "Contábil",
+  vatSalesJournal: "Livro de IVA de Vendas",
+  vatRates: "Alíquotas de IVA",
+  confirmLogout: "Tem certeza de que deseja sair?",
   },
+  "statistics": {
+  "title": "Estatísticas",
+  "subtitle": "Análise de vendas e estoque",
+
+  "salesToday": "Vendas Hoje",
+  "ticketsToday": "Cupons Hoje",
+  "averageToday": "Média Hoje",
+
+  "salesMonth": "Vendas do Mês",
+  "ticketsMonth": "Cupons do Mês",
+  "averageMonth": "Média do Mês",
+
+  "monthlyRevenue": "Faturamento por Mês",
+  "paymentMethods": "Métodos de Pagamento",
+  "criticalStock": "Estoque Crítico",
+
+  "code": "Código",
+  "item": "Artigo",
+  "reorderPoint": "Ponto de Reposição",
+  "stock": "Estoque",
+
+  "loading": "Carregando estatísticas..."
 },
+
+"months": {
+  "jan": "Jan",
+  "feb": "Fev",
+  "mar": "Mar",
+  "apr": "Abr",
+  "may": "Mai",
+  "jun": "Jun",
+  "jul": "Jul",
+  "aug": "Ago",
+  "sep": "Set",
+  "oct": "Out",
+  "nov": "Nov",
+  "dec": "Dez"
+},
+criticalProducts: "Produtos Críticos",
+monthTickets: "Tickets do Mês",
+registeredSales: "Vendas Registradas",
+todaySales: "Vendas Hoje",
+tickets: "tickets",
+average: "Média",
+reorderPoint: "Ponto de Pedido",
+
+businessSummary: "Resumo Comercial",
+
+todayRevenue: "Faturamento Hoje",
+monthSalesCount: "Vendas do Mês",
+monthRevenue: "Faturamento Mensal",
+
+ivaAlicuotas: {
+  title: "Alíquotas de Vendas",
+  subtitle: "Detalhe das vendas por alíquota de imposto",
+
+  from: "De",
+  to: "Até",
+  list: "Listar",
+  exit: "Sair",
+
+  date: "Data",
+  legalName: "Razão Social",
+  document: "CPF/CNPJ",
+  type: "Tipo",
+  comp: "Comp.",
+  invoice: "Comprovante",
+  taxableAmount: "Valor Tributável",
+  vatRate: "Imposto %",
+  vatAmount: "Valor do Imposto",
+  cae: "CAE",
+
+  noData: "Nenhum dado disponível",
+
+  exportExcel: "Exportar Excel",
+  print: "Imprimir",
+  pdf: "PDF",
+
+  search: "Pesquisar...",
+
+  previous: "Anterior",
+  next: "Próximo",
+  page: "Página",
+
+  taxableSales: "Vendas Tributáveis",
+  vat: "Imposto",
+  totalSales: "Total de Vendas",
+of: "de",
+  generatedBy: "Relatório gerado pelo BRUKI",
+},
+combos: {
+  title: "Combos",
+  availableCombos: "Combos disponíveis",
+  comboData: "Dados do Combo",
+  addArticle: "Adicionar Artigo",
+  comboDetail: "Detalhes do Combo",
+  comboTotal: "TOTAL DO COMBO",
+
+  comboName: "Nome do Combo",
+  finalPrice: "Preço Final",
+
+  article: "Artigo",
+  quantity: "Quantidade",
+  total: "Total",
+  price: "Preço",
+  add: "Adicionar",
+  comboDeleted: "Combo excluído",
+  comboSaved: "Combo salvo",
+
+  articleAdded: "Adicionar",
+
+  deleteCombo: "Excluir combo",
+  deleteAllItems: "Todos os itens",
+  deleteSelected: "Selecionados",
+
+  deleteComboQuestion: "Excluir o combo completo?",
+  deleteItemsQuestion: "Excluir todos os artigos do combo?",
+
+  itemDeleted: "Artigos excluídos",
+
+  comboNotFound: "Combo não encontrado",
+  articleNotFound: "Artigo não encontrado",
+
+  selectCombo: "Selecione um combo",
+  selectArticle: "Selecione pelo menos um artigo",
+  selectComboFirst: "Selecione um combo primeiro",
+
+  code: "Código",
+  id: "ID",
+  name: "Nome"
+},
+  },
 };

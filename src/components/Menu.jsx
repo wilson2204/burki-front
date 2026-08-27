@@ -15,8 +15,9 @@ import {
   Moon,
   Menu as MenuIcon
 } from "lucide-react";
-import logo from "../assets/logo_bruki_login-removebg-preview.png";
+import logo from "../assets/logo_con_sombreado-removebg-preview.png";
 import { useLanguage } from "../context/LanguageContext";
+import { apiFetch } from "../services/api";
 
 export default function Menu({
   section,
@@ -33,12 +34,16 @@ export default function Menu({
   const [openParametros, setOpenParametros] = useState(false);
   const [openImpuestos, setOpenImpuestos] = useState(false);
   const [openEmpresa, setOpenEmpresa] = useState(false);
+  const [openInformes, setOpenInformes] = useState(false);
+const [openContable, setOpenContable] = useState(false);
+const [openStock, setOpenStock] = useState(false);
   const [foto, setFoto] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
   return localStorage.getItem("theme") === "dark";});
   const navigate = useNavigate();
 const { t } = useLanguage();
+
 
   useEffect(() => {
     const fotoGuardada = localStorage.getItem("fotoPerfil");
@@ -77,11 +82,9 @@ const { t } = useLanguage();
     try {
       setIsLoggingOut(true);
 
-      await fetch("http://localhost:8080/back_office/auth/logout", {
-        method: "POST",
-        credentials: "include"
-      });
-
+      await apiFetch("/auth/logout", {
+  method: "POST",
+});
     } catch (error) {
       console.log("Error al cerrar sesión", error);
     } finally {
@@ -174,7 +177,12 @@ const { t } = useLanguage();
       className="tree-item"
       onClick={() => setSection("articulos")}>{t("menu.articles")}</div>
     <div className="tree-item disabled">{t("menu.subArticles")}</div>
-    <div className="tree-item disabled">{t("menu.combos")}</div>
+    <div
+  className="tree-item"
+  onClick={() => setSection("combos")}
+>
+  {t("menu.combos")}
+</div>
     <div
       className="tree-item"
       onClick={() => setSection("clasificaciones")}
@@ -186,12 +194,13 @@ const { t } = useLanguage();
 
     <div className="tree-item disabled">{t("menu.priceChanges")}</div>
     <div className="tree-item disabled">{t("menu.priceLists")}</div>
-    <div className="tree-item disabled">{t("menu.promotions")}</div>
+    <div
+  className="tree-item"
+  onClick={() => setSection("promociones")}
+>
+  {t("menu.promotions")}
+</div>
 
-    <div className="menu-divider"></div>
-
-    <div className="tree-item disabled">{t("menu.sizes")}</div>
-    <div className="tree-item disabled">{t("menu.colors")}</div>
 
     <div className="menu-divider"></div>
 
@@ -280,7 +289,6 @@ const { t } = useLanguage();
 
     {openImpuestos && (
       <div className="tree" style={{ marginLeft: "15px" }}>
-        <div className="tree-item disabled">{t("menu.vat")}</div>
         <div
           className="tree-item"
           onClick={() => setSection("otros_tributos")}
@@ -290,7 +298,12 @@ const { t } = useLanguage();
       </div>
     )}
 
-    <div className="tree-item disabled">{t("menu.scales")}</div>
+    <div
+  className="tree-item"
+  onClick={() => setSection("balanzas")}
+>
+  {t("menu.scales")}
+</div>
     <div className="tree-item disabled">{t("menu.paymentMethods")}</div>
     <div className="tree-item disabled">{t("menu.installments")}</div>
 
@@ -316,12 +329,42 @@ const { t } = useLanguage();
 )}
 
 {/* RESTO DEL MENÚ */}
-<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+{/* STOCK */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setOpenStock(!openStock)}
+>
   <span className="folder-icon">
     <Package size={18} />
   </span>
-  {!collapsed && <span className="folder-label">{t("menu.stock")}</span>}
+
+  {!collapsed && (
+    <>
+      <span className="folder-label">
+        {t("menu.stock")}
+      </span>
+
+      <ChevronRight
+        size={16}
+        className={`folder-arrow ${openStock ? "open" : ""}`}
+      />
+    </>
+  )}
 </div>
+
+
+{openStock && !collapsed && (
+  <div className="tree">
+
+    <div
+      className="tree-item"
+      onClick={() => setSection("movimientos_stock")}
+    >
+      Movimientos de Stock
+    </div>
+
+  </div>
+)}
 
 <div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
   <span className="folder-icon">
@@ -337,12 +380,73 @@ const { t } = useLanguage();
   {!collapsed && <span className="folder-label">{t("menu.myInformation")}</span>}
 </div>
 
-<div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
+{/* INFORMES */}
+<div
+  className={`folder ${collapsed ? "collapsed" : ""}`}
+  onClick={() => setOpenInformes(!openInformes)}
+>
   <span className="folder-icon">
     <FileText size={18} />
   </span>
-  {!collapsed && <span className="folder-label">{t("menu.reports")}</span>}
+
+  {!collapsed && (
+    <>
+      <span className="folder-label">{t("menu.reports")}</span>
+      <ChevronRight
+        size={16}
+        className={`folder-arrow ${openInformes ? "open" : ""}`}
+      />
+    </>
+  )}
 </div>
+
+{openInformes && !collapsed && (
+  <div className="tree">
+
+    <div className="tree-item disabled">{t("menu.reportArticles")}</div>
+<div className="tree-item disabled">{t("menu.reportLabels")}</div>
+<div className="tree-item disabled">{t("menu.reportStock")}</div>
+<div className="tree-item disabled">{t("menu.reportDepartments")}</div>
+
+    <div className="menu-divider"></div>
+
+    <div className="tree-item disabled">{t("menu.reportCustomers")}</div>
+<div className="tree-item disabled">{t("menu.reportAccounts")}</div>
+
+
+    <div className="menu-divider"></div>
+
+    <div className="tree-item disabled">{t("menu.reportSales")}</div>
+<div className="tree-item disabled">{t("menu.reportCash")}</div>
+
+<div className="tree-item disabled">{t("menu.reportFinance")}</div>
+
+    <div
+      className="tree-item"
+      onClick={() => setOpenContable(!openContable)}
+    >
+      {openContable ? "▼" : "▶"} {t("menu.accounting")}
+    </div>
+
+    {openContable && (
+      <div className="tree" style={{ marginLeft: "15px" }}>
+
+        <div className="tree-item disabled">
+  {t("menu.vatSalesJournal")}
+</div>
+
+        <div
+  className="tree-item"
+  onClick={() => setSection("iva_alicuotas")}
+>
+  {t("menu.vatRates")}
+</div>
+
+      </div>
+    )}
+
+  </div>
+)}
 
 <div className={`folder disabled ${collapsed ? "collapsed" : ""}`}>
   <span className="folder-icon">

@@ -217,16 +217,241 @@ input[type="number"] {
 /* =========================
    DARK MODE FIX
 ========================= */
-body.dark-mode .tool {
-  background: #1e293b;
-  border-color: #334155;
+
+body.dark .monedas-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-body.dark-mode .tool span {
-  color: #f1f5f9;
+/* BOTONES */
+
+body.dark .tool {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
 }
 
-body.dark-mode .tool::before {
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+body.dark .tool span {
+  color: var(--text-primary);
 }
 
+/* TABLA */
+
+body.dark .tabla {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark .tabla-header {
+  background: var(--table-header);
+  color: var(--text-primary);
+}
+
+body.dark .tabla-header span {
+  border-right: 1px solid var(--border-color);
+}
+
+body.dark .fila {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .fila:hover {
+  background: var(--table-hover);
+}
+
+/* FORMULARIO */
+
+body.dark .formulario label {
+  color: var(--text-primary);
+}
+
+body.dark .formulario input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .formulario input:focus {
+  border-color: var(--primary-color);
+}
+/* =====================================
+   FIX FINAL MONEDAS
+===================================== */
+
+/* Botones */
+.tool.guardar::before {
+  background: #1e3a8a !important;
+}
+
+.tool.cancelar::before {
+  background: #0ea5e9 !important;
+}
+
+/* Tabla */
+.tabla-header,
+.fila {
+  grid-template-columns: 70px 1.8fr 120px 120px !important;
+}
+
+.fila {
+  padding: 0 !important;
+}
+
+.fila span {
+  padding: 10px;
+  border-right: 1px solid var(--border-color);
+}
+
+.fila span:last-child {
+  border-right: none;
+}
+
+/* Hover botones */
+.tool:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark Mode */
+body.dark .toolbar {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark .fila.activa {
+  background: #1d4ed8 !important;
+}
+
+body.dark .fila.activa span {
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   FIX TOOLBAR - MONEDAS
+===================================================== */
+
+.monedas-container .toolbar{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    padding:18px;
+
+    margin-bottom:18px;
+
+    background:var(--bg-secondary) !important;
+
+    border:1px solid var(--border-color) !important;
+    border-radius:16px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.06),
+        0 8px 18px rgba(0,0,0,.04);
+
+    overflow-x:auto;
+}
+
+.monedas-container .tool{
+    width:100px;
+    height:90px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    gap:8px;
+
+    padding:0;
+
+    background:var(--button-bg) !important;
+
+    border:1px solid var(--border-color);
+    border-radius:14px;
+
+    transition:.2s;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.08);
+}
+
+.monedas-container .tool:hover:not(.disabled){
+    transform:translateY(-3px);
+
+    background:var(--button-hover) !important;
+
+    border-color:var(--primary-color);
+
+    box-shadow:
+        0 6px 16px rgba(0,0,0,.12);
+}
+
+.monedas-container .tool:active{
+    transform:scale(.97);
+}
+
+.monedas-container .tool::before{
+    width:46px;
+    height:46px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    font-size:24px;
+    color:#fff;
+
+    margin:0;
+
+    transition:.2s;
+}
+
+.monedas-container .tool:hover::before{
+    transform:scale(1.08);
+}
+
+.monedas-container .tool span{
+    font-size:14px;
+    font-weight:600;
+    line-height:1.2;
+
+    text-align:center;
+
+    color:var(--text-primary);
+}
+
+/* Colores */
+
+.monedas-container .tool.nuevo::before{
+    background:#2563eb !important;
+}
+
+.monedas-container .tool.eliminar::before{
+    background:#64748b !important;
+}
+
+.monedas-container .tool.modificar::before{
+    background:#0ea5e9 !important;
+}
+
+.monedas-container .tool.guardar::before{
+    background:#059669 !important;
+}
+
+.monedas-container .tool.cancelar::before{
+    background:#ef4444 !important;
+}
+
+.monedas-container .tool.salir::before{
+    background:#0891b2 !important;
+}
+
+.monedas-container .tool.disabled{
+    opacity:.5;
+    pointer-events:none;
+}

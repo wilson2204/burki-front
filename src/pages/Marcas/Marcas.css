@@ -344,3 +344,411 @@
   }
 
 }
+
+/* ========================================= */
+/*               DARK MODE FIX               */
+/* ========================================= */
+
+body.dark .marcas-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* TOOLBAR */
+
+body.dark .marcas-container .toolbar {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* BOTONES */
+
+body.dark .marcas-container .btn {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  box-shadow: none;
+}
+
+body.dark .marcas-container .btn span {
+  color: var(--text-primary);
+}
+
+/* FORMULARIO */
+
+body.dark .marcas-container .form-nueva {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark .marcas-container .form-body {
+  background: var(--bg-secondary);
+}
+
+body.dark .marcas-container .form-nueva input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .marcas-container .form-nueva input:focus {
+  border-color: var(--primary-color);
+}
+
+/* TABLA */
+
+body.dark .marcas-container .tabla {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla thead {
+  background: var(--table-header);
+}
+
+body.dark .marcas-container .tabla th {
+  background: var(--table-header);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla td {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark .marcas-container .tabla tr:hover {
+  background: var(--table-hover);
+}
+
+/* FILA SELECCIONADA */
+
+body.dark .marcas-container .selected {
+  background: rgba(59, 130, 246, 0.25) !important;
+}
+
+body.dark .marcas-container .selected td {
+  color: #93c5fd;
+}
+
+/* BUSCADOR */
+
+body.dark .marcas-container .toolbar-right input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+body.dark .marcas-container .toolbar-right input:focus {
+  border-color: var(--primary-color);
+}
+
+/* ================================================= */
+/* FIX TOOLBAR ESTILO ARTICULOS */
+/* ================================================= */
+
+.marcas-container .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    padding:12px;
+    align-items:flex-start;
+
+    background:var(--bg-secondary) !important;
+    border-bottom:1px solid var(--border-color) !important;
+    border-radius:0;
+}
+
+/* BOTONES */
+
+.marcas-container .btn{
+    width:95px;
+    height:78px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+
+    padding-top:8px;
+    gap:8px;
+
+    background:var(--button-bg) !important;
+
+    border:1px solid var(--border-color);
+    border-radius:12px;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.10),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    transition:.2s;
+}
+
+.marcas-container .btn:hover{
+    background:var(--button-hover) !important;
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.14);
+}
+
+/* CIRCULOS */
+
+.marcas-container .btn svg{
+    width:40px;
+    height:40px;
+
+    padding:0;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#fff;
+
+    flex-shrink:0;
+}
+
+/* TEXTO */
+
+.marcas-container .btn span{
+    font-size:14px;
+    font-weight:500;
+    color:var(--text-primary);
+    line-height:1;
+}
+
+/* COLORES */
+
+.marcas-container .btn.new svg{
+    background:#2563eb;
+}
+
+.marcas-container .btn.delete svg{
+    background:#2563eb;
+}
+
+.marcas-container .btn.edit svg,
+.marcas-container .btn.modify svg{
+    background:#0ea5e9;
+}
+
+.marcas-container .btn.save svg{
+    background:#059669;
+}
+
+.marcas-container .btn.cancel svg{
+    background:#ef4444;
+}
+
+.marcas-container .btn.exit svg{
+    background:#0ea5e9;
+}
+
+/* DISABLED */
+
+.marcas-container .btn.disabled{
+    opacity:.5;
+    pointer-events:none;
+}
+
+/* DARK */
+
+body.dark .marcas-container .btn{
+    background:var(--button-bg) !important;
+    border-color:var(--border-color);
+}
+
+body.dark .marcas-container .btn:hover{
+    background:var(--button-hover) !important;
+}
+
+body.dark .marcas-container .btn span{
+    color:var(--text-primary);
+}
+
+/* ICONO TIPO ARTICULOS */
+
+.marcas-container .tool-icon{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    color:#fff;
+    font-size:20px;
+    line-height:1;
+
+    flex-shrink:0;
+}
+
+.marcas-container .btn.new .tool-icon{
+    background:#2563eb;
+}
+
+.marcas-container .btn.delete .tool-icon{
+    background:#6b7280;
+}
+
+.marcas-container .btn.edit .tool-icon{
+    background:#0ea5e9;
+}
+
+.marcas-container .btn.save .tool-icon{
+    background:#2563eb;
+}
+
+.marcas-container .btn.cancel .tool-icon{
+    background:#2563eb;
+}
+
+.marcas-container .btn.exit .tool-icon{
+    background:#0ea5e9;
+}
+
+.marcas-container .btn:not(.new):not(.delete):not(.edit):not(.save):not(.cancel):not(.exit) .tool-icon{
+    background:#6b7280;
+}
+
+/* ========================================= */
+/* TOOLBAR MARCAS - ICONOS GRANDES CENTRADOS */
+/* ========================================= */
+
+.marcas-container .toolbar {
+    align-items: center;
+}
+
+
+/* TARJETA BOTÓN */
+
+.marcas-container .btn {
+
+    width: 105px;
+    height: 90px;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+}
+
+
+/* ICONOS */
+
+.marcas-container .tool-icon {
+
+    width:48px;
+    height:48px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    font-size:28px;
+
+    line-height:1;
+
+    margin:0 auto;
+
+    color:white;
+
+}
+
+
+/* TEXTO */
+
+.marcas-container .btn span {
+
+    font-size:14px;
+
+    text-align:center;
+
+}
+
+
+/* ========================================= */
+/* TABLA MÁS GRANDE                          */
+/* ========================================= */
+
+
+.marcas-container .tabla {
+
+    width:100%;
+
+    margin-top:20px;
+
+}
+
+
+.marcas-container .tabla th {
+
+    padding:18px;
+
+    font-size:15px;
+
+}
+
+
+.marcas-container .tabla td {
+
+    padding:20px 18px;
+
+    font-size:16px;
+
+}
+
+
+/* altura filas */
+
+.marcas-container .tabla tbody tr {
+
+    height:60px;
+
+}
+
+.tabla-wrapper {
+  width: 100%;
+  max-height: calc(100vh - 190px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.tabla-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tabla-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabla-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+}
+
+.tabla-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

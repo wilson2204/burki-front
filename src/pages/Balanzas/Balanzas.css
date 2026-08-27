@@ -1,0 +1,878 @@
+/* =========================================================
+   BALANZAS
+   ESTILO BRUKI BACKOFFICE
+========================================================= */
+
+.balanzas-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 10px;
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.balanzas-container .toolbar {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+  padding: 14px;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.04);
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 14px;
+}
+
+
+/* =========================================================
+   BOTONES TOOLBAR
+========================================================= */
+
+.balanzas-container .toolbar .tool {
+  width: 100px;
+  height: 88px;
+
+  min-width: 100px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 8px;
+
+  box-sizing: border-box;
+
+  background: var(--button-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+
+  cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    opacity .2s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.balanzas-container .toolbar .tool:hover:not(:disabled) {
+  transform: translateY(-3px);
+
+  background: var(--button-hover);
+
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   ICONOS
+========================================================= */
+
+.balanzas-container .toolbar .tool .tool-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .18),
+    0 2px 4px rgba(0, 0, 0, .12);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+
+/* =========================================================
+   ICONO HOVER
+========================================================= */
+
+.balanzas-container .toolbar .tool:hover:not(:disabled) .tool-icon {
+  transform: scale(1.06);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .22),
+    0 4px 8px rgba(0, 0, 0, .15);
+}
+
+
+/* =========================================================
+   TEXTO
+========================================================= */
+
+.balanzas-container .toolbar .tool .tool-label {
+  margin: 0;
+  padding: 0;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  color: var(--text-primary);
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   COLORES DE ICONOS
+========================================================= */
+
+/* NUEVO */
+
+.balanzas-container .toolbar .tool.new .tool-icon {
+  background: #2563eb;
+}
+
+
+/* ELIMINAR */
+
+.balanzas-container .toolbar .tool.delete .tool-icon {
+  background: #64748b;
+}
+
+
+/* MODIFICAR */
+
+.balanzas-container .toolbar .tool.edit .tool-icon {
+  background: #0ea5e9;
+}
+
+
+/* GUARDAR */
+
+.balanzas-container .toolbar .tool.save .tool-icon {
+  background: #059669;
+}
+
+
+/* CANCELAR */
+
+.balanzas-container .toolbar .tool.cancel .tool-icon {
+  background: #ef4444;
+}
+
+
+/* SALIR */
+
+.balanzas-container .toolbar .tool.exit .tool-icon {
+  background: #0891b2;
+}
+
+
+/* =========================================================
+   BOTONES DESHABILITADOS
+========================================================= */
+
+.balanzas-container .toolbar .tool.disabled,
+.balanzas-container .toolbar .tool:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.balanzas-container .toolbar .tool.disabled:hover,
+.balanzas-container .toolbar .tool:disabled:hover {
+  transform: none;
+
+  background: var(--button-bg);
+
+  border-color: var(--border-color);
+}
+
+
+/* =========================================================
+   SCROLL TOOLBAR
+========================================================= */
+
+.balanzas-container .toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.balanzas-container .toolbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.balanzas-container .toolbar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.balanzas-message {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-bottom: 14px;
+
+  padding: 12px 15px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  border: 1px solid transparent;
+}
+
+
+/* ERROR */
+
+.balanzas-message.error {
+  background: rgba(239, 68, 68, .10);
+
+  color: #dc2626;
+
+  border-color: rgba(239, 68, 68, .25);
+}
+
+
+/* ÉXITO */
+
+.balanzas-message.success {
+  background: rgba(16, 185, 129, .10);
+
+  color: #059669;
+
+  border-color: rgba(16, 185, 129, .25);
+}
+
+
+/* =========================================================
+   CONTENEDOR TABLA
+========================================================= */
+
+.balanzas-table-wrapper {
+  width: 100%;
+
+  max-height: 550px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 16px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.05);
+
+  scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.balanzas-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  font-size: 14px;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   CABECERA
+========================================================= */
+
+.balanzas-table thead {
+  background: var(--bg-secondary);
+}
+
+
+/* CABECERA FIJA */
+
+.balanzas-table thead th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 5;
+
+  padding: 12px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-secondary);
+
+  border-bottom: 1px solid var(--border-color);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ANCHOS
+========================================================= */
+
+.balanzas-table .col-nro {
+  width: 140px;
+}
+
+.balanzas-table .col-nombre {
+  width: auto;
+}
+
+
+/* =========================================================
+   CELDAS
+========================================================= */
+
+.balanzas-table tbody td {
+  padding: 12px;
+
+  border-bottom: 1px solid var(--border-color);
+
+  color: var(--text-primary);
+
+  background: var(--bg-secondary);
+
+  vertical-align: middle;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILA
+========================================================= */
+
+.balanzas-table tbody tr {
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.balanzas-table tbody tr:hover td {
+  background: var(--button-hover);
+}
+
+
+/* =========================================================
+   FILA SELECCIONADA
+========================================================= */
+
+.balanzas-table tbody tr.selected td {
+  background: rgba(37, 99, 235, .10);
+}
+
+
+/* BORDE IZQUIERDO DE SELECCIÓN */
+
+.balanzas-table tbody tr.selected td:first-child {
+  border-left: 3px solid var(--primary-color);
+  padding-left: 9px;
+}
+
+
+/* HOVER SELECCIONADO */
+
+.balanzas-table tbody tr.selected:hover td {
+  background: rgba(37, 99, 235, .15);
+}
+
+
+/* =========================================================
+   ESTADO DE TABLA
+========================================================= */
+
+.balanzas-table .table-status {
+  text-align: center;
+
+  padding: 30px 15px;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  cursor: default;
+}
+
+.balanzas-table tbody tr:has(.table-status):hover td {
+  background: var(--bg-secondary);
+}
+
+
+/* =========================================================
+   SCROLL TABLA
+========================================================= */
+
+.balanzas-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.balanzas-table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.balanzas-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+
+  border-radius: 10px;
+}
+
+.balanzas-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.balanzas-form-area {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.balanzas-form {
+  width: 100%;
+
+  max-width: 850px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+
+/* =========================================================
+   FILA FORMULARIO
+========================================================= */
+
+.balanzas-form .form-row {
+  display: grid;
+
+  grid-template-columns: 260px minmax(200px, 500px);
+
+  align-items: center;
+
+  gap: 15px;
+
+  min-height: 40px;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.balanzas-form .form-row label {
+  color: var(--text-primary);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  text-align: right;
+}
+
+
+/* =========================================================
+   INPUTS Y SELECTS
+========================================================= */
+
+.balanzas-form .form-row input,
+.balanzas-form .form-row select {
+  width: 100%;
+
+  min-width: 0;
+
+  height: 40px;
+
+  padding: 8px 10px;
+
+  box-sizing: border-box;
+
+  background: var(--bg-card);
+
+  color: var(--text-primary);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-family: "Segoe UI", Arial, sans-serif;
+
+  font-size: 14px;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.balanzas-form .form-row input:focus,
+.balanzas-form .form-row select:focus {
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 0 0 2px rgba(59, 130, 246, .15);
+}
+
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+.balanzas-form .form-row input:disabled,
+.balanzas-form .form-row select:disabled {
+  opacity: .65;
+
+  cursor: not-allowed;
+
+  background: var(--button-hover);
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.balanzas-form .form-row select {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   MODO OSCURO
+========================================================= */
+
+body.dark .balanzas-container {
+  background: var(--bg-primary);
+
+  color: var(--text-primary);
+}
+
+
+/* TOOLBAR */
+
+body.dark .balanzas-container .toolbar {
+  background: var(--bg-secondary);
+
+  border-color: var(--border-color);
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, .25);
+}
+
+
+/* BOTONES */
+
+body.dark .balanzas-container .toolbar .tool {
+  background: var(--button-bg);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-container .toolbar .tool:hover:not(:disabled) {
+  background: var(--button-hover);
+}
+
+
+/* TABLA */
+
+body.dark .balanzas-table-wrapper {
+  background: var(--bg-secondary);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-table thead th {
+  background: var(--bg-secondary);
+
+  color: var(--text-secondary);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-table tbody td {
+  background: var(--bg-secondary);
+
+  color: var(--text-primary);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-table tbody tr:hover td {
+  background: var(--button-hover);
+}
+
+
+/* FORM */
+
+body.dark .balanzas-form-area {
+  background: var(--bg-secondary);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-form .form-row input,
+body.dark .balanzas-form .form-row select {
+  background: var(--bg-card);
+
+  color: var(--text-primary);
+
+  border-color: var(--border-color);
+}
+
+body.dark .balanzas-form .form-row input:disabled {
+  background: var(--button-hover);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .balanzas-container {
+    padding: 8px;
+  }
+
+  .balanzas-container .toolbar {
+    justify-content: flex-start;
+
+    overflow-x: auto;
+  }
+
+  .balanzas-form {
+    max-width: 100%;
+  }
+
+  .balanzas-form .form-row {
+    grid-template-columns: 1fr;
+
+    gap: 6px;
+
+    align-items: stretch;
+  }
+
+  .balanzas-form .form-row label {
+    text-align: left;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .balanzas-container .toolbar {
+    gap: 8px;
+
+    padding: 10px;
+
+    border-radius: 12px;
+  }
+
+  .balanzas-container .toolbar .tool {
+    width: 88px;
+
+    min-width: 88px;
+
+    height: 82px;
+  }
+
+  .balanzas-container .toolbar .tool .tool-icon {
+    width: 42px;
+    height: 42px;
+
+    font-size: 23px;
+  }
+
+  .balanzas-container .toolbar .tool .tool-label {
+    font-size: 12px;
+  }
+
+
+  .balanzas-table-wrapper {
+    border-radius: 12px;
+  }
+
+
+  .balanzas-table {
+    min-width: 500px;
+  }
+
+
+  .balanzas-form-area {
+    padding: 14px;
+
+    border-radius: 12px;
+  }
+
+}
+
+
+/* =========================================================
+   VARIABLES FALLBACK
+   SOLO SI EL SISTEMA NO LAS DEFINE
+========================================================= */
+
+:root {
+
+  --bg-primary: #f5f6fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+
+  --text-primary: #2f3640;
+  --text-secondary: #718093;
+
+  --border-color: #dcdde1;
+  --border: #dcdde1;
+
+  --button-bg: #ffffff;
+  --button-hover: #f1f2f6;
+
+  --primary-color: #2563eb;
+
+}
+
+
+/* =========================================================
+   VARIABLES DARK
+========================================================= */
+
+body.dark {
+
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-card: #111827;
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #94a3b8;
+
+  --border-color: #334155;
+  --border: #334155;
+
+  --button-bg: #111827;
+  --button-hover: #1e293b;
+
+  --primary-color: #3b82f6;
+
+}

@@ -1,0 +1,343 @@
+/* MovimientosStock.css
+   Versión compacta
+*/
+
+.movimientos-stock-container{
+    width:100%;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+.header-stock{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.header-stock h2{
+    margin:0;
+    font-size:28px;
+    font-weight:700;
+    color:var(--text-color);
+}
+
+.acciones{display:flex;gap:12px;}
+.acciones button{
+    padding:11px 22px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#2563eb;
+    color:#fff;
+    font-weight:600;
+    transition:.2s;
+}
+.acciones button:last-child{background:#64748b;}
+.acciones button:hover{transform:translateY(-2px);}
+
+.stock-filtros,
+.detalle-stock,
+.tabla-wrapper{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+
+.stock-filtros{
+    padding:22px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.stock-filtros .field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.stock-filtros label{
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-secondary);
+}
+
+.stock-filtros input,
+.stock-filtros select{
+    height:42px;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    padding:0 14px;
+    background:var(--input-bg,#fff);
+    color:var(--text-color);
+}
+
+/* DETALLE */
+
+.detalle-stock{
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.detalle-header,
+.detalle-row{
+    display:grid;
+    grid-template-columns:2.5fr 1.3fr 90px 110px 90px 110px;
+    gap:14px;
+}
+
+.detalle-header{
+    font-size:.85rem;
+    color:var(--text-secondary);
+    font-weight:600;
+}
+
+.detalle-row{
+    padding:14px;
+    border:1px solid var(--border-color);
+    border-radius:14px;
+    align-items:start;
+}
+
+.detalle-row.origen{border-left:4px solid #3b82f6;}
+.detalle-row.destino{border-left:4px solid #22c55e;}
+
+.articulo-col,
+.sucursal-col{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.search-box{
+    display:flex;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.search-box input{
+    flex:1;
+    border:none;
+    padding:10px 14px;
+    background:transparent;
+    color:var(--text-color);
+    outline:none;
+}
+
+.search-btn{
+    width:42px;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+}
+
+.articulo-col>input,
+.sucursal-col select{
+    height:40px;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    padding:0 12px;
+    background:var(--input-bg,#fff);
+    color:var(--text-color);
+}
+
+.badge{
+    width:max-content;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:.68rem;
+    font-weight:700;
+}
+.badge.origen{background:#dbeafe;color:#2563eb;}
+.badge.destino{background:#dcfce7;color:#16a34a;}
+
+.valor-card{
+    height:120px;
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.valor-card strong{font-size:22px;}
+.valor-card span{font-size:.68rem;color:var(--text-secondary);}
+.valor-card.success{
+    background:rgba(34,197,94,.08);
+    border-color:rgba(34,197,94,.3);
+}
+
+.cantidad-card input{
+    width:100%;
+    height:120px;
+    border:2px solid #3b82f6;
+    border-radius:14px;
+    font-size:28px;
+    font-weight:700;
+    text-align:center;
+    background:var(--input-bg,#fff);
+    color:var(--text-color);
+}
+
+.cantidad-placeholder{height:120px;}
+
+.botones-stock{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+}
+
+.botones-stock button{
+    padding:11px 22px;
+    border:none;
+    border-radius:10px;
+    color:#fff;
+    cursor:pointer;
+    font-weight:600;
+}
+.botones-stock button:nth-child(1){background:#16a34a;}
+.botones-stock button:nth-child(2){background:#2563eb;}
+.botones-stock button:nth-child(3){background:#f59e0b;}
+.botones-stock button:nth-child(4){background:#ef4444;}
+
+.tabla-wrapper{overflow:auto;}
+
+.tabla-stock{width:100%;border-collapse:collapse;}
+.tabla-stock thead{background:#f1f5f9;}
+.tabla-stock th,.tabla-stock td{padding:14px;text-align:left;}
+.tabla-stock td{border-top:1px solid #e5e7eb;}
+.tabla-stock tbody tr:hover{background:#f8fafc;}
+
+@media(max-width:1200px){
+  .detalle-header{display:none;}
+  .detalle-row{grid-template-columns:1fr;}
+  .valor-card,
+  .cantidad-card input,
+  .cantidad-placeholder{height:70px;}
+}
+/* ===========================
+   FIX MODO OSCURO
+=========================== */
+
+body.dark .movimientos-stock-container{
+    color:var(--text-primary);
+}
+
+body.dark .stock-filtros,
+body.dark .detalle-stock,
+body.dark .tabla-wrapper{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+
+/* Inputs */
+
+body.dark input,
+body.dark select{
+    background:var(--input-bg) !important;
+    color:var(--text-primary) !important;
+    border:1px solid var(--border-color) !important;
+}
+
+body.dark input::placeholder{
+    color:var(--text-secondary);
+}
+
+/* Buscador */
+
+body.dark .search-box{
+    background:var(--input-bg);
+    border-color:var(--border-color);
+}
+
+body.dark .search-box input{
+    background:transparent;
+}
+
+body.dark .search-btn{
+    color:#60a5fa;
+}
+
+body.dark .search-btn:hover{
+    background:rgba(59,130,246,.15);
+}
+
+/* Tarjetas */
+
+body.dark .detalle-row{
+    background:#172033;
+    border-color:#334155;
+}
+
+body.dark .valor-card{
+    background:#1f2937;
+    border-color:#334155;
+}
+
+body.dark .valor-card span{
+    color:#94a3b8;
+}
+
+body.dark .valor-card strong{
+    color:#f8fafc;
+}
+
+body.dark .valor-card.success{
+    background:rgba(34,197,94,.10);
+    border-color:rgba(34,197,94,.35);
+}
+
+body.dark .valor-card.success strong{
+    color:#4ade80;
+}
+
+/* Cantidad */
+
+body.dark .cantidad-card input{
+    background:#111827;
+    border-color:#3b82f6;
+    color:#ffffff;
+}
+
+/* Tabla */
+
+body.dark .tabla-stock{
+    color:var(--text-primary);
+}
+
+body.dark .tabla-stock thead{
+    background:#1f2937;
+}
+
+body.dark .tabla-stock th{
+    color:#cbd5e1;
+}
+
+body.dark .tabla-stock td{
+    border-color:#334155;
+}
+
+body.dark .tabla-stock tbody tr:hover{
+    background:#172033;
+}
+
+/* Badges */
+
+body.dark .badge.origen{
+    background:rgba(59,130,246,.18);
+    color:#93c5fd;
+}
+
+body.dark .badge.destino{
+    background:rgba(34,197,94,.18);
+    color:#86efac;
+}

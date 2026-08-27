@@ -1,13 +1,99 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./Articulos.css";
+import {
+  articulosImagenes,
+  mapaImagenes
+} from "../../data/articulosImagenes";
+import { apiFetch } from "../../services/api";
+
+const safeNumber = (v) => {
+  const n = Number(v);
+  return isNaN(n) || n === 0 ? null : n;
+};
+
+
+const emptyForm = {
+  id: "",
+  imgPath: null,
+  nombre: "",
+
+  barCodes: [],
+  codigo: "",
+  adicional: "",
+
+  costo: "",
+  margen: "",
+  precioFinal: "",
+
+  iva: "",
+  taxId: "",
+  currencyId: "",
+
+  clasificacionId: "",
+  departamentoId: "",
+  subDepartamentoId: "",
+  proveedorId: "",
+  marcaId: "",
+  itemTypeId: 1,
+  measurementUnitId: "",
+
+  reorderPoint: "",
+  controlMeasurementUnitId: "",
+
+  expirationDays: "",
+  itemPresentation: "",
+
+  useLabel: false,
+
+sinPromocion: false,
+
+promotionId: "",
+promotionOriginalId: null
+};
 
 export default function Articulos({ setSection }) {
 
   const [view, setView] = useState("table");
   const [tab, setTab] = useState("basicos");
-
+const [mostrarGaleria, setMostrarGaleria] = useState(false);
+const [imagenArticulo, setImagenArticulo] = useState(null);
+const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+const [meta, setMeta] = useState({
+  hasNext: false,
+  hasPrevious: false
+});
   const [articulos, setArticulos] = useState([]);
   const [selected, setSelected] = useState(null);
+const [nuevoCodigo, setNuevoCodigo] = useState("");
+  const [stock, setStock] = useState([]);
+const [linkedItems, setLinkedItems] = useState([]);
+const [availableLinkedItems, setAvailableLinkedItems] =
+  useState([]);
+  const [comboItems, setComboItems] = useState([]);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+const [promotions, setPromotions] = useState([]);
+  const [search, setSearch] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [busquedaActiva, setBusquedaActiva] = useState("");
+  const [openCategorias, setOpenCategorias] = useState(false);
+  const [showFiltersPopup, setShowFiltersPopup] = useState(false);
+  const [filters, setFilters] = useState({
+  texto: "",
+  departamento: "",
+  subDepartamento: "",
+  proveedor: "",
+  marca: "",
+  clasificacion: "",
+  tipo: ""
+});
+const [nuevoLinkedItem, setNuevoLinkedItem] = useState("");
+const [nuevoComboItem, setNuevoComboItem] = useState("");
+const [nuevoBarcode, setNuevoBarcode] = useState("");
+
+  const [form, setForm] = useState(emptyForm);
+
+  const [flashPrice, setFlashPrice] = useState(false);
 
   const [clasificaciones, setClasificaciones] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
@@ -19,747 +105,1012 @@ export default function Articulos({ setSection }) {
   const [currencies, setCurrencies] = useState([]);
   const [itemTypes, setItemTypes] = useState([]);
   const [measurementUnits, setMeasurementUnits] = useState([]);
+  const calcularPrecioFinal = (costo, margen, ivaId) => {
+  const ivaObj = ivas.find(i => i.id === Number(ivaId));
+const obtenerImagenArticulo = (nombre, departamentoId) => {
+  if (!nombre || !departamentoId) return null;
 
-  const [flashPrice, setFlashPrice] = useState(false);
-const [page, setPage] = useState(0);
-const [totalPages, setTotalPages] = useState(0);
-  const [search, setSearch] = useState("");
-  const [soloNovedades, setSoloNovedades] = useState(false);
-  const [originalBarCodes, setOriginalBarCodes] = useState([]);
-  const [nuevoCodigo, setNuevoCodigo] = useState("");
-  const [stock, setStock] = useState([]);
+  const departamento = departamentos.find(
+    d => String(d.id) === String(departamentoId)
+  );
 
-  const emptyForm = {
-  id: "",
-  nombre: "",
-  barCodes: [],
+  if (!departamento) return null;
 
-  codigo: "",
-  adicional: "",
+  const categoria = departamento.name;
+  const lista = articulosImagenes[categoria];
 
-  costo: "",
-  costoConIva: "",
+  if (!lista || lista.length === 0) return null;
 
-  margen: "",
+  const texto = nombre.toLowerCase().trim();
 
-  precio: "0.00",
-  precioFinal: "0.00",
+  const archivo = lista.find(img => {
+    const nombreArchivo = img
+      .split("/")
+      .pop()
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[_-]/g, " ")
+      .toLowerCase()
+      .trim();
 
-  precioAnterior: "",
-  fechaCambio: "",
+    return texto.includes(nombreArchivo);
+  });
 
-  iva: "",
-  taxId: "",
-  currencyId: "",
-
-  clasificacionId: "",
-  departamentoId: "",
-  subDepartamentoId: "",
-
-  proveedorId: "",
-  marcaId: "",
-
-  itemTypeId: "",
-  measurementUnitId: "",
-
-  itemPresentation: 1,
-
-  price_2: "",
-  price_3: "",
-  price_4: "",
-  price_5: "",
-
-  expirationDays: 0,
-
-  useLabel: false,
-
-  reorderPoint: 0,
-  controlMeasurementUnitId: ""
+  return archivo ? `/Articulos/${archivo}` : null;
 };
 
-  const [form, setForm] = useState(emptyForm);
+  const iva = ivaObj ? Number(ivaObj.value) : 0;
 
-  const fetchConfig = {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
+  const base = Number(costo) || 0;
+  const margin = Number(margen) || 0;
 
-  // =========================================================
-  // COMBOS
-  // =========================================================
+  return Math.round(
+    base * (1 + margin / 100) * (1 + iva / 100) * 100
+  ) / 100;
+};
+const costoConIva = (() => {
+  const ivaObj = ivas.find(i => i.id === Number(form.iva));
+  const iva = ivaObj ? Number(ivaObj.value) : 0;
 
-  const getCombos = async () => {
-    try {
+  return (
+    (Number(form.costo) || 0) *
+    (1 + iva / 100)
+  ).toFixed(2);
+})();
+  // ================= GET ARTICULOS =================
+  const getArticulos = useCallback(async () => {
+   
+  const res = await apiFetch(
+  `/items?page=${page}&size=500`
+);
 
-      const res = await fetch(
-        "http://localhost:8080/back_office/item/data-for-creation",
-        fetchConfig
-      );
+  const data = await res.json();
+ console.log(data.content[0]);
+    console.log("FORM ACTUAL:", form);
+console.log("SELECTED:", selected);
+  setArticulos(data.content || []);
+  setTotalPages(data.totalPages || 0);
 
-      if (!res.ok) {
-        console.error(await res.text());
-        return;
-      }
+  setMeta({
+    hasNext: data.hasNext,
+    hasPrevious: data.hasPrevious
+  });
+}, [page]);
+  // ================= GET ITEM =================
+const getItemById = useCallback(async (id) => {
+  console.log(
+  "FORM BARCODES:",
+  form.barCodes
+);
+  const res = await apiFetch(
+  `/items/${id}`
+);
 
-      const data = await res.json();
+  if (!res.ok) {
+    console.error(await res.text());
+    return;
+  }
 
-      setClasificaciones(data.itemClassifications || []);
-      setItemTypes(data.itemTypes || []);
-      setMeasurementUnits(data.measurementUnits || []);
+  const data = await res.json();
+  const item = data.item;
+  const rutaImagen = item.imgPath
+  ? mapaImagenes[item.imgPath.toLowerCase()] || null
+  : null;
 
-      setProveedores(data.supplier || []);
-      setDepartamentos(data.itemCollections || []);
-      setSubDeptos(data.itemSubCollections || []);
+setImagenArticulo(rutaImagen);
 
-      setMarcas(data.brands || []);
+console.log(
+  "LINKED ITEMS DEL GET:",
+  JSON.stringify(
+    item.linkedItems,
+    null,
+    2
+  )
+);
+console.log("LINK OBJECT COMPLETO:", item.linkedItems);
 
-      setIvas(data.IVAs || []);
+ setLinkedItems(
+  item.linkedItems || []
+);
+setComboItems(
+  (item.itemsInBundle || []).map(i => ({
+    id: i.id,
+    name: i.name,
+    price: Number(i.price) || 0,
+    quantity: Number(i.quantity) || 1
+  }))
+);
+if (String(item.itemTypeId) === "2") {
+  getComboItems(item.id);
+}
+  console.log(
+  "BARCODES RECIBIDOS:",
+  item.barCodes
+);
+  console.log("ITEM GET", item);
+  console.log("TYPE PRINCIPAL", data.item.typeId);
+const originalBarcodes = (item.barCodes || []).map(b => b.value);
+setForm({
+  ...emptyForm,
 
-      setTaxes(data.taxes || []);
+  id: item.id ?? "",
 
-      setCurrencies(data.currencies || []);
+  nombre: item.name ?? "",
+  imgPath: rutaImagen,
 
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  codigo: item.barCode ?? item.barcode ?? "",
+  adicional: item.extraBarCode ?? "",
 
-  // =========================================================
-  // LEER ARTICULOS
-  // NUEVO ENDPOINT
-  // =========================================================
+  costo: item.cost ?? 0,
+  margen: item.margin ?? 0,
+  precioFinal: item.price ?? 0,
 
-const getArticulos = async () => {
+  iva: item.ivaId ?? "",
+  taxId: item.taxId ?? "",
+  currencyId: item.currencyId ?? "",
 
-  try {
+  clasificacionId:
+    item.classificationId ??
+    item.itemClassificationId ??
+    "",
 
-    const res = await fetch(
-      `http://localhost:8080/back_office/item?page=${page}&size=500`,
-      {
-        credentials: "include"
-      }
+  departamentoId:
+    item.itemCollectionId ??
+    item.collectionId ??
+    "",
+
+  subDepartamentoId:
+    item.itemSubCollectionId ??
+    item.subCollectionId ??
+    "",
+
+  proveedorId: item.supplierId ?? "",
+
+  marcaId:
+    item.brandId ??
+    item.itemBrandId ??
+    "",
+
+  itemTypeId:
+    item.itemTypeId ??
+    item.typeId ??
+    "",
+
+  measurementUnitId: item.measurementUnitId ?? "",
+
+  reorderPoint:
+    item.reorderPoint ??
+    item.itemStock?.reorderPoint ??
+    "",
+
+  controlMeasurementUnitId:
+    item.controlMeasurementUnitId ??
+    item.itemStock?.controlMeasurementUnitId ??
+    "",
+
+  expirationDays: item.expirationDays ?? "",
+
+  itemPresentation:
+    item.itemPresentation ??
+    item.presentation ??
+    "",
+
+  useLabel: item.useLabel ?? false,
+  promotionId: item.promotion?.id ?? "",
+promotionOriginalId: item.promotion?.id ?? null,
+sinPromocion: item.promotion == null,
+
+  price_2: item.price_2 ?? 0,
+  price_3: item.price_3 ?? 0,
+  price_4: item.price_4 ?? 0,
+  price_5: item.price_5 ?? 0,
+
+  precioAnterior: item.previousPrice ?? 0,
+  fechaCambio: item.lastPriceUpdate ?? "",
+
+  barCodes: (item.barCodes || []).map(b => ({
+  value: b.value,
+  detail: b.detail ?? b.description ?? "",
+  deleted: false,
+})),
+barCodesOriginal: (item.barCodes || []).map(b => b.value)
+});
+  setStock(
+    (item.stocks || []).map(s => ({
+      ...s,
+      itemId: item.id,
+      itemName: item.name,
+      editableStock: s.currentStock
+    }))
+  );
+}, []);
+
+
+  // ================= STOCK =================
+  const getStock = useCallback(async (itemId) => {
+    const res = await apiFetch(
+  `/items/stocks?page=0&size=500`,
+);
+    const data = await res.json();
+
+    setStock(
+      (data.content || [])
+        .filter(s => s.itemId === itemId)
+        .map(s => ({
+          ...s,
+          editableStock: s.currentStock
+        }))
     );
+  }, []);
 
-    if (res.status === 401) {
-      alert("Sesión expirada");
+  // ================= UPDATE STOCK =================
+
+const updateStock = async (row) => {
+  console.log("ACTUALIZANDO STOCK", row);
+
+  const res = await apiFetch(
+  `/items/${row.itemId}/branches/${row.branchId}/stocks`,
+  {
+    method: "PUT",
+    body: JSON.stringify({
+      currentStock: Number(row.editableStock)
+    })
+  }
+  
+);
+  console.log("STATUS:", res.status);
+
+  if (!res.ok) {
+    console.error(await res.text());
+  }
+};
+  // ================= CRUD =================
+  const nuevo = () => {
+    setForm(emptyForm);
+    setSelected(null);
+    setView("form");
+    setTab("basicos");
+    setImagenArticulo(null);
+  setMostrarGaleria(false);
+  setCategoriaSeleccionada(null);
+  };
+  const buildCreatePayload = (form, measurementUnits) => {
+  const toNumber = (v) =>
+    v !== "" && v !== null && v !== undefined ? Number(v) : null;
+  const imgPath = form.imgPath
+  ? form.imgPath
+      .split("/")
+      .pop()
+      .split("\\")
+      .pop()
+      .replace(/\.[^/.]+$/, "")
+      .replace(/ /g, "_")
+      .replace(/[^A-Za-z0-9_-]/g, "")
+  : null;
+
+
+  const controlMeasurementUnitId = form.controlMeasurementUnitId
+    ? Number(form.controlMeasurementUnitId)
+    : null;
+
+
+    
+return {
+  item: {
+    name: form.nombre ?? "",
+      imgPath,
+    barCode: form.codigo?.trim() || null,
+    extraBarCode: form.adicional?.trim() || null,
+
+    cost: Number(form.costo) || 0,
+    margin: Number(form.margen) || 0,
+    price: Number(form.precioFinal) || 0,
+
+    price_2: Number(form.price_2) || 0,
+    price_3: Number(form.price_3) || 0,
+    price_4: Number(form.price_4) || 0,
+    price_5: Number(form.price_5) || 0,
+
+    currencyId: Number(form.currencyId) || 1,
+    supplierId: Number(form.proveedorId) || 0,
+
+    itemCollectionId: Number(form.departamentoId) || 0,
+    itemSubCollectionId: Number(form.subDepartamentoId) || 0,
+
+    ivaId: Number(form.iva) || 1,
+    taxId: Number(form.taxId) || 0,
+
+    itemTypeId: Number(form.itemTypeId) || 1,
+
+    classificationId: Number(form.clasificacionId) || 0,
+    brandId: Number(form.marcaId) || 0,
+
+    measurementUnitId: Number(form.measurementUnitId) || 0,
+
+    measurementUnitName:
+      measurementUnits.find(
+        m => m.id === Number(form.measurementUnitId)
+      )?.name || "",
+
+    expirationDays: Number(form.expirationDays) || 1,
+
+    itemPresentation: Number(form.itemPresentation) || 2.0,
+
+    useLabel: !!form.useLabel
+  },
+
+  itemStock: {
+    reorderPoint: Number(form.reorderPoint) || 0,
+
+    controlMeasurementUnitId:
+      form.controlMeasurementUnitId
+        ? Number(form.controlMeasurementUnitId)
+        : null
+  }
+};
+  };
+
+
+const buildUpdatePayload = (form, measurementUnits) => {
+
+
+  const imgPath = form.imgPath
+  ? form.imgPath
+      .split("/")
+      .pop()
+      .split("\\")
+      .pop()
+      .replace(/\.[^/.]+$/, "")
+      .replace(/ /g, "_")
+      .replace(/[^A-Za-z0-9_-]/g, "")
+  : null;
+
+  return {
+    name: form.nombre,
+
+    imgPath,
+
+    cost: Number(form.costo) || 0,
+    margin: Number(form.margen) || 0,
+    price: Number(form.precioFinal) || 0,
+
+    currencyId: Number(form.currencyId) || 1,
+    supplierId: Number(form.proveedorId) || 0,
+
+    itemCollectionId: Number(form.departamentoId) || 0,
+    itemSubCollectionId: Number(form.subDepartamentoId) || 0,
+
+    ivaId: Number(form.iva),
+
+    taxId: Number(form.taxId) || 0,
+
+    itemTypeId: Number(form.itemTypeId),
+
+    classificationId: Number(form.clasificacionId) || 0,
+
+    brandId: Number(form.marcaId) || 0,
+
+    measurementUnitId:
+      Number(form.measurementUnitId) || 0,
+
+    measurementUnitName:
+      measurementUnits.find(
+        m => m.id === Number(form.measurementUnitId)
+      )?.name || "",
+
+    expirationDays:
+      Number(form.expirationDays) || 1,
+
+    itemPresentation:
+      Number(form.itemPresentation) || 1,
+
+    price_2: Number(form.price_2) || 0,
+    price_3: Number(form.price_3) || 0,
+    price_4: Number(form.price_4) || 0,
+    price_5: Number(form.price_5) || 0,
+
+    useLabel: !!form.useLabel
+    
+  };
+  
+};
+
+  // ================= BARCODES =================
+
+const guardarBarcodes = async (itemId, barCodes) => {
+  console.log("BARCODES QUE SE VAN A ENVIAR:", barCodes);
+  console.log("=== GUARDAR BARCODES ===");
+  console.log("ITEM ID:", itemId);
+  console.log("BARCODES:", barCodes);
+
+  const res = await apiFetch(`/items/${itemId}/barcodes`, {
+  method: "POST",
+  body: JSON.stringify({
+    barCodes
+  })
+});
+
+  console.log("STATUS BARCODES:", res.status);
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.log("ERROR BARCODES:", err);
+
+    if (res.status === 409) {
+      console.warn("Barcode duplicado ignorado");
       return;
     }
 
+    throw new Error(err);
+  }
+};
+const eliminarBarcode = async (itemId, barCodeValue) => {
+  await apiFetch(
+  `/items/${itemId}/barcodes/${barCodeValue}`,
+  {
+    method: "DELETE",
+  }
+);
+};
+const updateComboItems = async (idCombo, items) => {
+  const res = await apiFetch(`/items/${idCombo}/bundles`, {
+    method: "PUT",
+    body: JSON.stringify(items)
+  });
+
+  return res;
+};
+  // ================= ARTICULOS VINCULADOS =================
+
+const vincularItem = async (itemId, linkedItemId) => {
+
+  const body = {
+    linkedItemId: Number(linkedItemId)
+  };
+
+  console.log("URL:",
+    `${API}/items/${itemId}/linked-items`
+  );
+
+  console.log("BODY:", body);
+
+  const res = await apiFetch(
+  `/items/${itemId}/linked-items`,
+  {
+    method: "POST",
+    body: JSON.stringify(body)
+  }
+);
+
+  console.log("STATUS LINK:", res.status);
+
+  if (!res.ok) {
+    console.log(await res.text());
+  }
+  return res;
+};
+
+const eliminarLinkedItem = async (
+  itemId,
+  linkedItemId
+) => {
+  console.log(
+    "DELETE:",
+    `${API}/items/${itemId}/linked-items/${linkedItemId}`
+  );
+
+  const res = await apiFetch(
+  `/items/${itemId}/linked-items/${linkedItemId}`,
+  {
+    method: "DELETE",
+  }
+);
+  console.log(
+    "STATUS DELETE:",
+    res.status
+  );
+
+  if (!res.ok) {
+    console.log(
+      "ERROR:",
+      await res.text()
+    );
+  }
+
+  return res;
+};
+
+// ================= PROMOCIONES =================
+
+const vincularPromocion = async (promotionId, itemId) => {
+  const res = await apiFetch(
+  `/promotions/${promotionId}/items/${itemId}`,
+  {
+    method: "PUT",
+  }
+);
+
+  if (!res.ok) {
+    console.log(await res.text());
+  }
+
+  return res;
+};
+
+const desvincularPromocion = async (promotionId, itemId) => {
+  const res = await apiFetch(
+  `/promotions/${promotionId}/items/${itemId}`,
+  {
+    method: "DELETE",
+  }
+);
+
+  if (!res.ok) {
+    console.log(await res.text());
+  }
+
+  return res;
+};
+
+
+const getComboItems = useCallback(async (id) => {
+  const res = await apiFetch(
+  `/items/bundles/${id}`,
+);
+
+  if (!res.ok) {
+    console.log(await res.text());
+    return;
+  }
+
+  const data = await res.json();
+
+  setComboItems(
+    (data || []).map(i => ({
+      id: i.id,
+      name: i.name,
+      price: Number(i.price) || 0,
+      quantity: Number(i.quantity) || 1
+    }))
+  );
+}, []);
+
+  // ================= GUARDAR =================
+
+const guardar = async () => {
+  const method = selected ? "PUT" : "POST";
+
+  if (!form.itemTypeId) {
+    alert("Debes seleccionar el tipo de artículo");
+    return;
+  }
+
+  try {
+    console.log(
+      "BARCODES ANTES DE GUARDAR:",
+      form.barCodes
+    );
+
+    // =====================================================
+    // 1. CREAR PAYLOAD PRIMERO
+    // =====================================================
+
+    const payload = selected
+      ? buildUpdatePayload(
+          form,
+          measurementUnits
+        )
+      : buildCreatePayload(
+          form,
+          measurementUnits
+        );
+
+    console.log("SELECTED:", selected);
+    console.log("PAYLOAD:", payload);
+
+    console.log(
+      "PAYLOAD FINAL",
+      JSON.stringify(payload, null, 2)
+    );
+
+    console.log(
+      "TIPO A GUARDAR:",
+      form.itemTypeId
+    );
+
+    // =====================================================
+    // 2. DEFINIR ENDPOINT
+    // =====================================================
+
+    const endpoint = selected
+      ? `/items/${selected}`
+      : `/items`;
+
+    // =====================================================
+    // 3. GUARDAR ARTÍCULO
+    // =====================================================
+
+    const res = await apiFetch(endpoint, {
+      method,
+      body: JSON.stringify(payload)
+    });
+console.log(
+  "STATUS UPDATE:",
+  res.status
+);
+
+console.log(
+  "RESPUESTA UPDATE:",
+  await res.clone().text()
+);
     if (!res.ok) {
-      console.error(await res.text());
+      const err = await res.text();
+
+      console.error(
+        "ERROR UPDATE ITEM:",
+        err,
+        res.status
+      );
+
+      alert(err);
+      return;
+    }
+
+    // =====================================================
+    // 4. ACTUALIZAR LISTADO
+    // =====================================================
+
+    await getArticulos();
+
+    // =====================================================
+    // 5. ACTUALIZAR ITEMS DEL COMBO
+    // =====================================================
+
+    if (form.itemTypeId === 2 && form.id) {
+      await updateComboItems(
+        form.id,
+        comboItems
+      );
+    }
+
+    // =====================================================
+    // 6. OBTENER ID DEL ARTÍCULO
+    // =====================================================
+
+    const itemId = selected
+      ? selected
+      : Number(
+          res.headers
+            .get("location")
+            ?.split("/")
+            .pop()
+        );
+
+    if (!itemId) {
+      console.error(
+        "No se pudo obtener el ID del artículo"
+      );
+      return;
+    }
+
+    // =====================================================
+    // 7. PROMOCIONES
+    // =====================================================
+
+    const original =
+      form.promotionOriginalId;
+
+    const actual = form.sinPromocion
+      ? null
+      : (
+          form.promotionId
+            ? Number(form.promotionId)
+            : null
+        );
+
+    if (!original && actual) {
+      await vincularPromocion(
+        actual,
+        itemId
+      );
+    }
+    else if (original && !actual) {
+      await desvincularPromocion(
+        original,
+        itemId
+      );
+    }
+    else if (
+      original &&
+      actual &&
+      Number(original) !== Number(actual)
+    ) {
+      await desvincularPromocion(
+        original,
+        itemId
+      );
+
+      await vincularPromocion(
+        actual,
+        itemId
+      );
+    }
+
+    // =====================================================
+    // 8. CÓDIGOS DE BARRAS
+    // =====================================================
+
+    const actuales =
+      form.barCodes || [];
+
+    const originales =
+      form.barCodesOriginal || [];
+
+    // Nuevos reales
+    const nuevos = actuales.filter(
+      b =>
+        !b.deleted &&
+        !originales.includes(b.value)
+    );
+
+    // Eliminados reales
+    const eliminados = actuales.filter(
+      b =>
+        b.deleted &&
+        originales.includes(b.value)
+    );
+
+    // =====================================================
+    // 9. ELIMINAR BARCODES
+    // =====================================================
+
+    for (const b of eliminados) {
+      await eliminarBarcode(
+        itemId,
+        b.value
+      );
+    }
+
+    // =====================================================
+    // 10. AGREGAR BARCODES
+    // =====================================================
+
+    if (nuevos.length > 0) {
+      await guardarBarcodes(
+        itemId,
+        nuevos
+      );
+    }
+
+    // =====================================================
+    // 11. LIMPIAR / VOLVER A TABLA
+    // =====================================================
+
+    setImagenArticulo(null);
+    setCategoriaSeleccionada(null);
+    setMostrarGaleria(false);
+    setView("table");
+
+  } catch (err) {
+    console.error(
+      "Error guardando item:",
+      err
+    );
+  }
+};
+
+  const eliminar = async () => {
+    if (!selected) return;
+
+    await apiFetch(`/items/${selected}`, {
+  method: "DELETE",
+  credentials: "include"
+});
+
+    setSelected(null);
+    getArticulos();
+  };
+
+  // ================= STOCK EDIT =================
+  const handleStockChange = (index, value) => {
+    setStock(prev => {
+      const copy = [...prev];
+      copy[index].editableStock = value;
+      return copy;
+    });
+  };
+  // ================= COMBOS =================
+const getCombos = useCallback(async () => {
+  try {
+    const res = await apiFetch(
+      `/items/data-for-creation`
+    );
+
+    if (!res.ok) {
+      console.error("Error obteniendo datos para combos:", res.status);
       return;
     }
 
     const data = await res.json();
 
-    setArticulos(data.content || []);
-setTotalPages(data.totalPages || 0);
-  } catch (err) {
-    console.error(err);
-  }
-};
 
-  // =========================================================
-  // LEER STOCK
-  // NUEVO ENDPOINT
-  // =========================================================
+    setClasificaciones(data.classifications || []);
+    setProveedores(data.suppliers || []);
+    setTaxes(data.taxes || []);
+    setMarcas(data.brands || []);
+    setCurrencies(data.currencies || []);
+    setPromotions(data.promotions || []);
+    const departamentosGenericos =
+  (data.collections || []).filter(d => d.id === 0);
 
-  const getStock = async (itemId) => {
-
-    try {
-
-      const res = await fetch(
-        "http://localhost:8080/back_office/item-stock",
-        {
-          credentials: "include"
-        }
-      );
-
-      if (res.status === 401) {
-        alert("Sesión expirada");
-        return;
-      }
-
-      if (!res.ok) {
-        console.error(await res.text());
-        return;
-      }
-
-      const data = await res.json();
-
-      const filtrado = data
-        .filter(s => s.itemId === itemId)
-        .map(s => ({
-          ...s,
-          editableStock: s.currentStock
-        }));
-
-      setStock(filtrado);
-
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // =========================================================
-  // ACTUALIZAR STOCK
-  // NUEVO ENDPOINT
-  // =========================================================
-
-  const updateStock = async (item) => {
-
-    try {
-
-      const res = await fetch(
-        `http://localhost:8080/back_office/item-stock/${item.branchId}/${item.itemId}`,
-        {
-          method: "PUT",
-
-          credentials: "include",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            stock: Number(item.editableStock)
-          })
-        }
-      );
-
-      if (res.status === 401) {
-        alert("Sesión expirada");
-        return;
-      }
-
-      if (res.status === 404) {
-        alert("Artículo o sucursal inexistente");
-        return;
-      }
-
-      if (res.status === 422) {
-        alert("Formato inválido");
-        return;
-      }
-
-      if (!res.ok) {
-        console.error(await res.text());
-        alert("Error actualizando stock");
-        return;
-      }
-
-      setStock(prev =>
-        prev.map(s =>
-          s.branchId === item.branchId &&
-          s.itemId === item.itemId
-            ? {
-                ...s,
-                currentStock: item.editableStock
-              }
-            : s
-        )
-      );
-
-      alert("Stock actualizado");
-
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleStockChange = (index, value) => {
-
-    const updated = [...stock];
-
-    updated[index].editableStock = value;
-
-    setStock(updated);
-  };
-
-  // =========================================================
-  // RECALCULAR
-  // =========================================================
-
-  const recalcular = () => {
-
-    const costo = parseFloat(form.costo) || 0;
-
-    const margen =
-  Number(
-    Math.max(
-      0,
-      parseFloat(form.margen) || 0
-    ).toFixed(4)
+const subDeptosGenericos =
+  (data.subCollections || []).filter(
+    s => s.collectionId === 0
   );
 
-    const ivaObj =
-      ivas.find(i => i.id == form.iva);
 
-    const ivaRate =
-      ivaObj
-        ? (ivaObj.value || 0)
-        : 0;
-
-    const costoConIva =
-      costo + (costo * ivaRate / 100);
-
-    const precio =
-      costo + (costo * margen / 100);
-
-    const precioFinal =
-      precio + (precio * ivaRate / 100);
-
-    setForm(prev => ({
-      ...prev,
-
-      costoConIva:
-        costoConIva.toFixed(2),
-
-      precio:
-        precio.toFixed(2),
-
-      precioFinal:
-        precioFinal.toFixed(2),
-
-      fechaCambio:
-        new Date().toLocaleString()
-    }));
-
-    setFlashPrice(true);
-
-    setTimeout(() => {
-      setFlashPrice(false);
-    }, 500);
-  };
-
-  // =========================================================
-  // EFFECTS
-  // =========================================================
-
-useEffect(() => {
-
-  getCombos();
-
+setDepartamentos(departamentosGenericos);
+setSubDeptos(subDeptosGenericos);
+    setIvas(data.IVAs || []);
+    setMeasurementUnits(data.measurementUnits || []);
+    setItemTypes(data.types || []);
+    setAvailableLinkedItems(
+  data.linkedItems || []
+);
+  } catch (e) {
+    console.error(e);
+  }
 }, []);
 
-useEffect(() => {
-
-  getArticulos();
-
-}, [page]);
-
-  useEffect(() => {
-
-    recalcular();
-
-  }, [
-    form.costo,
-    form.margen,
-    form.iva,
-    ivas
-  ]);
-
-  // =========================================================
-  // NUEVO
-  // =========================================================
-
-  const nuevo = () => {
-
-    setForm(emptyForm);
-
-    setSelected(null);
-
-    setView("form");
-
-    setTab("basicos");
-  };
-
-  // =========================================================
-  // GUARDAR
-  // NUEVOS ENDPOINTS
-  // =========================================================
-
- const guardar = async () => {
-
-  try {
-
-    let payload = {
-      item: {
-        name: form.nombre || "SIN NOMBRE",
-
-        barCode: form.codigo || null,
-        extraBarCode: form.adicional || null,
-
-        cost: parseFloat(form.costo) || 0,
-
-        margin: Number(
-          Math.max(0, parseFloat(form.margen) || 0).toFixed(4)
-        ),
-
-        price: parseFloat(form.precioFinal) || 0,
-
-        currencyId: parseInt(form.currencyId) || 1,
-        supplierId: parseInt(form.proveedorId) || 0,
-        itemCollectionId: parseInt(form.departamentoId) || 0,
-        itemSubCollectionId: parseInt(form.subDepartamentoId) || 0,
-        ivaId: parseInt(form.iva) || 1,
-        taxId: parseInt(form.taxId) || 0,
-        itemTypeId: parseInt(form.itemTypeId) || 1,
-        classificationId: parseInt(form.clasificacionId) || 0,
-        measurementUnitId: parseInt(form.measurementUnitId) || 1,
-        brandId: parseInt(form.marcaId) || 0,
-        measurementUnitName:
-          measurementUnits.find(
-            m => m.id == form.measurementUnitId
-          )?.name || "",
-
-        itemPresentation:
-          parseFloat(form.itemPresentation) || 1,
-
-        price_2: parseFloat(form.price_2) || 0,
-        price_3: parseFloat(form.price_3) || 0,
-        price_4: parseFloat(form.price_4) || 0,
-        price_5: parseFloat(form.price_5) || 0,
-
-        expirationDays:
-          parseInt(form.expirationDays) || 0,
-
-        useLabel: form.useLabel || false
-      },
-
-barCodesToUpdate: form.barCodes.map(b => {
-
-  const exists = originalBarCodes.some(
-    ob => ob.value === b.value
-  );
-
-  return {
-
-    action: exists
-      ? "UPDATE"
-      : "CREATE",
-
-    barCode: {
-      value: b.value,
-      details: b.details
-    }
-
-  };
-
-}),
-      Stock: {
-        reorderPoint:
-          parseFloat(form.reorderPoint) || 0,
-
-        controlMeasurementUnitId:
-          parseInt(form.controlMeasurementUnitId) || null
-      },
-
-      linkedItems: null
-    };
-
-    console.log(payload);
-
-    const method =
-      selected
-        ? "PUT"
-        : "POST";
-
-    const url =
-      selected
-        ? `http://localhost:8080/back_office/item/${selected}`
-        : "http://localhost:8080/back_office/item";
-
-    const res = await fetch(url, {
-      method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.status === 401) {
-      alert("Sesión expirada");
-      return;
-    }
-
-    if (res.status === 403) {
-      const txt = await res.text();
-      console.error(txt);
-      alert("403 Forbidden");
-      return;
-    }
-
-    if (res.status === 404) {
-      const txt = await res.text();
-      console.error(txt);
-      alert("Entidad relacionada inexistente");
-      return;
-    }
-
-    if (res.status === 409) {
-      const txt = await res.text();
-      console.error(txt);
-      alert("Código de barras duplicado");
-      return;
-    }
-
-    if (res.status === 422) {
-      const txt = await res.text();
-      console.error(txt);
-      alert("Datos inválidos");
-      return;
-    }
-
-    if (!res.ok) {
-      console.error(await res.text());
-      alert("Error guardando artículo");
-      return;
-    }
-
-    await getArticulos();
-
-    setView("table");
-
-    alert(
-      selected
-        ? "Artículo actualizado"
-        : "Artículo creado"
-    );
-
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-  const eliminar = async () => {
-
-  if (!selected) {
-    alert("Seleccioná un artículo");
+const agregarItemAlCombo = async () => {
+  if (!form.id) {
+    alert("Primero guardá el artículo principal");
     return;
   }
 
-  try {
-
-    // =====================================================
-    // ELIMINAR CODIGOS
-    // =====================================================
-
-    if (form.barCodes?.length > 0) {
-
-      const payload = {
-
-        item: {
-          name: form.nombre
-        },
-
-        barCodesToUpdate:
-
-          form.barCodes.map(b => ({
-
-            action: "DELETE",
-
-            barCode: {
-              value: b.value,
-              details: b.details
-            }
-
-          }))
-      };
-
-      const limpiar = await fetch(
-        `http://localhost:8080/back_office/item/${selected}`,
-        {
-          method: "PUT",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        }
-      );
-
-      if (!limpiar.ok) {
-
-        console.error(await limpiar.text());
-
-        alert("Error eliminando códigos");
-
-        return;
-      }
-    }
-
-    const limpiarCodigos = async () => {
-
-  if (!form.barCodes?.length) return true;
-
-  const payload = {
-
-    item: {
-      name: form.nombre
-    },
-
-    barCodesToUpdate:
-
-      form.barCodes.map(b => ({
-
-        action: "DELETE",
-
-        barCode: {
-          value: b.value,
-          details: b.details
-        }
-
-      }))
-  };
-
-  const res = await fetch(
-    `http://localhost:8080/back_office/item/${selected}`,
-    {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    }
+  const item = availableLinkedItems.find(
+    x => x.linkedItemId === Number(nuevoComboItem)
   );
 
-  return res.ok;
-};
+  if (!item) return;
 
-
-
-    // =====================================================
-    // ELIMINAR ARTICULO
-    // =====================================================
-
-    const res = await fetch(
-      `http://localhost:8080/back_office/item/${selected}`,
-      {
-        method: "DELETE",
-        credentials: "include"
-      }
-    );
-
-    if (res.status === 401) {
-      alert("Sesión expirada");
-      return;
+  const res = await apiFetch(`/items/${form.id}/bundles`, {
+  method: "POST",
+  body: JSON.stringify([
+    {
+      id: Number(item.linkedItemId),
+      quantity: 1
     }
+  ])
+});
 
-    if (res.status === 409) {
-
-      console.error(await res.text());
-
-      alert("El artículo está vinculado");
-
-      return;
-    }
-
-    if (res.status === 422) {
-
-      alert("El stock debe ser 0");
-
-      return;
-    }
-
-    if (!res.ok) {
-
-      console.error(await res.text());
-
-      alert("Error eliminando");
-
-      return;
-    }
-
-    await getArticulos();
-
-    setSelected(null);
-
-    setForm({ ...emptyForm });
-
-    setView("table");
-
-    alert("Artículo eliminado");
-
-  } catch (err) {
-
-    console.error(err);
+  if (!res.ok) {
+    alert(await res.text());
+    return;
   }
+
+  setComboItems(prev => [
+    ...prev,
+    {
+      id: item.linkedItemId,
+      name: item.linkedItemName,
+      price: item.value || 0,
+      quantity: 1
+    }
+  ]);
+
+  setNuevoComboItem("");
 };
 
-  // =========================================================
-  // FILTROS
-  // =========================================================
+  // ================= EFFECTS =================
+  useEffect(() => {
+    getArticulos();
+  }, [getArticulos]);
 
-  const articulosFiltrados = articulos.filter(a => {
+  useEffect(() => {
+  getCombos();
+}, [getCombos]);
 
-    const t = search.toLowerCase();
+useEffect(() => {
+  const nuevoPrecio = calcularPrecioFinal(
+    form.costo,
+    form.margen,
+    form.iva
+  );
 
-    const marcaNombre =
-      marcas.find(m => m.id === a.brandId)
-        ?.name
-        ?.toLowerCase() || "";
+  setForm(prev => ({
+    ...prev,
+    precioFinal: nuevoPrecio
+  }));
+}, [form.costo, form.margen, form.iva, ivas]);
 
-    const match =
-      String(a.id)
-        .toLowerCase()
-        .includes(t)
+useEffect(() => {
+  console.log(
+    "BARCODES CAMBIARON:",
+    form.barCodes
+  );
+}, [form.barCodes]);
 
-      ||
 
-      (a.name || "")
-        .toLowerCase()
-        .includes(t)
+  // ================= FILTRO =================
+const filtrados = articulos.filter(a => {
+   console.log(a);
+  const q = (filters.texto || "").toLowerCase().trim();
 
-      ||
+  const matchTexto =
+    !q ||
+    String(a.id).includes(q) ||
+    (a.name || "").toLowerCase().includes(q) ||
+    (a.barCode || "").toLowerCase().includes(q) ||
+    (a.extraBarCode || "").toLowerCase().includes(q);
 
-      marcaNombre.includes(t)
+  const matchDepto =
+    !filters.departamento ||
+    String(a.itemCollectionId) === String(filters.departamento);
 
-      ||
+  const matchSubDepto =
+    !filters.subDepartamento ||
+    String(a.itemSubCollectionId) === String(filters.subDepartamento);
+const matchTipo =
+  !filters.tipo ||
+  String(a.typeId) === String(filters.tipo);
 
-      String(a.cost ?? "")
-        .toLowerCase()
-        .includes(t)
+  const matchClasificacion =
+    !filters.clasificacion ||
+    String(a.classificationId) === String(filters.clasificacion);
 
-      ||
+  const matchMarca =
+    !filters.marca ||
+    String(a.brandId) === String(filters.marca);
 
-      String(a.margin ?? "")
-        .toLowerCase()
-        .includes(t)
-
-      ||
-
-      String(a.price ?? "")
-        .toLowerCase()
-        .includes(t);
-
-    if (soloNovedades) {
-      return match && a.price > 0;
-    }
-
-    return match;
-  });
+  const matchProveedor =
+    !filters.proveedor ||
+    String(a.supplierId) === String(filters.proveedor);
 
   return (
-    <div className="articulos-container">
+    matchTexto &&
+    matchDepto &&
+    matchSubDepto &&
+    matchTipo &&
+    matchClasificacion &&
+    matchMarca &&
+    matchProveedor
+  );
+});
+  return (
+  <div className="articulos-container">
+
+    {/* ================= TOOLBAR ================= */}
     <div className="toolbar">
 
       <div className="tool new" onClick={nuevo}>
-        <span className="tool-icon">➕</span>
+        <span className="tool-icon">＋</span>
         <span className="tool-label">Nuevo</span>
       </div>
 
+      <div
+        className="tool edit"
+        onClick={() => {
+          if (!selected) {
+            alert("Seleccione un artículo");
+            return;
+          }
+
+          getItemById(selected);
+          getStock(selected);
+          setView("form");
+        }}
+      >
+        <span className="tool-icon">✎</span>
+        <span className="tool-label">Editar</span>
+      </div>
+
       <div className="tool delete" onClick={eliminar}>
-        <span className="tool-icon">🗑️</span>
+        <span className="tool-icon">🗑</span>
         <span className="tool-label">Eliminar</span>
       </div>
 
       <div className="tool save" onClick={guardar}>
-        <span className="tool-icon">💾</span>
+        <span className="tool-icon">✓</span>
         <span className="tool-label">Guardar</span>
       </div>
 
@@ -767,52 +1118,234 @@ barCodesToUpdate: form.barCodes.map(b => {
         className="tool exit"
         onClick={() => setSection("home")}
       >
-        <span className="tool-icon">🚪</span>
+        <span className="tool-icon">↪</span>
         <span className="tool-label">Salir</span>
       </div>
 
-      {/* BOTÓN CANCELAR */}
-<div
-  className="tool cancel"
-  onClick={() => {
-    // Limpia el formulario
-    setForm(emptyForm);
+      <div
+        className="tool cancel"
+        onClick={() => {
+          setForm(emptyForm);
+          setSelected(null);
+          setView("table");
+          setTab("basicos");
+          setImagenArticulo(null);
+          setMostrarGaleria(false);
+          setCategoriaSeleccionada(null);
+        }}
+      >
+        <span className="tool-icon">✕</span>
+        <span className="tool-label">Cancelar</span>
+      </div>
+     
+{/* ================= BUSCADOR DENTRO DEL TOOLBAR ================= */}
 
-    // Deselecciona el artículo actual
-    setSelected(null);
+<div className="search-bar-ml">
 
-    // Vuelve a la vista de tabla
-    setView("table");
+  <div className="search-box">
+    <input
+  type="text"
+  placeholder="Buscar artículos..."
+  value={busquedaActiva}
+  onChange={(e) => {
+    const valor = e.target.value;
 
-    // Restablece la pestaña inicial
-    setTab("basicos");
+    setBusquedaActiva(valor);
+
+    setFilters(prev => ({
+      ...prev,
+      texto: valor
+    }));
   }}
+/>
+
+    {/* BOTÓN FILTROS */}
+    <button
+  type="button"
+   disabled
+  className={`btn-filtros ${showFiltersPopup ? "active" : ""}`}
+  onClick={() =>
+    setShowFiltersPopup(prev => !prev)
+  }
+  title="Filtros"
+  aria-label="Abrir filtros"
 >
-  <span className="tool-icon">❌</span>
-  <span className="tool-label">Cancelar</span>
+  <svg
+    viewBox="0 0 24 24"
+    width="19"
+    height="19"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4 6H20L14 13V18L10 20V13L4 6Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</button>
+
+  </div>
 </div>
+  {/* ================= POPUP DE FILTROS ================= */}
 
-      <div className="toolbar-right">
-        <input
-          placeholder="Buscar..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
+  {showFiltersPopup && (
+    <div className="filters-popup">
 
-        <label>
-          <input
-            type="checkbox"
-            checked={soloNovedades}
-            onChange={e => setSoloNovedades(e.target.checked)}
-          />
-          Solo novedades
-        </label>
+      <div className="popup-row">
+        <label>Departamento</label>
+
+        <select
+          value={filters.departamento}
+          onChange={(e) =>
+            setFilters(f => ({
+              ...f,
+              departamento: e.target.value
+            }))
+          }
+        >
+          <option value="">Todos</option>
+
+          {departamentos.map(d => (
+            <option key={d.id} value={d.id}>
+              {d.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+
+      <div className="popup-row">
+        <label>Subdepartamento</label>
+
+        <select
+          value={filters.subDepartamento}
+          onChange={(e) =>
+            setFilters(f => ({
+              ...f,
+              subDepartamento: e.target.value
+            }))
+          }
+        >
+          <option value="">Todos</option>
+
+          {subDeptos.map(s => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+
+      <div className="popup-row">
+        <label>Proveedor</label>
+
+        <select
+          value={filters.proveedor}
+          onChange={(e) =>
+            setFilters(f => ({
+              ...f,
+              proveedor: e.target.value
+            }))
+          }
+        >
+          <option value="">Todos</option>
+
+          {proveedores.map(p => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+
+      <div className="popup-row">
+        <label>Marca</label>
+
+        <select
+          value={filters.marca}
+          onChange={(e) =>
+            setFilters(f => ({
+              ...f,
+              marca: e.target.value
+            }))
+          }
+        >
+          <option value="">Todas</option>
+
+          {marcas.map(m => (
+            <option key={m.id} value={m.id}>
+              {m.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+
+      <div className="popup-row">
+        <label>Clasificación</label>
+
+        <select
+          value={filters.clasificacion}
+          onChange={(e) =>
+            setFilters(f => ({
+              ...f,
+              clasificacion: e.target.value
+            }))
+          }
+        >
+          <option value="">Todas</option>
+
+          {clasificaciones.map(c => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+
+      <div className="popup-actions">
+
+        <button
+          type="button"
+          onClick={() =>
+            setFilters({
+              texto: "",
+              departamento: "",
+              subDepartamento: "",
+              proveedor: "",
+              marca: "",
+              clasificacion: "",
+              tipo: ""
+            })
+          }
+        >
+          Limpiar
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            setShowFiltersPopup(false)
+          }
+        >
+          Aplicar
+        </button>
+
       </div>
 
     </div>
+  )}
 
+</div>
       {view === "table" && (
         <>
+        <div className="tabla-scroll">
         <table className="tabla">
           
         <thead>
@@ -826,103 +1359,17 @@ barCodesToUpdate: form.barCodes.map(b => {
 </thead>
 
 <tbody>
-  {articulosFiltrados.map(a => (
+  {filtrados.map(a => (
     <tr
       key={a.id}
       onClick={() => setSelected(a.id)}
       onDoubleClick={() => {
-
-        const item = articulos.find(x => x.id === a.id);
-
-setOriginalBarCodes(item.barCodes || []);
-
-      setForm({
-  ...emptyForm,
-
-  id: item.id,
-  barCodes: item.barCodes || [],
-  nombre:
-    item.name || "",
-
-  precio:
-    item.price || "0",
-
-  precioFinal:
-    item.price || "0",
-
-  costo:
-    item.cost || "",
-
-  margen:
-  Number(
-    Math.max(
-      0,
-      parseFloat(item.margin) || 0
-    ).toFixed(4)
-  ),
-
-  codigo:
-    item.barCode || "",
-
-  adicional:
-    item.extraBarCode || "",
-
-  iva:
-    item.ivaId || "",
-
-  taxId:
-    item.taxId || "",
-
-  currencyId:
-    item.currencyId || "",
-
-  clasificacionId:
-    item.classificationId || "",
-
-  departamentoId:
-    item.itemCollectionId || "",
-
-  subDepartamentoId:
-    item.itemSubCollectionId || "",
-
-  proveedorId:
-    item.supplierId || "",
-
-  marcaId:
-    item.brandId || "",
-
-  itemTypeId:
-    item.itemTypeId || "",
-
-  measurementUnitId:
-    item.measurementUnitId || "",
-
-  itemPresentation:
-    item.itemPresentation || 1,
-
-  price_2:
-    item.price_2 || 0,
-
-  price_3:
-    item.price_3 || 0,
-
-  price_4:
-    item.price_4 || 0,
-
-  price_5:
-    item.price_5 || 0,
-
-  expirationDays:
-    item.expirationDays || 0,
-
-useLabel: Boolean(item.useLabel)
-
-});
-
-        setSelected(item.id);
-        getStock(item.id);
-        setView("form");
-      }}
+  if (!a.id || a.id === 0) return;
+  getItemById(a.id);
+  getStock(a.id);
+  setSelected(a.id);
+  setView("form");
+}}
       className={selected === a.id ? "selected" : ""}
     >
       <td>{a.id}</td>
@@ -934,24 +1381,25 @@ useLabel: Boolean(item.useLabel)
   ))}
 </tbody>
         </table>
+        </div>
         <div className="pagination">
-      <button
-        disabled={page === 0}
-        onClick={() => setPage(prev => prev - 1)}
-      >
-        ← Anterior
-      </button>
+<button
+  disabled={page === 0}
+  onClick={() => setPage(p => Math.max(p - 1, 0))}
+>
+  ← Anterior
+</button>
 
-      <span>
-        Página {page + 1} de {totalPages}
-      </span>
+<span>
+  Página {page + 1} de {Math.max(totalPages, page + 1)}
+</span>
 
-      <button
-        disabled={page >= totalPages - 1}
-        onClick={() => setPage(prev => prev + 1)}
-      >
-        Siguiente →
-      </button>
+<button
+  disabled={!meta.hasNext}
+  onClick={() => setPage(p => p + 1)}
+>
+  Siguiente →
+</button>
     </div>
   </>
       )}
@@ -963,14 +1411,14 @@ useLabel: Boolean(item.useLabel)
             <button onClick={() => setTab("basicos")} className={tab === "basicos" ? "active" : ""}>Básicos</button>
             <button onClick={() => setTab("otros")} className={tab === "otros" ? "active" : ""}>Otros</button>
             <button onClick={() => setTab("stock")} className={tab === "stock" ? "active" : ""}>Stock</button>
-            <button onClick={() => setTab("listas")} className={tab === "listas" ? "active" : ""}>Listas y Promos</button>
-            <button
+            <button onClick={() => setTab("listas")} className={tab === "listas" ? "active" : ""}>Listas/Promos/Imagen</button>
+           <button
   onClick={() => setTab("combo")}
   className={tab === "combo" ? "active" : ""}
 >
   Combo
 </button>
-            <button onClick={() => setTab("codigos")}className={tab === "codigos" ? "active" : ""}
+            <button onClick={() => setTab("codigos")} className={tab === "codigos" ? "active" : ""}
 >
 Códigos de barras
 </button>
@@ -1029,7 +1477,7 @@ Códigos de barras
                 <input value={form.costo} onChange={e => setForm({...form, costo: e.target.value})}/>
 
                 <label>Costo con IVA</label>
-                <input value={form.costoConIva} disabled />
+                <input value={costoConIva} disabled />
 
                 <label>Margen %</label>
                 <input value={form.margen} onChange={e => setForm({...form, margen: e.target.value})}/>
@@ -1080,28 +1528,133 @@ Códigos de barras
 
       {/* ENVASE */}
       <div className="otros-box">
-        <h3>Envase</h3>
+        
 
-        <div className="field-row">
-          <label>Artículo Envase</label>
+        <div className="otros-box">
+  <h3>Artículo Envase</h3>
 
-          <select>
-            <option>Sin envase</option>
-            <option>Botella</option>
-            <option>Caja</option>
-            <option>Pack</option>
-          </select>
-        </div>
+  {linkedItems.map((l) => (
+  <div
+    key={l.linkedItemId}
+    className="linked-item-row"
+  >
+    <span className="linked-item-name">
+      {l.linkedItemName}
+    </span>
+
+    <button
+      type="button"
+      className="btn-remove-linked"
+   onClick={async () => {
+  console.log("ITEM ID:", form.id);
+  console.log(
+    "LINKED ITEM ID:",
+    l.linkedItemId
+  );
+
+  const res = await eliminarLinkedItem(
+    form.id,
+    l.linkedItemId
+  );
+
+  if (res.ok) {
+    setLinkedItems(prev =>
+      prev.filter(
+        x =>
+          x.linkedItemId !==
+          l.linkedItemId
+      )
+    );
+  } else {
+    alert(
+      "No se pudo eliminar el vínculo"
+    );
+  }
+}}
+
+    >
+      Quitar
+    </button>
+  </div>
+))}
+
+  <div
+    style={{
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px"
+    }}
+  >
+    <select
+  value={nuevoCodigo}
+  onChange={e =>
+    setNuevoCodigo(e.target.value)
+  }
+>
+  <option value="">
+    Seleccione un artículo
+  </option>
+
+  {availableLinkedItems.map(item => (
+    <option
+      key={item.linkedItemId}
+      value={item.linkedItemId}
+    >
+      {item.linkedItemName}
+    </option>
+  ))}
+</select>
+
+    <button
+  type="button"
+  className="btn-vincular-envase"
+  onClick={async () => {
+    if (!form.id) {
+      alert(
+        "Primero guardá el artículo"
+      );
+      return;
+    }
+
+    const res = await vincularItem(
+      form.id,
+      nuevoCodigo
+    );
+
+    if (!res.ok) {
+      await getItemById(form.id);
+      alert(
+        await res.text()
+      );
+      return;
+    }
+
+    setNuevoCodigo("");
+  }}
+>
+  Vincular Envase
+</button>
+  </div>
+</div>
       </div>
 
-      {/* SUSPENDER */}
       <div className="otros-box">
-        <h3>Suspender ventas</h3>
+  <h3>Suspender ventas</h3>
 
-        <label className="check-row">
-          Quitar este artículo de la venta
-        </label>
-      </div>
+  <label className="check-row">
+    <input
+      type="checkbox"
+      checked={form.suspendido || false}
+      onChange={(e) =>
+        setForm({
+          ...form,
+          suspendido: e.target.checked
+        })
+      }
+    />
+    Quitar este artículo de la venta
+  </label>
+</div>
 
       {/* GASTRONOMIA */}
       <div className="otros-box">
@@ -1166,7 +1719,6 @@ Códigos de barras
         </div>
 
         <label className="check-row">
-          checked={form.useLabel}
           Incluir en etiquetas de gondola
         </label>
 
@@ -1267,10 +1819,17 @@ Códigos de barras
           <div className="field-row">
             <label>Punto de pedido</label>
 
-            <input
-              type="number"
-              min="0"
-            />
+           <input
+  type="number"
+  min="0"
+  value={form.reorderPoint}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      reorderPoint: e.target.value
+    })
+  }
+/>
           </div>
 
         </div>
@@ -1390,17 +1949,190 @@ Códigos de barras
 
     {/* DERECHA */}
     <div className="listas-box">
-      <h3>Promoción</h3>
+    <h3>Promoción</h3>
 
-      <select>
-        <option>Sin Promo</option>
-        <option>2x1</option>
-        <option>3x2</option>
-        <option>Descuento %</option>
-      </select>
-    </div>
+<div className="promo-row">
+
+  <label className="check-row promo-check">
+    <input
+  type="checkbox"
+  checked={form.sinPromocion}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      sinPromocion: e.target.checked,
+      promotionId: e.target.checked ? "" : form.promotionId
+    })
+  }
+/>
+    Sin promoción
+  </label>
+
+  <select
+  value={form.promotionId}
+  disabled={form.sinPromocion}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      promotionId: e.target.value
+    })
+  }
+>
+  <option value="">Seleccione una promoción</option>
+
+  {promotions.map((promo) => (
+    <option
+      key={promo.id}
+      value={promo.id}
+    >
+      {promo.name}
+    </option>
+  ))}
+</select>
+
+</div>
+<div className="imagen-articulo-box">
+
+  <h3>Imagen del artículo</h3>
+
+  <div className="preview-container">
+
+    {imagenArticulo ? (
+      <>
+        <img
+  src={
+    form.imgPath
+      ? encodeURI(`/Articulos/${form.imgPath}`)
+      : ""
+  }
+  alt={form.nombre || "Artículo"}
+  className="preview-articulo"
+  onError={(e) => {
+    console.error("ERROR CARGANDO IMAGEN:", e.currentTarget.src);
+  }}
+/>
+
+        <button
+          type="button"
+            disabled
+          className="btn-quitar-imagen"
+          onClick={() => {
+            setImagenArticulo(null);
+            setForm(prev => ({
+              ...prev,
+              imgPath: null
+            }));
+          }}
+        >
+          🗑 Quitar
+        </button>
+      </>
+    ) : (
+      <div
+        className="preview-vacia"
+        onClick={() => {
+          setMostrarGaleria(true);
+          setCategoriaSeleccionada(null);
+        }}
+        style={{ cursor: "pointer" }}
+      >
+        <span className="plus">+</span>
+        <span className="texto">
+          Agregar imagen
+        </span>
+      </div>
+    )}
 
   </div>
+
+</div>
+{mostrarGaleria && (
+
+<div className="modal-imagenes">
+
+<div className="modal-contenido">
+
+<h3>Seleccionar imagen</h3>
+
+
+<div className="galeria">
+
+  {!categoriaSeleccionada ? (
+
+    Object.keys(articulosImagenes).map((categoria) => (
+
+      <div
+        key={categoria}
+        className="carpeta-item"
+        onClick={() => setCategoriaSeleccionada(categoria)}
+      >
+        <div className="carpeta-icono">📁</div>
+        <span>{categoria}</span>
+      </div>
+
+    ))
+
+  ) : (
+
+    <>
+      <button
+        className="volver-categoria"
+        onClick={() => setCategoriaSeleccionada(null)}
+      >
+        ⬅ Volver
+      </button>
+
+      {articulosImagenes[categoriaSeleccionada].map((img) => (
+
+        <div
+          key={img}
+          className="imagen-item"
+          onClick={() => {
+  setImagenArticulo(img);
+
+  setForm(prev => ({
+    ...prev,
+     imgPath: img
+  }));
+
+  setMostrarGaleria(false);
+  setCategoriaSeleccionada(null);
+}}
+        >
+
+          <img
+            src={`/Articulos/${encodeURI(img)}`}
+            alt={img}
+          />
+
+          <span>{img.split("/").pop()}</span>
+
+        </div>
+
+      ))}
+
+    </>
+
+  )}
+
+</div>
+
+
+<button
+className="cerrar-modal"
+onClick={()=>setMostrarGaleria(false)}
+>
+Cerrar
+</button>
+
+
+</div>
+
+</div>
+
+)}
+</div>
+</div>
 )}
 {tab === "codigos" && (
   <div className="codigos-container">
@@ -1412,11 +2144,11 @@ Códigos de barras
       <div className="codigo-add-row">
 
         <input
-          type="number"
-          placeholder="Ingrese código de barras"
-          value={nuevoCodigo}
-onChange={e => setNuevoCodigo(e.target.value)}
-        />
+  type="text"
+  placeholder="Ingrese código de barras"
+  value={nuevoCodigo}
+  onChange={e => setNuevoCodigo(e.target.value)}
+/>
 
         <button
   type="button"
@@ -1440,9 +2172,10 @@ onChange={e => setNuevoCodigo(e.target.value)}
     barCodes: [
       ...prev.barCodes,
       {
-        value: nuevoCodigo.trim(),
-        details: "Adicional"
-      }
+  value: nuevoCodigo.trim(),
+  detail: "Adicional",
+  deleted: false
+}
     ]
   }));
 
@@ -1467,7 +2200,10 @@ onChange={e => setNuevoCodigo(e.target.value)}
 <tbody>
 
   {form.barCodes.map((b, index) => (
-    <tr key={index}>
+    <tr
+  key={index}
+  className={b.deleted ? "barcode-deleted" : ""}
+>
 
       <td>
         <input type="radio" readOnly />
@@ -1475,22 +2211,45 @@ onChange={e => setNuevoCodigo(e.target.value)}
 
       <td>{b.value}</td>
 
-      <td>{b.details}</td>
+      <td>{b.detail}</td>
 
       <td>
 
-        <button
-          type="button"
-          className="btn-codigo eliminar"
-          onClick={() =>
-            setForm(prev => ({
-              ...prev,
-              barCodes: prev.barCodes.filter((_, i) => i !== index)
-            }))
-          }
-        >
-          Eliminar
-        </button>
+      {!b.deleted ? (
+  <button
+    type="button"
+    className="btn-codigo eliminar"
+    onClick={() => {
+      setForm(prev => ({
+        ...prev,
+        barCodes: prev.barCodes.map((bc, i) =>
+          i === index
+            ? { ...bc, deleted: true }
+            : bc
+        )
+      }));
+    }}
+  >
+    Eliminar
+  </button>
+) : (
+  <button
+    type="button"
+    className="btn-codigo restaurar"
+    onClick={() => {
+      setForm(prev => ({
+        ...prev,
+        barCodes: prev.barCodes.map((bc, i) =>
+          i === index
+            ? { ...bc, deleted: false }
+            : bc
+        )
+      }));
+    }}
+  >
+    Restaurar
+  </button>
+)}
 
       </td>
 
@@ -1504,6 +2263,11 @@ onChange={e => setNuevoCodigo(e.target.value)}
       <div className="codigo-info">
         <div className="codigo-info">
   Total de códigos: {form.barCodes.length}
+  {form.barCodes.some(b => b.deleted) && (
+  <div className="codigo-delete-warning">
+    ⚠ Los códigos tachados serán eliminados al guardar.
+  </div>
+)}
 </div>
       </div>
 
@@ -1512,28 +2276,74 @@ onChange={e => setNuevoCodigo(e.target.value)}
   </div>
 )}
 
-          {tab === "combo" && (
+        {tab === "combo" && (
   <div className="combo-container">
 
-    <div className="combo-header">
-      <div>Código</div>
-      <div>Cantidad</div>
-      <div>Artículo</div>
-      <div>Valor</div>
+    <div className="combo-title">
+      {form.nombre}
     </div>
 
-    <div className="combo-body">
+    <table className="combo-table">
 
-      {/* FILAS DEL COMBO */}
-      {/* después acá podés agregar artículos */}
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Cantidad</th>
+          <th>Artículo</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
 
-    </div>
+      <tbody>
+
+        {comboItems.map((item) => (
+
+          <tr key={item.id}>
+
+            <td>{item.id}</td>
+
+            <td>
+              <input
+                type="number"
+                min="1"
+                value={item.quantity}
+                onChange={(e) => {
+
+                  const qty = Number(e.target.value);
+
+                  setComboItems(prev =>
+                    prev.map(x =>
+                      x.id === item.id
+                        ? {
+                            ...x,
+                            quantity: qty
+                          }
+                        : x
+                    )
+                  );
+                }}
+              />
+            </td>
+
+            <td>{item.name}</td>
+
+            <td>
+              $
+              {(item.price * item.quantity).toFixed(2)}
+            </td>
+
+          </tr>
+
+        ))}
+
+      </tbody>
+
+    </table>
 
   </div>
 )}
-        </div>
-      )}
-
-    </div>
+  </div>
+)}
+</div>
   );
 }

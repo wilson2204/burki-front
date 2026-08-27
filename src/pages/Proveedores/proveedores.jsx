@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import "./Proveedores.css";
+import "./proveedores.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
 export default function Proveedores({ setSection }) {
 
@@ -29,13 +30,13 @@ export default function Proveedores({ setSection }) {
   // 🔥 GET
   // =====================
   const cargarDatos = async () => {
-    const res = await fetch(API_URL, { credentials: "include" });
+    const res = await apiFetch("/supplier");
     const json = await res.json();
     setProveedores(json);
   };
 
   const cargarMonedas = async () => {
-    const res = await fetch(API_CURRENCY, { credentials: "include" });
+    const res = await apiFetch("/currency");
     const json = await res.json();
     setMonedas(json);
   };
@@ -77,12 +78,10 @@ export default function Proveedores({ setSection }) {
   // POST
   // =====================
   const crear = async () => {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
+    const res = await apiFetch("/supplier", {
+  method: "POST",
+  body: JSON.stringify(form)
+});
 
     if (res.status === 201) {
       cargarDatos();
@@ -94,13 +93,10 @@ export default function Proveedores({ setSection }) {
   // PUT
   // =====================
   const modificar = async () => {
-    const res = await fetch(`${API_URL}/${form.id}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
-
+    const res = await apiFetch(`/supplier/${form.id}`, {
+  method: "PUT",
+  body: JSON.stringify(form)
+});
     if (res.status === 204) {
       cargarDatos();
       setModo("lista");
@@ -115,10 +111,9 @@ export default function Proveedores({ setSection }) {
     if (!seleccionado) return alert(t("suppliers.selectOne"));
     if (!confirm (t("suppliers.confirmDelete"))) return;
 
-    const res = await fetch(`${API_URL}/${seleccionado.id}`, {
-      method: "DELETE",
-      credentials: "include"
-    });
+  const res = await apiFetch(`/supplier/${seleccionado.id}`, {
+  method: "DELETE"
+});
 
     if (res.status === 204) {
       cargarDatos();
@@ -131,47 +126,91 @@ export default function Proveedores({ setSection }) {
     if (modo === "editar") modificar();
   };
 
-  const handleCancelar = () => {
-    setModo("lista");
-    setSeleccionado(null);
-  };
+const handleCancelar = () => {
+  setModo("lista");
+
+  setForm({
+    id: null,
+    name: "",
+    companyName: "",
+    cuit: "",
+    address: "",
+    phone: "",
+    email: "",
+    description: "",
+    currencyId: ""
+  });
+
+  setSeleccionado(null);
+};
+
 
   const handleSalir = () => {
     setSection("home");
   };
 
   return (
-    <div className="proveedores-container">
+<div className="proveedores-container">
 
-      {/* 🔥 TOOLBAR */}
-      <div className="toolbar">
+  {/* TOOLBAR */}
+<div className="toolbar">
 
-        <div className="tool nuevo" data-icon="+" onClick={handleNuevo}>
-          <span>{t("common.new")}</span>
-        </div>
+  <div
+    className="tool nuevo"
+    data-icon="＋"
+    onClick={handleNuevo}
+  >
+    <span>{t("common.new")}</span>
+  </div>
 
-        <div className={`tool eliminar ${!seleccionado ? "disabled" : ""}`} data-icon="−" onClick={eliminar}>
-          <span>{t("common.delete")}</span>
-        </div>
+  <div
+    className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="🗑"
+    onClick={eliminar}
+  >
+    <span>{t("common.delete")}</span>
+  </div>
 
-        <div className={`tool modificar ${!seleccionado ? "disabled" : ""}`} data-icon="✎" onClick={handleModificar}>
-          <span>{t("common.edit")}</span>
-        </div>
+  <div
+    className={`tool modificar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="✎"
+    onClick={handleModificar}
+  >
+    <span>{t("common.edit")}</span>
+  </div>
 
-        <div className={`tool guardar ${modo === "lista" ? "disabled" : ""}`} data-icon="✔" onClick={handleGuardar}>
-          <span>{t("common.save")}</span>
-        </div>
+  <div
+    className={`tool guardar ${modo === "lista" ? "disabled" : ""}`}
+    data-icon="✓"
+    onClick={handleGuardar}
+  >
+    <span>{t("common.save")}</span>
+  </div>
 
-        <div className={`tool cancelar ${modo === "lista" ? "disabled" : ""}`} data-icon="✖" onClick={handleCancelar}>
-          <span>{t("common.cancel")}</span>
-        </div>
+<div
+  className={`tool cancelar ${
+    modo === "lista" && seleccionado === null ? "disabled" : ""
+  }`}
+  data-icon="✕"
+  onClick={
+    modo !== "lista" || seleccionado !== null
+      ? handleCancelar
+      : undefined
+  }
+>
+  <span>{t("common.cancel")}</span>
+</div>
 
-        <div className="tool salir" data-icon="➜" onClick={handleSalir}>
-          <span>{t("common.exit")}</span>
-        </div>
 
-      </div>
+  <div
+    className="tool salir"
+    data-icon="↪"
+    onClick={handleSalir}
+  >
+    <span>{t("common.exit")}</span>
+  </div>
 
+</div>
       {/* 🔥 FORM */}
       {(modo === "nuevo" || modo === "editar") && (
         <div className="formulario">

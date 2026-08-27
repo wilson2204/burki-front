@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./Departamentos.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { departamentosImagenes } from "../../data/departamentosImagenes";
+import { apiFetch } from "../../services/api";
 
 export default function Departamentos({ setSection }) {
+const [mostrarGaleria, setMostrarGaleria] = useState(false);
 
-  const { t } = useLanguage();
-  const API_URL = "http://localhost:8080/back_office/item-collection";
-  const API_IVA = "http://localhost:8080/back_office/iva";
-  const API_TAX = "http://localhost:8080/back_office/tax/item-collection";
+    const { t } = useLanguage();
 
   const [data, setData] = useState([]);
   const [ivas, setIvas] = useState([]);
@@ -17,7 +17,7 @@ export default function Departamentos({ setSection }) {
   const [modoCrear, setModoCrear] = useState(false);
   const [modoEditar, setModoEditar] = useState(false);
 
-  const fileInputRef = useRef(null);
+  
 
   const showForm = modoCrear || modoEditar; // 🔥 FIX CLAVE
 
@@ -34,31 +34,47 @@ export default function Departamentos({ setSection }) {
 
   /* ================= FETCH ================= */
 
-  const fetchData = async (url, setter) => {
-    try {
-      const res = await fetch(url, {
-        credentials: "include"
-      });
+  const fetchData = async (endpoint, setter) => {
+  try {
 
-      if (!res.ok) {
-        console.error("GET error:", url, res.status);
-        return;
-      }
+    const res = await apiFetch(endpoint);
 
-      const json = await res.json();
-      setter(json);
-
-    } catch (e) {
-      console.error(e);
+    if (!res.ok) {
+      console.error(
+        "GET error:",
+        endpoint,
+        res.status
+      );
+      return;
     }
-  };
+
+    const json = await res.json();
+
+    setter(json);
+
+  } catch (e) {
+    console.error(e);
+  }
+};
 
   useEffect(() => {
-    fetchData(API_URL, setData);
-    fetchData(API_IVA, setIvas);
-    fetchData(API_TAX, setTaxes);
-  }, []);
 
+  fetchData(
+    "/item-collection",
+    setData
+  );
+
+  fetchData(
+    "/iva",
+    setIvas
+  );
+
+  fetchData(
+    "/tax/item-collection",
+    setTaxes
+  );
+
+}, []);
   /* ================= NUEVO FIX ================= */
 
   const handleNuevo = () => {
@@ -98,22 +114,24 @@ export default function Departamentos({ setSection }) {
     });
   };
 
-  const handleCancelar = () => {
-    setModoCrear(false);
-    setModoEditar(false);
-    setSeleccionado(null);
+  
+const handleCancelar = () => {
+  setModoCrear(false);
+  setModoEditar(false);
+  setSeleccionado(null);
 
-    setForm({
-      name: "",
-      description: "",
-      ivaRateId: "",
-      taxId: "",
-      positionButton: 0,
-      price: 0,
-      weighable: false,
-      image: null
-    });
-  };
+  setForm({
+    name: "",
+    description: "",
+    ivaRateId: "",
+    taxId: "",
+    positionButton: 0,
+    price: 0,
+    weighable: false,
+    image: null
+  });
+};
+
 
   const handleEliminar = async () => {
     if (!seleccionado) return alert(t("departamentos.selectRecord"));
@@ -121,10 +139,12 @@ export default function Departamentos({ setSection }) {
     if (!window.confirm(t("departamentos.confirmDelete"))) return;
 
     try {
-      const res = await fetch(`${API_URL}/${seleccionado}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const res = await apiFetch(
+  `/item-collection/${seleccionado}`,
+  {
+    method: "DELETE"
+  }
+);
 
       if (res.status === 204) {
         setData(data.filter(d => d.id !== seleccionado));
@@ -150,9 +170,9 @@ export default function Departamentos({ setSection }) {
 
     try {
 
-      const url = modoCrear
-        ? API_URL
-        : `${API_URL}/${seleccionado}`;
+    const url = modoCrear
+  ? "/item-collection"
+  : `/item-collection/${seleccionado}`;
 
       const method = modoCrear ? "POST" : "PUT";
 
@@ -167,14 +187,10 @@ export default function Departamentos({ setSection }) {
         weighable: form.weighable
       };
 
-      const res = await fetch(url, {
-        method,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
+      const res = await apiFetch(url, {
+  method,
+  body: JSON.stringify(payload)
+});
 
       if (!res.ok) {
         const err = await res.text();
@@ -183,7 +199,10 @@ export default function Departamentos({ setSection }) {
         return;
       }
 
-      await fetchData(API_URL, setData);
+      await fetchData(
+  "/item-collection",
+  setData
+);
       handleCancelar();
 
     } catch (e) {
@@ -193,31 +212,16 @@ export default function Departamentos({ setSection }) {
 
   /* ================= IMAGEN ================= */
 
-  const handleAccesoRapido = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm(prev => ({
-        ...prev,
-        image: reader.result
-      }));
-    };
-    reader.readAsDataURL(file);
-  };
-
+const handleAccesoRapido = () => {
+  setMostrarGaleria(true);
+};
   /* ================= BOTONES ================= */
 
   const canModify = !!seleccionado;
   const canDelete = !!seleccionado;
   const canSave = showForm;
   const handleSalir = () => {
-  setSection("home"); // ⚠️ cambiá esto si tu app usa otro nombre
+  setSection("home"); 
 };
 
   /* ================= RENDER ================= */
@@ -226,173 +230,211 @@ export default function Departamentos({ setSection }) {
     <div className="departamentos-container">
 <div className="toolbar">
 
-  <div className="tool nuevo" onClick={handleNuevo}>
-    <span className="emoji">➕</span>
+  <div
+    className="tool nuevo"
+    data-icon="＋"
+    onClick={handleNuevo}
+  >
     <span>{t("common.new")}</span>
   </div>
 
   <div
     className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="🗑"
     onClick={() => seleccionado && handleEliminar()}
   >
-    <span className="emoji">🗑️</span>
     <span>{t("common.delete")}</span>
   </div>
 
   <div
     className={`tool modificar ${!canModify ? "disabled" : ""}`}
+    data-icon="✎"
     onClick={() => canModify && handleModificar()}
   >
-    <span className="emoji">✏️</span>
     <span>{t("common.edit")}</span>
   </div>
 
   <div
     className={`tool guardar ${!canSave ? "disabled" : ""}`}
+    data-icon="✓"
     onClick={() => canSave && handleGuardar()}
   >
-    <span className="emoji">💾</span>
     <span>{t("common.save")}</span>
   </div>
 
+<div className={`tool cancelar ${ !(modoCrear || modoEditar || seleccionado) ? "disabled" : "" }`} data-icon="✕" onClick={ (modoCrear || modoEditar || seleccionado) ? handleCancelar : undefined } > <span>{t("common.cancel")}</span> </div>
+
+
   <div
-    className={`tool cancelar ${!showForm ? "disabled" : ""}`}
-    onClick={() => showForm && handleCancelar()}
+    className="tool salir"
+    data-icon="↪"
+    onClick={handleSalir}
   >
-    <span className="emoji">❌</span>
-    <span>{t("common.cancel")}</span>
+    <span>{t("common.exit")}</span>
   </div>
-  <div className="tool salir" onClick={handleSalir}>
-  <span className="emoji">🚪</span>
-  <span>{t("common.exit")}</span>
-</div>
 
 </div>
-
       {/* FORM FIJO Y CONTROLADO */}
       {showForm && (
-        <div className="form-wrapper">
+  <div className="form-wrapper">
 
-          <div className="form-left">
+    {/* IZQUIERDA */}
+    <div className="form-left">
 
-            <div className="row">
-              <label>{t("common.name")}</label>
-              <input
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-              />
-            </div>
+      <div className="row">
+        <label>{t("common.name")}</label>
+        <input
+          value={form.name}
+          onChange={e =>
+            setForm({ ...form, name: e.target.value })
+          }
+        />
+      </div>
 
-            <div className="row">
-              <label>{t("departamentos.detail")}</label>
-              <input
-                value={form.description}
-                onChange={e => setForm({ ...form, description: e.target.value })}
-              />
-            </div>
+      <div className="row">
+        <label>{t("departamentos.detail")}</label>
+        <input
+          value={form.description}
+          onChange={e =>
+            setForm({
+              ...form,
+              description: e.target.value
+            })
+          }
+        />
+      </div>
 
-            <div className="row">
-              <label>{t("departamentos.iva")}</label>
-              <select
-                value={form.ivaRateId}
-                onChange={e =>
-                  setForm({
-                    ...form,
-                    ivaRateId: e.target.value === "" ? "" : Number(e.target.value)
-                  })
-                }
-              >
-                <option value="">{t("common.select")}</option>
-                {ivas.map(i => (
-                  <option key={i.id} value={i.id}>
-                    {i.description}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <div className="row">
+        <label>{t("departamentos.iva")}</label>
+        <select
+          value={form.ivaRateId}
+          onChange={e =>
+            setForm({
+              ...form,
+              ivaRateId:
+                e.target.value === ""
+                  ? ""
+                  : Number(e.target.value)
+            })
+          }
+        >
+          <option value="">
+            {t("common.select")}
+          </option>
 
-            <div className="row">
-              <label>{t("departamentos.internalTax")}</label>
-              <select
-                value={form.taxId}
-                onChange={e =>
-                  setForm({
-                    ...form,
-                    taxId: e.target.value === "" ? "" : Number(e.target.value)
-                  })
-                }
-              >
-                <option value="">{t("common.none")}</option>
-                {taxes.map(t => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {ivas.map(i => (
+            <option key={i.id} value={i.id}>
+              {i.description}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div className="row">
-              <label>{t("departamentos.position")}</label>
-              <select
-                value={form.positionButton}
-                onChange={e =>
-                  setForm({ ...form, positionButton: Number(e.target.value) })
-                }
-              >
-                {[...Array(11)].map((_, i) => (
-                  <option key={i} value={i}>{i}</option>
-                ))}
-              </select>
-            </div>
+      <div className="row">
+        <label>{t("departamentos.internalTax")}</label>
 
-            <div className="row checkbox-row">
-              <input
-                type="checkbox"
-                checked={form.weighable}
-                onChange={e =>
-                  setForm({ ...form, weighable: e.target.checked })
-                }
-              />
-              <label>{t("departamentos.weighable")}</label>
-            </div>
+        <select
+          value={form.taxId}
+          onChange={e =>
+            setForm({
+              ...form,
+              taxId:
+                e.target.value === ""
+                  ? ""
+                  : Number(e.target.value)
+            })
+          }
+        >
+          {taxes.map(tx => (
+            <option key={tx.id} value={tx.id}>
+              {tx.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          </div>
+      <div className="row">
+        <label>{t("departamentos.position")}</label>
 
-          <div className="form-right">
+        <select
+          value={form.positionButton}
+          onChange={e =>
+            setForm({
+              ...form,
+              positionButton: Number(e.target.value)
+            })
+          }
+        >
+          {[...Array(11)].map((_, i) => (
+            <option key={i} value={i}>
+              {i}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <button className="acceso-btn" onClick={handleAccesoRapido}>
-              {t("departamentos.quickAccess")}
-            </button>
+    </div>
 
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+    {/* DERECHA */}
+  <div className="form-right">
 
-            {form.image && (
-              <img
-                src={form.image}
-                alt="preview"
-                style={{
-                  width: "120px",
-                  height: "120px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  marginTop: "10px"
-                }}
-              />
-            )}
+  <div className="pesable-card">
 
-          </div>
+    <div className="row checkbox-row weighable-row">
+      <input
+        type="checkbox"
+        checked={form.weighable}
+        onChange={e =>
+          setForm({
+            ...form,
+            weighable: e.target.checked
+          })
+        }
+      />
+      <label>{t("departamentos.weighable")}</label>
+    </div>
 
-        </div>
-      )}
+  </div>
+
+
+  <button
+    className="acceso-btn"
+    onClick={handleAccesoRapido}
+  >
+    {t("departamentos.quickAccess")}
+  </button>
+
+
+  {form.image && (
+    <div className="preview-card">
+      <img
+        src={`/Departamentos/${form.image}`}
+        alt="preview"
+      />
+    </div>
+  )}
+{form.image && (
+    <button
+        type="button"
+        className="quitar-imagen-btn"
+        onClick={() =>
+            setForm(prev => ({
+                ...prev,
+                image: null
+            }))
+        }
+    >
+        🗑 Quitar imagen
+    </button>
+)}
+</div>
+
+  </div>
+)}
 
  {/* TABLA */}
-<table className="tabla">
+<div className="tabla-container">
+  <table className="tabla">
   <thead>
     <tr>
       <th style={{ width: "70px" }}>Nro</th>
@@ -450,7 +492,52 @@ export default function Departamentos({ setSection }) {
     ))}
   </tbody>
 </table>
+</div>
+{mostrarGaleria && (
+  <div className="modal-imagenes">
+    <div className="modal-contenido">
 
+      <h3>Seleccionar imagen</h3>
+
+      <div className="galeria">
+
+        {departamentosImagenes.map((img) => (
+
+          <div
+            key={img}
+            className="imagen-item"
+            onClick={() => {
+              setForm(prev => ({
+                ...prev,
+                image: img,
+              }));
+
+              setMostrarGaleria(false);
+            }}
+          >
+            <img
+              src={`/Departamentos/${img}`}
+              alt={img}
+            />
+
+            <span>{img.replace(".png", "")}</span>
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <button
+        className="cerrar-modal"
+        onClick={() => setMostrarGaleria(false)}
+      >
+        Cerrar
+      </button>
+
+    </div>
+  </div>
+)}
     </div>
   );
 }

@@ -1,0 +1,620 @@
+/* =========================
+   CONTENEDOR
+========================= */
+
+.iva-container {
+  padding: 18px;
+  min-height: 100vh;
+  background: #f6f8fc;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.iva-hero {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  border: 1px solid #dbeafe;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
+  color: white;
+  font-size: 28px;
+}
+
+.hero-left h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hero-left p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.hero-filters {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   FILTROS
+========================= */
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.date-group input {
+  height: 38px;
+  padding: 0 12px;
+
+  border-radius: 10px;
+  border: 1px solid #dbeafe;
+
+  background: white;
+  color: #0f172a;
+}
+
+.btn-listar {
+  height: 38px;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(37,99,235,.25);
+
+  transition: .2s;
+}
+
+.btn-listar:hover {
+  transform: translateY(-1px);
+}
+
+.btn-salir {
+  height: 38px;
+  padding: 0 18px;
+
+  border-radius: 10px;
+  border: 1px solid #dbeafe;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+/* =========================
+   CARD PRINCIPAL
+========================= */
+
+.iva-card {
+  background: white;
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  border: 1px solid #dbeafe;
+
+  box-shadow: 0 4px 16px rgba(37,99,235,.05);
+}
+
+.table-header {
+  padding: 18px 20px;
+
+  background: linear-gradient(
+    180deg,
+    #f8fbff,
+    #ffffff
+  );
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.table-header span {
+  display: block;
+  margin-top: 4px;
+
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.table-actions {
+  padding: 12px 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+  background: #fafcff;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.actions-left,
+.actions-center,
+.actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions-left button,
+.actions-center button {
+  height: 34px;
+  padding: 0 12px;
+
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+.actions-right select,
+.actions-right input {
+  height: 34px;
+
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+
+  padding: 0 10px;
+
+  background: white;
+}
+
+.actions-right input {
+  width: 180px;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.iva-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.iva-table thead {
+  background: #eff6ff;
+}
+
+.iva-table th {
+  padding: 11px 12px;
+
+  text-align: left;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #1e3a8a;
+
+  border-bottom: 1px solid #dbeafe;
+}
+
+.iva-table td {
+  padding: 10px 12px;
+
+  font-size: 13px;
+
+  color: #334155;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  white-space: nowrap;
+}
+
+.iva-table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px !important;
+
+  color: #94a3b8;
+}
+
+/* =========================
+   CHIP IVA
+========================= */
+
+.iva-chip {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 8px;
+
+  border-radius: 999px;
+
+  background: #dbeafe;
+  color: #2563eb;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================
+   RESUMEN
+========================= */
+
+.stats-grid {
+  margin-top: 14px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+.stat-card {
+  background: white;
+
+  border-radius: 12px;
+  padding: 12px 14px;
+
+  border: 1px solid #dbeafe;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-shadow: 0 2px 8px rgba(37,99,235,.06);
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+}
+
+.ventas .stat-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.iva .stat-icon {
+  background: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.exentas .stat-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.total .stat-icon {
+  background: #93c5fd;
+  color: #1e40af;
+}
+
+.stat-card span {
+  display: block;
+
+  font-size: 11px;
+  color: #64748b;
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 2px;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+/* =========================
+   PAGINACION
+========================= */
+
+.pagination {
+  padding: 14px 18px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination button {
+  height: 34px;
+  padding: 0 14px;
+
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+
+  background: white;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #eff6ff;
+}
+
+.pagination button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark .iva-container {
+  background: var(--bg-primary);
+}
+
+body.dark .iva-hero,
+body.dark .iva-card,
+body.dark .stat-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark .hero-left h1,
+body.dark .table-header h2,
+body.dark .stat-card strong {
+  color: var(--text-primary);
+}
+
+body.dark .hero-left p,
+body.dark .table-header span,
+body.dark .stat-card span,
+body.dark .pagination span {
+  color: var(--text-secondary);
+}
+
+body.dark .date-group input,
+body.dark .actions-right input,
+body.dark .actions-right select,
+body.dark .btn-salir,
+body.dark .actions-left button,
+body.dark .actions-center button,
+body.dark .pagination button {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark .table-actions {
+  background: var(--bg-secondary);
+}
+
+body.dark .iva-table thead {
+  background: var(--table-header);
+}
+
+body.dark .iva-table th,
+body.dark .iva-table td {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark .iva-table tbody tr:hover {
+  background: var(--table-hover);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+  .iva-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-left,
+  .actions-center,
+  .actions-right {
+    flex-wrap: wrap;
+  }
+
+  .actions-right input {
+    width: 100%;
+  }
+}
+
+.btn-salir {
+  height: 38px;
+  padding: 0 18px;
+
+  border-radius: 10px;
+  border: 1px solid #3b82f6;
+
+  background: #ffffff;
+  color: #2563eb;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.btn-salir:hover {
+  background: #eff6ff;
+}
+
+/* =========================
+   DARK MODE FIX BOTON SALIR
+========================= */
+
+body.dark .btn-salir {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #3b82f6 !important;
+
+  font-weight: 600;
+}
+
+body.dark .btn-salir:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border-color: #60a5fa !important;
+}
+
+body.dark .table-header {
+  background: linear-gradient(180deg, #0f172a, #111827);
+  border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-group label {
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date-group input[type="date"] {
+  width: 180px;
+  height: 52px;
+
+  padding: 0 14px;
+
+  background: #16213b;
+  color: #fff;
+
+  border: 2px solid #2b3f66;
+  border-radius: 12px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: text;
+
+  transition: all .2s ease;
+}
+
+.date-group input[type="date"]:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 4px rgba(79,140,255,.15);
+}
+
+.date-group input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  transform: scale(1.4);
+}

@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import Menu from "../../components/Menu";
 import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip
+} from "recharts";
+import {
   Package,
   Building2,
   Boxes,
@@ -25,21 +34,30 @@ import Combos from "../Combos/Combos";
 import Empresa from "../Empresa/Empresa";
 import Sucursales from "../Sucursales/Sucursales";
 import Terminales from "../Terminales/Terminales";
+import IvaAlicuotas from "../IvaAlicuotas/IvaAlicuotas";
 import {
   useAlert
 } from "../../context/Alertcontext";
 import { useLanguage } from "../../context/LanguageContext";
+import Estadisticas from "../Estadisticas/Estadisticas";
+import Promociones from "../Promociones/Promociones";
+import { apiFetch } from "../../services/api";
+import MovimientosStock from "../MovimientosStock/MovimientosStock";
+import Balanzas from "../Balanzas/Balanzas";
+
 export default function Dashboard() {
   const [section, setSection] = useState("home");
   const [usuario, setUsuario] = useState(null);
   const [rol, setRol] = useState(null);
   const [permisos, setPermisos] = useState(null);
 const [menuCollapsed, setMenuCollapsed] = useState(false);
+const [quickAccessOpen, setQuickAccessOpen] = useState(false);
   const navigate = useNavigate();
 const [showSettings, setShowSettings] = useState(false);
 const [profileImage, setProfileImage] = useState(
   localStorage.getItem("profileImage") || null
 );
+const [fullscreenChart, setFullscreenChart] = useState(false);
 const {
   notifications,
   setNotifications
@@ -47,15 +65,30 @@ const {
 const { language, setLanguage } = useLanguage();
 const [showNotifications, setShowNotifications] =
   useState(false);
+  const [todayStats, setTodayStats] = useState({
+  totalRevenue: 0,
+  tickets: 0,
+  averageRevenue: 0,
+});
+
+const [monthStats, setMonthStats] = useState({
+  totalRevenue: 0,
+  tickets: 0,
+  averageRevenue: 0,
+});
+useEffect(() => {
+  console.log("fullscreenChart cambió:", fullscreenChart);
+}, [fullscreenChart]);
+const [criticalStock, setCriticalStock] = useState([]);
+const [salesHistory, setSalesHistory] = useState([]);
 
   // 🔥 Cargar sesión + usuario + permisos
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await fetch("http://localhost:8080/back_office/user/me", {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await apiFetch("/user/me", {
+  method: "GET",
+});
 
         if (!res.ok) {
           navigate("/login");
@@ -67,26 +100,23 @@ const [showNotifications, setShowNotifications] =
         setUsuario(data.nameAndSurname || "Usuario");
         setRol(data.userRole || "USER");
 
-        const resPerm = await fetch(
-          "http://localhost:8080/back_office/auth/check-permissions",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              operations: [
-                "CREATE",
-                "DELETE",
-                "UPDATE",
-                "BACK_OFFICE_ACCESS",
-                "VIEWS_ACCESS",
-                "USERS_ACCESS",
-                "REPORTS_ACCESS",
-              ],
-            }),
-          }
-        );
-
+       const resPerm = await apiFetch(
+  "/auth/check-permissions",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      operations: [
+        "CREATE",
+        "DELETE",
+        "UPDATE",
+        "BACK_OFFICE_ACCESS",
+        "VIEWS_ACCESS",
+        "USERS_ACCESS",
+        "REPORTS_ACCESS",
+      ],
+    }),
+  }
+);
         if (!resPerm.ok) {
           setPermisos(null);
         } else {
@@ -104,7 +134,45 @@ const [showNotifications, setShowNotifications] =
     };
 
     init();
+    cargarDashboardStats();
   }, []);
+  useEffect(() => {
+  if (section === "home") {
+    cargarDashboardStats();
+  }
+}, [section]);
+useEffect(() => {
+  if (section !== "home") return;
+
+  const interval = setInterval(() => {
+    cargarDashboardStats();
+  }, 60000); // 1 minuto
+
+  return () => clearInterval(interval);
+}, [section]);
+
+
+  const handleLogout = async () => {
+  try {
+    const res = await apiFetch(
+  "/auth/logout",
+  {
+    method: "POST",
+  }
+);
+
+    if (res.status === 204) {
+      navigate("/login");
+      return;
+    }
+
+    console.error("Error logout:", res.status);
+    navigate("/login");
+  } catch (error) {
+    console.error("Error logout:", error);
+    navigate("/login");
+  }
+};
   const texts = {
   es: {
     settings: "Configuración",
@@ -221,8 +289,62 @@ const handleProfileImage = (e) => {
   reader.readAsDataURL(file);
 };
 
+const cargarDashboardStats = async () => {
+  try {
+    const [
+      salesRes,
+      todayRes,
+      monthRes,
+      criticalRes
+    ] = await Promise.all([
+      apiFetch("/report/sales/year-and-month"),
+
+      apiFetch("/report/sales/today"),
+
+      apiFetch("/report/sales/current-month"),
+
+      apiFetch("/report/critical-stock-items"),
+    ]);
+
+    const salesData = await salesRes.json();
+    const todayData = await todayRes.json();
+    const monthData = await monthRes.json();
+    const criticalData = await criticalRes.json();
+
+    const months = [
+      "",
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ];
+
+    setSalesHistory(
+      salesData.map(item => ({
+        mes: `${months[item.month]}/${item.year}`,
+        ventas: item.revenue
+      }))
+    );
+
+    setTodayStats(todayData);
+    setMonthStats(monthData);
+    setCriticalStock(criticalData);
+
+  } catch (error) {
+    console.error("Error Dashboard:", error);
+  }
+};
+
   return (
-  <div className="dashboard">
+  <div className={`dashboard ${fullscreenChart ? "fullscreen-active" : ""}`}>
 <Menu
   section={section}
   setSection={setSection}
@@ -241,6 +363,140 @@ const handleProfileImage = (e) => {
 >
         <div className="dashboard-content">
           <div className="watermark">BRUKI</div>
+
+{/* =========================================================
+    ACCESO RÁPIDO LATERAL
+========================================================= */}
+
+<div
+  className={`quick-sidebar ${
+    quickAccessOpen ? "open" : ""
+  }`}
+>
+
+  {/* BOTÓN PESTAÑA */}
+  <button
+    className="quick-sidebar-toggle"
+    onClick={() =>
+      setQuickAccessOpen((prev) => !prev)
+    }
+    aria-label="Acceso rápido"
+  >
+
+    <span className="quick-toggle-arrow">
+      {quickAccessOpen ? "›" : "‹"}
+    </span>
+  </button>
+
+
+  {/* PANEL */}
+  <div className="quick-sidebar-panel">
+
+    {/* HEADER */}
+    <div className="quick-sidebar-header">
+      <div className="quick-sidebar-title">
+
+        <span>
+          Acceso rápido
+        </span>
+      </div>
+    </div>
+
+
+    {/* ACCESOS */}
+    <div className="quick-sidebar-items">
+
+      {/* ARTÍCULOS */}
+      <button
+        className="quick-sidebar-item"
+        onClick={() => {
+          setSection("articulos");
+          setQuickAccessOpen(false);
+        }}
+      >
+        <Package size={25} />
+
+        <span>
+          {t.articles}
+        </span>
+      </button>
+
+
+      {/* DEPARTAMENTOS */}
+      <button
+        className="quick-sidebar-item"
+        onClick={() => {
+          setSection("departamentos");
+          setQuickAccessOpen(false);
+        }}
+      >
+        <Building2 size={25} />
+
+        <span>
+          {t.departments}
+        </span>
+      </button>
+
+
+      {/* STOCK */}
+      <button
+        className="quick-sidebar-item"
+        onClick={() => {
+          setSection("movimientos_stock");
+          setQuickAccessOpen(false);
+        }}
+      >
+        <Boxes size={25} />
+
+        <span>
+          {t.stock}
+        </span>
+      </button>
+
+
+      {/* CLIENTES */}
+      <button
+        className="quick-sidebar-item disabled"
+        disabled
+      >
+        <Users size={25} />
+
+        <span>
+          {t.clients}
+        </span>
+      </button>
+
+
+      {/* PRECIOS */}
+      <button
+        className="quick-sidebar-item disabled"
+        disabled
+      >
+        <DollarSign size={25} />
+
+        <span>
+          {t.prices}
+        </span>
+      </button>
+
+
+      {/* SALIR */}
+      <button
+        className="quick-sidebar-item logout"
+        onClick={handleLogout}
+      >
+        <LogOut size={25} />
+
+        <span>
+          {t.logout}
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
 {section === "home" && (
   <>
@@ -285,8 +541,6 @@ const handleProfileImage = (e) => {
               }}
             >
               <option value="es">🇦🇷 Español</option>
-              <option value="en">🇺🇸 English</option>
-              <option value="pt">🇧🇷 Português</option>
             </select>
           </div>
         </div>
@@ -329,127 +583,228 @@ const handleProfileImage = (e) => {
     {/* ================= KPI CARDS ================= */}
     <div className="kpi-grid">
       <div className="kpi-card">
-        <div className="kpi-icon purple">📦</div>
+        <div className="kpi-icon red">⚠️</div>
         <div className="kpi-content">
-          <div className="kpi-title">{t.articles}</div>
-          <div className="kpi-value">12.356</div>
-          <div className="kpi-trend positive">↑ 8.2%</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
+          <div className="kpi-title">Stock Crítico</div>
+
+<div className="kpi-value">
+  {criticalStock.length}
+</div>
+
+<div className="kpi-subtitle">
+  Productos críticos
+</div>
         </div>
       </div>
 
-      <div className="kpi-card">
-        <div className="kpi-icon blue">👥</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.clients}</div>
-          <div className="kpi-value">4.872</div>
-          <div className="kpi-trend positive">↑ 6.4%</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
-        </div>
-      </div>
+<div className="kpi-card">
+  <div className="kpi-icon blue">🎟️</div>
 
-      <div className="kpi-card">
-        <div className="kpi-icon green">🏢</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.branches}</div>
-          <div className="kpi-value">8</div>
-          <div className="kpi-trend positive">↑ 2</div>
-          <div className="kpi-subtitle">vs mes anterior</div>
-        </div>
-      </div>
-
-      <div className="kpi-card">
-        <div className="kpi-icon gold">💰</div>
-        <div className="kpi-content">
-          <div className="kpi-title">{t.monthSales}</div>
-          <div className="kpi-value">$12.450.000</div>
-          <div className="kpi-trend positive">↑ 15.3%</div>
-          <div className="kpi-subtitle">{t.previousMonth}</div>
-        </div>
-      </div>
+  <div className="kpi-content">
+    <div className="kpi-title">
+      Tickets del Mes
     </div>
+
+    <div className="kpi-value">
+      {monthStats.tickets}
+    </div>
+
+    <div className="kpi-subtitle">
+      Ventas registradas
+    </div>
+  </div>
+</div>
+
+    <div className="kpi-card">
+  <div className="kpi-icon green">💵</div>
+
+  <div className="kpi-content">
+    <div className="kpi-title">Ventas Hoy</div>
+
+    <div className="kpi-value">
+      $
+      {Number(
+        todayStats.totalRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+
+    <div className="kpi-trend positive">
+      {todayStats.tickets} tickets
+    </div>
+
+    <div className="kpi-subtitle">
+      Promedio $
+      {Number(
+        todayStats.averageRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+  </div>
+</div>
+
+<div className="kpi-card">
+  <div className="kpi-icon gold">📈</div>
+
+  <div className="kpi-content">
+    <div className="kpi-title">
+      {t.monthSales}
+    </div>
+
+    <div className="kpi-value">
+      $
+      {Number(
+        monthStats.totalRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+
+    <div className="kpi-trend positive">
+      {monthStats.tickets} tickets
+    </div>
+
+    <div className="kpi-subtitle">
+      Promedio $
+      {Number(
+        monthStats.averageRevenue || 0
+      ).toLocaleString("es-AR")}
+    </div>
+  </div>
+</div>
+      </div>
+    
 
     {/* ================= PANEL PRINCIPAL ================= */}
     <div className="home-panels">
       {/* GRÁFICO */}
-      <div className="panel-card">
-        <h3>📈 {t.salesChart}</h3>
-        <div className="chart-placeholder">
-          {t.salesGraph}
-        </div>
-      </div>
+ <div className={`panel-card chart-card ${fullscreenChart ? "expanded" : ""}`}>
+
+  <div className="panel-header">
+    <h3>📈 {t.salesChart}</h3>
+
+    <button
+      className="expand-chart-btn"
+      onClick={() => {
+  console.log("FULLSCREEN:", !fullscreenChart);
+  setFullscreenChart(prev => !prev);
+}}
+    >
+      {fullscreenChart ? "✕" : "⛶"}
+    </button>
+  </div>
+
+  <div
+  className="chart-container"
+  style={{
+    width: "100%",
+    height: fullscreenChart ? "calc(100vh - 120px)" : "300px",
+    minWidth: 0,
+    minHeight: 0
+  }}
+>
+  <ResponsiveContainer
+    width="100%"
+    height="100%"
+    minWidth={0}
+    minHeight={0}
+  >
+
+      <LineChart data={salesHistory}>
+
+        <CartesianGrid strokeDasharray="3 3" />
+
+        <XAxis dataKey="mes" />
+
+        <YAxis />
+
+        <Tooltip
+          formatter={(value) =>
+            `$${Number(value).toLocaleString("es-AR")}`
+          }
+        />
+
+        <Line
+          type="monotone"
+          dataKey="ventas"
+          stroke="#2563eb"
+          strokeWidth={3}
+          dot={{
+            r: 4,
+            strokeWidth: 2,
+            fill: "#0f172a"
+          }}
+          activeDot={{
+            r: 6,
+            strokeWidth: 2
+          }}
+          animationBegin={150}
+          animationDuration={1400}
+          animationEasing="ease-out"
+        />
+
+      </LineChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
 
       {/* STOCK CRÍTICO */}
       <div className="panel-card">
         <h3>⚠️ {t.criticalStock}</h3>
-        <ul className="simple-list">
-          <li>Producto A — 12 u.</li>
-          <li>Producto B — 8 u.</li>
-          <li>Producto C — 5 u.</li>
-          <li>Producto D — 3 u.</li>
-          <li>Producto E — 2 u.</li>
-        </ul>
+      <ul className="simple-list">
+  {criticalStock
+    .slice(0, 5)
+    .map((item, index) => (
+      <li key={index}>
+        {item.item}
+        <br />
+        Stock: {item.currentStock}
+        {" | "}
+        PP: {item.reorderPoint}
+      </li>
+    ))}
+</ul>
       </div>
 
       {/* ACTIVIDAD RECIENTE */}
       <div className="panel-card">
-        <h3>🕒 {t.recentActivity}</h3>
-        <ul className="simple-list">
-          <li>{t.newArticle}</li>
-          <li>{t.newSale}</li>
-          <li>{t.registeredClient}</li>
-          <li>{t.updatedStock}</li>
-          <li>{t.connectedUser}</li>
-        </ul>
+      <h3>📊 Resumen Comercial</h3>
+      <ul className="simple-list">
+  <li>
+    Ventas hoy: {todayStats.tickets}
+  </li>
+
+  <li>
+    Facturación hoy:
+    {" "}
+    $
+    {Number(
+      todayStats.totalRevenue || 0
+    ).toLocaleString("es-AR")}
+  </li>
+
+  <li>
+    Ventas del mes:
+    {" "}
+    {monthStats.tickets}
+  </li>
+
+  <li>
+    Facturación mensual:
+    {" "}
+    $
+    {Number(
+      monthStats.totalRevenue || 0
+    ).toLocaleString("es-AR")}
+  </li>
+
+  <li>
+    Productos críticos:
+    {" "}
+    {criticalStock.length}
+  </li>
+</ul>
       </div>
     </div>
-
-    {/* ================= ACCESOS RÁPIDOS ================= */}
-<div className="quick-access-wrapper">
-  <div className="quick-access-bar">
-    
-    <div
-      className="quick-item"
-      onClick={() => setSection("articulos")}
-    >
-      <Package size={42} />
-      <span>{t.articles}</span>
-    </div>
-
-    <div
-      className="quick-item"
-      onClick={() => setSection("departamentos")}
-    >
-      <Building2 size={42} />
-      <span>{t.departments}</span>
-    </div>
-
-    {/* ❌ DESHABILITADOS */}
-    <div className="quick-item disabled">
-      <Boxes size={42} />
-      <span>{t.stock}</span>
-    </div>
-
-    <div className="quick-item disabled">
-      <Users size={42} />
-      <span>{t.clients}</span>
-    </div>
-
-    <div className="quick-item disabled">
-      <DollarSign size={42} />
-      <span>{t.prices}</span>
-    </div>
-
-    <div
-      className="quick-item salir"
-      onClick={() => navigate("/login")}
-    >
-      <LogOut size={42} />
-      <span>{t.logout}</span>
-    </div>
-
-  </div>
-</div>
   </>
 )}
           {section === "usuarios" && <Usuarios />}
@@ -458,10 +813,15 @@ const handleProfileImage = (e) => {
             <SubArticulos setSection={setSection} />
             
           )}
-          {section === "combos" && <Combos />}
+          {section === "combos" && (
+  <Combos setSection={setSection} />
+)}
           {section === "clasificaciones" && (
         <Clasificaciones setSection={setSection} />
       )}
+      {section === "promociones" && (
+    <Promociones setSection={setSection} />
+)}
           {section === "departamentos" && (
             <Departamentos setSection={setSection} />
           )}
@@ -476,17 +836,27 @@ const handleProfileImage = (e) => {
           {section === "otros_tributos" && (
   <OtrosTributos setSection={setSection} />
 )}
-          {section === "impuestos" && <h2>Impuestos</h2>}
-          {section === "balanzas" && <h2>Balanzas</h2>}
+{section === "movimientos_stock" && (
+  <MovimientosStock setSection={setSection} />
+)}
+    {section === "impuestos" && <h2>Impuestos</h2>}
+          {section === "balanzas" && (
+  <Balanzas setSection={setSection} />
+)}
           {section === "formas_pago" && <h2>Formas de pago</h2>}
           {section === "formas_pago_cuotas" && <h2>Formas de pago - cuotas</h2>}
           {section === "monedas" && (<Monedas setSection={setSection} />)}
           {section === "funciones_usuario" && <h2>Funciones de usuarios</h2>}
-          {section === "movimientos_stock" && <h2>Tipos de movimientos de stock</h2>}
           {section === "config_pos" && <h2>Configuración POS</h2>}
           {section === "config_general" && <h2>Configuración General</h2>}
           {section === "asistente" && <h2>Asistente de configuración</h2>}
-
+          {section === "iva_alicuotas" && (
+  <IvaAlicuotas setSection={setSection} />
+)}
+          {section === "Estadisticas" && <Estadisticas />}
+          {section === "Balanzas" && (
+    <Balanzas setSection={setSection} />
+)}
           {section === "Mi Información" && (
             <MiInformacion
               usuario={{

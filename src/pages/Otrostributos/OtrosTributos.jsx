@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import "./OtrosTributos.css";
 import { useLanguage } from "../../context/LanguageContext";
+import {
+  FaPlus,
+  FaTrash,
+  FaEdit,
+  FaSave,
+  FaTimes,
+  FaSignOutAlt
+} from "react-icons/fa";
+import { apiFetch } from "../../services/api";
 
 export default function OtrosTributos({ setSection }) {
 
@@ -20,8 +29,6 @@ const { t } = useLanguage();
   setSection("home");
 };
 
-  const API_URL = "http://localhost:8080/back_office/tax";
-
 const AFIP_CODES = [
   { value: "NATIONAL_TAX", label: t("otrosTributos.nationalTax") },
   { value: "PROVINCIAL_TAX", label: t("otrosTributos.provincialTax") },
@@ -35,10 +42,7 @@ const AFIP_CODES = [
 
   const cargarDatos = async () => {
     try {
-      const res = await fetch(API_URL, {
-        method: "GET",
-        credentials: "include"
-      });
+      const res = await apiFetch("/tax");
 
       if (res.status === 401) {
         alert("Sesión expirada");
@@ -94,10 +98,10 @@ const AFIP_CODES = [
     setModoCrear(false);
   };
 
-  // 🔥 FIX CENTRAL: payload seguro
+  //  payload seguro
   const buildPayload = () => ({
     afipCode: form.codAfip,
-    name: form.nombre.trim(), // 🔥 FIX 422 TAX_NAME
+    name: form.nombre.trim(), 
     type: form.tipo === "%" ? "PERCENTAGE" : "AMOUNT",
     amount: Number(form.valor),
     description: "DEFAULT"
@@ -110,12 +114,10 @@ const AFIP_CODES = [
       return;
     }
 
-    const res = await fetch(API_URL, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload())
-    });
+    const res = await apiFetch("/tax", {
+  method: "POST",
+  body: JSON.stringify(buildPayload()),
+});
 
     if (res.status === 201) {
       await cargarDatos();
@@ -132,12 +134,10 @@ const AFIP_CODES = [
       return;
     }
 
-    const res = await fetch(`${API_URL}/${seleccionado}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload())
-    });
+    const res = await apiFetch(`/tax/${seleccionado}`, {
+  method: "PUT",
+  body: JSON.stringify(buildPayload()),
+});
 
     if (res.status === 204) {
       await cargarDatos();
@@ -152,10 +152,9 @@ const AFIP_CODES = [
     if (!seleccionado) return alert("Seleccioná uno");
     if (!confirm("¿Eliminar?")) return;
 
-    const res = await fetch(`${API_URL}/${seleccionado}`, {
-      method: "DELETE",
-      credentials: "include"
-    });
+    const res = await apiFetch(`/tax/${seleccionado}`, {
+  method: "DELETE",
+});
 
     if (res.status === 204) {
       await cargarDatos();
@@ -171,40 +170,81 @@ const AFIP_CODES = [
   };
 
   const handleCancelar = () => {
-    setModoCrear(false);
-    setModoEditar(false);
-  };
+  setModoCrear(false);
+  setModoEditar(false);
+  setSeleccionado(null);
+
+  setForm({
+    codAfip: "",
+    nombre: "",
+    tipo: "$",
+    valor: ""
+  });
+};
 
   return (
     <div className="otros-container">
 
-      <div className="toolbar">
+<div className="toolbar">
 
-        <div className="tool nuevo" data-icon="+" onClick={handleNuevo}>
-          <span>{t("common.new")}</span>
-        </div>
+  <div
+    className="tool nuevo"
+    data-icon="＋"
+    onClick={handleNuevo}
+  >
+    <span>{t("common.new")}</span>
+  </div>
 
-        <div className={`tool eliminar ${!seleccionado ? "disabled" : ""}`} data-icon="−" onClick={eliminar}>
-          <span>{t("common.delete")}</span>
-        </div>
+  <div
+    className={`tool eliminar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="🗑"
+    onClick={eliminar}
+  >
+    <span>{t("common.delete")}</span>
+  </div>
 
-        <div className={`tool modificar ${!seleccionado ? "disabled" : ""}`} data-icon="✎" onClick={handleModificar}>
-          <span>{t("common.edit")}</span>
-        </div>
+  <div
+    className={`tool modificar ${!seleccionado ? "disabled" : ""}`}
+    data-icon="✎"
+    onClick={handleModificar}
+  >
+    <span>{t("common.edit")}</span>
+  </div>
 
-        <div className={`tool guardar ${!modoCrear && !modoEditar ? "disabled" : ""}`} data-icon="✔" onClick={handleGuardar}>
-          <span>{t("common.save")}</span>
-        </div>
+  <div
+    className={`tool guardar ${!modoCrear && !modoEditar ? "disabled" : ""}`}
+    data-icon="✓"
+    onClick={handleGuardar}
+  >
+    <span>{t("common.save")}</span>
+  </div>
 
-        <div className={`tool cancelar ${!modoCrear && !modoEditar ? "disabled" : ""}`} data-icon="✖" onClick={handleCancelar}>
-          <span>{t("common.cancel")}</span>
-        </div>
-        
-        <div className="tool exit" data-icon="🚪" onClick={salir}>
-  <span>{t("common.exit")}</span>
+  <div
+  className={`tool cancelar ${
+    !seleccionado && !modoCrear && !modoEditar
+      ? "disabled"
+      : ""
+  }`}
+  data-icon="✕"
+  onClick={
+    seleccionado || modoCrear || modoEditar
+      ? handleCancelar
+      : undefined
+  }
+>
+  <span>{t("common.cancel")}</span>
 </div>
 
-      </div>
+  <div
+    className="tool salir"
+    data-icon="↪"
+    onClick={salir}
+  >
+    <span>{t("common.exit")}</span>
+  </div>
+
+</div>
+
 
       {(modoCrear || modoEditar) && (
         <div className="formulario">

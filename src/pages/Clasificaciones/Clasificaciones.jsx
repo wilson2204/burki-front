@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Clasificaciones.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { apiFetch } from "../../services/api";
 
 export default function Clasificaciones({ setSection, onUpdate }) {
     const { t } = useLanguage();
@@ -13,21 +14,11 @@ export default function Clasificaciones({ setSection, onUpdate }) {
     name: ""
   });
 
-  const fetchConfig = {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + localStorage.getItem("token")
-    }
-  };
 
   /* ================= GET ================= */
   const getAll = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:8080/back_office/item-classification",
-        fetchConfig
-      );
+      const res = await apiFetch("/item-classification");
 
       if (!res.ok) {
         console.error("GET error:", res.status);
@@ -76,18 +67,17 @@ export default function Clasificaciones({ setSection, onUpdate }) {
 
   const guardar = async () => {
 
-    const url = selected
-      ? `http://localhost:8080/back_office/item-classification/${selected}`
-      : `http://localhost:8080/back_office/item-classification`;
+    const endpoint = selected
+  ? `/item-classification/${selected}`
+  : "/item-classification";
 
     try {
-      const res = await fetch(url, {
-        method: selected ? "PUT" : "POST",
-        ...fetchConfig,
-        body: JSON.stringify({
-          name: form.name
-        })
-      });
+    const res = await apiFetch(endpoint, {
+  method: selected ? "PUT" : "POST",
+  body: JSON.stringify({
+    name: form.name,
+  }),
+});
 
       if (!res.ok) {
         console.error("SAVE error:", await res.text());
@@ -109,13 +99,9 @@ export default function Clasificaciones({ setSection, onUpdate }) {
     if (!selected) return;
 
     try {
-      await fetch(
-        `http://localhost:8080/back_office/item-classification/${selected}`,
-        {
-          method: "DELETE",
-          ...fetchConfig
-        }
-      );
+      await apiFetch(`/item-classification/${selected}`, {
+  method: "DELETE",
+});
 
       await getAll();
 
@@ -135,18 +121,77 @@ export default function Clasificaciones({ setSection, onUpdate }) {
 
       {/* TOOLBAR PRO */}
       <div className="toolbar">
-        <div className="tool nuevo" data-icon="➕" onClick={nuevo}><span>{t("common.new")}</span></div>
-        <div className="tool eliminar" data-icon="🗑️" onClick={eliminar}><span>{t("common.delete")}</span></div>
-        <div className="tool duplicar" data-icon="📄" onClick={duplicar}><span>{t("common.duplicate")}</span></div>
-        <div className="tool modificar" data-icon="✏️" onClick={modificar}><span>{t("common.edit")}</span></div>
-        <div className="tool guardar" data-icon="💾" onClick={guardar}><span>{t("common.save")}</span></div>
-        <div className="tool cancelar" data-icon="❌" onClick={() => setView("table")}><span>{t("common.cancel")}</span></div>
-        <div className="tool salir" data-icon="🚪" onClick={() => setSection && setSection("home")}><span>{t("common.exit")}</span></div>
-      </div>
+
+  <div
+    className="tool nuevo"
+    data-icon="＋"
+    onClick={nuevo}
+  >
+    <span>{t("common.new")}</span>
+  </div>
+
+  <div
+    className="tool eliminar"
+    data-icon="−"
+    onClick={eliminar}
+  >
+    <span>{t("common.delete")}</span>
+  </div>
+
+  <div
+    className="tool duplicar"
+    data-icon="⧉"
+    onClick={duplicar}
+  >
+    <span>{t("common.duplicate")}</span>
+  </div>
+
+  <div
+    className="tool modificar"
+    data-icon="✎"
+    onClick={modificar}
+  >
+    <span>{t("common.edit")}</span>
+  </div>
+
+  <div
+    className="tool guardar"
+    data-icon="✓"
+    onClick={guardar}
+  >
+    <span>{t("common.save")}</span>
+  </div>
+
+  <div
+  className="tool cancelar"
+  data-icon="×"
+  onClick={() => {
+    setForm({
+      id: "",
+      name: ""
+    });
+
+    setSelected(null);
+    setView("table");
+  }}
+>
+  <span>{t("common.cancel")}</span>
+</div>
+
+  <div
+    className="tool salir"
+    data-icon="↪"
+    onClick={() => setSection && setSection("home")}
+  >
+    <span>{t("common.exit")}</span>
+  </div>
+
+</div>
 
       <div className="contenido">
 
         {/* TABLA */}
+        <div className="tabla-scroll">
         <div className="tabla">
           <table>
             <thead>
@@ -168,6 +213,7 @@ export default function Clasificaciones({ setSection, onUpdate }) {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* FORM */}

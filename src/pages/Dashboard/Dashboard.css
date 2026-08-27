@@ -1113,3 +1113,1002 @@ body.dark .profile-preview-placeholder {
   pointer-events: none;
   filter: grayscale(100%);
 }
+
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.simple-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #475569;
+}
+
+.simple-list li:last-child {
+  border-bottom: none;
+}
+
+.kpi-icon.red {
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+}
+/* ===============================
+   HEADER DEL GRAFICO
+================================ */
+
+.panel-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+/* ===============================
+   BOTON EXPANDIR
+================================ */
+
+.expand-chart-btn{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:20px;
+
+    transition:.2s;
+
+}
+
+
+.expand-chart-btn:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+/* =======================================
+   FULLSCREEN CHART
+======================================= */
+
+.dashboard.fullscreen-active {
+  overflow: hidden;
+}
+
+.dashboard.fullscreen-active .top-header,
+.dashboard.fullscreen-active .home-header,
+.dashboard.fullscreen-active .quick-access-wrapper,
+.dashboard.fullscreen-active .watermark {
+  display: none !important;
+}
+
+.chart-card.expanded {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  background: #0f172a !important;
+
+  z-index: 99999999 !important;
+
+  border-radius: 0 !important;
+
+  padding: 70px 32px 24px !important;
+
+  box-sizing: border-box !important;
+
+  overflow: hidden !important;
+}
+
+.chart-card.expanded .panel-header {
+  flex-shrink: 0;
+}
+
+.chart-card.expanded .expand-chart-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  z-index: 999999999;
+}
+.chart-card .recharts-dot {
+  transition:
+    r 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.chart-card .recharts-dot:hover {
+  r: 6;
+}
+.chart-container {
+  width: 100%;
+  min-width: 0;
+  position: relative;
+}
+
+.chart-container .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+/* =========================================
+   CONTENEDOR DEL GRÁFICO
+========================================= */
+
+/* =========================================
+   CONTENEDOR DEL GRÁFICO
+========================================= */
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+}
+
+/* =========================================
+   GRÁFICO EN FULLSCREEN
+========================================= */
+
+/* =========================================
+   RECHARTS
+========================================= */
+
+.chart-container .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+/* =========================================
+   BOTÓN EXPANDIR - DARK MODE
+========================================= */
+
+body.dark .expand-chart-btn {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+body.dark .expand-chart-btn:hover {
+    background: #334155;
+    color: #ffffff;
+    border-color: #475569;
+}
+
+/* =========================================
+   ANIMACIÓN DEL GRÁFICO
+========================================= */
+
+.chart-card {
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* Al entrar en fullscreen */
+.chart-card.expanded {
+  animation: chartExpand 0.4s ease forwards;
+}
+
+/* Al volver */
+@keyframes chartExpand {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.96);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* =========================================================
+   SLIDEBAR COMPACTO - ACCESO RÁPIDO
+========================================================= */
+
+.quick-sidebar {
+  position: fixed;
+
+  top: 50%;
+  right: 0;
+
+  transform: translateY(-50%);
+
+  z-index: 5000;
+
+  display: flex;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   PESTAÑA CERRADA
+========================================================= */
+
+.quick-sidebar-toggle {
+  width: 52px;
+  height: 125px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid var(--border-color);
+  border-right: none;
+
+  border-radius: 14px 0 0 14px;
+
+  background: var(--bg-secondary);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  box-shadow:
+    -4px 0 15px rgba(0, 0, 0, 0.15);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   FLECHA
+========================================================= */
+
+.quick-toggle-arrow {
+  font-size: 38px;
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  opacity: 0.75;
+
+  color: var(--text-secondary);
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+
+/* =========================================================
+   HOVER PESTAÑA
+========================================================= */
+
+.quick-sidebar-toggle:hover {
+  background: var(--table-hover);
+}
+
+.quick-sidebar-toggle:hover .quick-toggle-arrow {
+  color: var(--primary-color);
+
+  transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.quick-sidebar-panel {
+  width: 0;
+
+  max-height: 330px;
+
+  overflow: hidden;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-right: none;
+
+  border-radius: 12px 0 0 12px;
+
+  box-shadow:
+    -8px 0 25px rgba(0, 0, 0, 0.20);
+
+  opacity: 0;
+
+  transform: translateX(100%);
+
+  pointer-events: none;
+
+  transition:
+    width 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+
+
+/* =========================================================
+   PANEL ABIERTO
+========================================================= */
+
+.quick-sidebar.open .quick-sidebar-panel {
+  width: 190px;
+
+  opacity: 1;
+
+  transform: translateX(0);
+
+  pointer-events: auto;
+}
+
+
+/* =========================================================
+   HEADER DEL PANEL
+========================================================= */
+
+.quick-sidebar-header {
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  background: var(--bg-tertiary);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+
+.quick-sidebar-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  color: var(--text-primary);
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ICONO DEL TÍTULO
+========================================================= */
+
+/*
+   Si también sacaste el emoji ⚡ del título,
+   esta clase ya no hace falta.
+*/
+
+.quick-sidebar-title-icon {
+  display: none;
+}
+
+
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
+
+.quick-sidebar-close {
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  font-size: 18px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.quick-sidebar-close:hover {
+  background: var(--table-hover);
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   CONTENEDOR DE ITEMS
+========================================================= */
+
+.quick-sidebar-items {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 7px;
+}
+
+
+/* =========================================================
+   ITEM
+========================================================= */
+
+.quick-sidebar-item {
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 9px;
+
+  border: 1px solid transparent;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+/* =========================================================
+   ICONOS DE LOS ITEMS
+========================================================= */
+
+.quick-sidebar-item svg {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+
+  color: var(--primary-color);
+
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.quick-sidebar-item:hover:not(:disabled) {
+  background: var(--table-hover);
+
+  border-color: var(--border-color);
+
+  transform: translateX(-2px);
+}
+
+
+.quick-sidebar-item:hover:not(:disabled) svg {
+  color: var(--primary-hover);
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   DESHABILITADOS
+========================================================= */
+
+.quick-sidebar-item:disabled,
+.quick-sidebar-item.disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SALIR
+========================================================= */
+
+.quick-sidebar-item.logout {
+  margin-top: 3px;
+
+  color: #ef4444;
+
+  border-top: 1px solid var(--border-color);
+}
+
+
+.quick-sidebar-item.logout svg {
+  color: #ef4444;
+}
+
+
+.quick-sidebar-item.logout:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.10);
+
+  border-color: rgba(239, 68, 68, 0.25);
+
+  color: #ef4444;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .quick-sidebar-toggle {
+    width: 44px;
+    height: 105px;
+  }
+
+  .quick-toggle-arrow {
+    font-size: 32px;
+  }
+
+  .quick-sidebar.open .quick-sidebar-panel {
+    width: 175px;
+  }
+
+  .quick-sidebar-item {
+    height: 38px;
+
+    font-size: 11px;
+  }
+
+  .quick-sidebar-item svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+/* =========================================================
+   SLIDEBAR COMPACTO - ACCESO RÁPIDO
+========================================================= */
+
+.quick-sidebar {
+  position: fixed;
+
+  top: 50%;
+  right: 0;
+
+  transform: translateY(-50%);
+
+  z-index: 5000;
+
+  display: flex;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   PESTAÑA CERRADA - MÁS COMPACTA
+========================================================= */
+
+.quick-sidebar-toggle {
+  width: 34px;
+  height: 75px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid var(--border-color);
+  border-right: none;
+
+  border-radius: 9px 0 0 9px;
+
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  box-shadow:
+    -3px 0 9px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   FLECHA
+========================================================= */
+
+.quick-toggle-arrow {
+  font-size: 24px;
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  opacity: 0.75;
+
+  color: var(--text-secondary);
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+
+/* =========================================================
+   HOVER PESTAÑA
+========================================================= */
+
+.quick-sidebar-toggle:hover {
+  background: var(--table-hover);
+}
+
+.quick-sidebar-toggle:hover .quick-toggle-arrow {
+  color: var(--primary-color);
+  transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.quick-sidebar-panel {
+  width: 0;
+
+  max-height: 330px;
+
+  overflow: hidden;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+  border-right: none;
+
+  border-radius: 12px 0 0 12px;
+
+  box-shadow:
+    -8px 0 25px rgba(0, 0, 0, 0.20);
+
+  opacity: 0;
+
+  transform: translateX(100%);
+
+  pointer-events: none;
+
+  transition:
+    width 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+
+
+/* =========================================================
+   PANEL ABIERTO
+========================================================= */
+
+.quick-sidebar.open .quick-sidebar-panel {
+  width: 190px;
+
+  opacity: 1;
+
+  transform: translateX(0);
+
+  pointer-events: auto;
+}
+
+
+/* =========================================================
+   HEADER DEL PANEL
+========================================================= */
+
+.quick-sidebar-header {
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  background: var(--bg-tertiary);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+
+.quick-sidebar-title {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: var(--text-primary);
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ICONO DEL TÍTULO
+========================================================= */
+
+.quick-sidebar-title-icon {
+  display: none;
+}
+
+
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
+
+.quick-sidebar-close {
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  font-size: 18px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.quick-sidebar-close:hover {
+  background: var(--table-hover);
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   CONTENEDOR DE ITEMS
+========================================================= */
+
+.quick-sidebar-items {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 7px;
+}
+
+
+/* =========================================================
+   ITEM
+========================================================= */
+
+.quick-sidebar-item {
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 9px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+/* =========================================================
+   ICONOS DE LOS ITEMS
+========================================================= */
+
+.quick-sidebar-item svg {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+
+  color: var(--primary-color);
+
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.quick-sidebar-item:hover:not(:disabled) {
+  background: var(--table-hover);
+
+  border-color: var(--border-color);
+
+  transform: translateX(-2px);
+}
+
+.quick-sidebar-item:hover:not(:disabled) svg {
+  color: var(--primary-hover);
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   DESHABILITADOS
+========================================================= */
+
+.quick-sidebar-item:disabled,
+.quick-sidebar-item.disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SALIR
+========================================================= */
+
+.quick-sidebar-item.logout {
+  margin-top: 3px;
+
+  color: #ef4444;
+
+  border-top: 1px solid var(--border-color);
+}
+
+.quick-sidebar-item.logout svg {
+  color: #ef4444;
+}
+
+.quick-sidebar-item.logout:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.10);
+
+  border-color: rgba(239, 68, 68, 0.25);
+
+  color: #ef4444;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .quick-sidebar-toggle {
+    width: 34px;
+    height: 75px;
+  }
+
+  .quick-toggle-arrow {
+    font-size: 24px;
+  }
+
+  .quick-sidebar.open .quick-sidebar-panel {
+    width: 175px;
+  }
+
+  .quick-sidebar-item {
+    height: 38px;
+    font-size: 11px;
+  }
+
+  .quick-sidebar-item svg {
+    width: 18px;
+    height: 18px;
+  }
+}
